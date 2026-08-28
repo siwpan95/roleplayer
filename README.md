@@ -119,6 +119,14 @@ mini-Cordis），见 `web/`：
   11 项盗贼基准逐值一致 CP=1/HP=65/AC=20/近战+11/远程+8/强韧+11/反射+10/意志+10，
   扩充子系统与 Python `tests/test_expansion.py` 逐值一致，并额外校验 16 服务挂载、
   ConditionService（15 条条件/惩罚聚合/auto_fail）、MonsterService（334 种怪物/CR→XP/stat block/DM 结算））。
+- 单元测试：`npm test`（Node 内置 `node:test`，零新依赖，规避本机 npm 大包安装不可靠）
+  跑 `web/test/engine.test.cjs`，覆盖骰子纯函数/属性调整/战斗条件叠加/怪物图鉴/盗贼基准/
+  16 服务挂载，共 10 项全过；构建前由 `test:build` 复用 `tsconfig.smoke.json` 产出 `dist-smoke`。
+- CI 门禁：根 `.github/workflows/ci.yml` 固化 Python(pytest) + web(typecheck/build/smoke/unit)
+  双 job，push/PR 即触发。
+- 代码分割：`vite.config.ts` 经 `manualChunks` 把 bundle 拆为 `data`(静态 SRD 数据集)/
+  `vendor-react`/`engine`/`ui` 多 chunk，主逻辑 chunk 由单 1.2MB 降为 popup 0.8KB +
+  engine 50KB + ui 11KB + vendor-react 142KB（data 1.02MB 为 gzip 221KB 的静态数据）。
 - **SRD 内容同步**：`web/src/engine/` 现已 1:1 镜像 Python 端 SRD 扩充——新增
   `data_spells.ts`(319 法术) / `data_magicitems.ts`(361 物品) / `data_monsters.ts`(334 怪物+CR_XP) /
   `data_conditions.ts`(15 条件) 四个数据模块，以及 `condition.ts` / `monster.ts` 两个 Service，
