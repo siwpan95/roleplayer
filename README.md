@@ -190,6 +190,21 @@ python cli.py
 python mvp_gui.py        # 或 python -m gui.app
 ```
 
+### Windows 安装包
+项目提供自包含安装包 `dist/D20-Setup-2.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
+
+- **打包 GUI 应用**：`F:/Python314/python.exe -m PyInstaller D20.spec --noconfirm --clean`
+  入口 `gui/app.py`，已注入 Tcl/Tk 9.0 运行时（`runtime_hook_tk.py` + `_tcllib/`）以修复 PyInstaller 对 Tk 9.0 的收集盲点。
+  重新打包前需先解压 `F:/Python314/tcl/libtcl9.0.4.zip`、`libtk9.0.4.zip` 到
+  `_tcllib/tcl/tcl_library`、`_tcllib/tk/tk_library`（`_tcllib/` 已被 .gitignore 排除）。
+- **构建安装包**：`F:/Python314/python.exe -m PyInstaller installer.spec --noconfirm --clean`
+  产出 `dist/D20-Setup-2.0.0.exe`，内嵌完整 D20 程序目录，双击即装。
+- **安装行为**：默认安装到 `%LOCALAPPDATA%\Programs\D20`（免 UAC），并在桌面与开始菜单创建快捷方式，
+  同时写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\D20` 卸载项。
+- **卸载**：开始菜单「卸载 D20」，或 `D20-Setup-2.0.0.exe --uninstall`。
+- 注：本机网络无法访问 Inno Setup 官方源（GitHub 被墙），安装包改用纯标准库自写安装向导
+  （`installer.py`，ctypes 直调 `IShellLink` 创建快捷方式），零第三方依赖。
+
 ### 运行测试
 ```bash
 python -m pytest tests/ -v

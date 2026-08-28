@@ -9,6 +9,15 @@ node_modules/
 web/dist/
 web/dist-smoke/
 
+# ---- PyInstaller 构建产物（D20.spec / D20.iss 为源，产物不入库） ----
+/dist/
+/build/
+/installer/
+# Tcl/Tk 9.0 库临时展开目录（构建期依赖，由 D20.spec 引用）
+/_tcllib/
+/_pyi_build.log
+/_isdl.log
+
 # ---- 按要求全程排除的归档（D21） ----
 D21/
 
