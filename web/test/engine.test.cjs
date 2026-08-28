@@ -244,13 +244,95 @@ test("ReferenceService 规则速查", () => {
 });
 
 // ---------------------------------------------------------------------------
-//  架构一致性：18 服务全挂载（防回归）
+//  v2.2 模拟对战
 // ---------------------------------------------------------------------------
-test("18 个服务全部挂载", () => {
+test("遭遇构建常量与 DMG 2014 一致", () => {
+  assert.equal(d20.XP_THRESHOLDS[1].deadly, 100);
+  assert.equal(d20.XP_THRESHOLDS[5].medium, 500);
+  assert.equal(d20.XP_THRESHOLDS[20].deadly, 12700);
+  assert.equal(d20.DAILY_XP_BUDGET[1], 300);
+  assert.equal(d20.DEFAULT_MAX_ROUNDS, 30);
+});
+
+test("遭遇评估：4×L1 vs 哥布林×4 = 致命（×2 倍数）", () => {
   const c = new d20.Character();
-  const all18 = ["attributes","background","classes","combat","condition","derived","dice",
+  const ev = c.battleEvaluate([1, 1, 1, 1], ["哥布林", "哥布林", "哥布林", "哥布林"]);
+  assert.equal(ev.base_xp, 200);
+  assert.equal(ev.adjusted_xp, 400);
+  assert.equal(ev.difficulty, "deadly");
+  assert.equal(ev.difficulty_cn, "致命");
+});
+
+test("构建遭遇落在目标难度档", () => {
+  const c = new d20.Character();
+  const ev = c.battleBuild([3, 3, 3, 3], "medium");
+  assert.equal(ev.difficulty, "medium");
+  assert.ok(ev.monsters.length >= 1);
+});
+
+function battleParty() {
+  const f = new d20.Character();
+  f.setClass("战士");
+  f.levelTo(3);
+  f.setAttribute("力量", 16);
+  f.purchaseSkill("近战攻击", 12);
+  f.purchaseSkill("活力", 6);
+  f.equipItem("鳞甲");
+  f.equipItem("长剑");
+  const w = new d20.Character();
+  w.setClass("法师");
+  w.levelTo(3);
+  w.setAttribute("智力", 16);
+  w.purchaseSkill("奥术施法", 12);
+  w.purchaseSkill("活力", 4);
+  w.purchaseTechnique("火焰箭");
+  w.purchaseTechnique("魔法飞弹");
+  w.buySlot(1);
+  w.buySlot(1);
+  return [f, w];
+}
+
+test("模拟对战跑完整场并分出胜负", () => {
+  const party = battleParty();
+  const b = party[0].battleCreate(party, [["哥布林", 2]]);
+  assert.equal(b.combatants.length, 4);
+  const r = party[0].battleRun();
+  assert.ok(["party", "foe", "draw"].includes(r.winner));
+  assert.ok(r.rounds >= 1);
+  assert.equal(r.total_xp, 100);
+});
+
+test("蒙特卡洛：简单遭遇胜率 > 85%，且不污染角色状态", () => {
+  const party = battleParty();
+  const hp0 = party[0].ctx.rest.currentHp();
+  const slots0 = JSON.stringify(party[1].state.slotsUsed);
+  const r = party[0].battleSimulate(party, [["哥布林", 2]], 100);
+  assert.ok(r.win_rate > 0.85, `胜率应 >85%（实际 ${r.win_rate}）`);
+  assert.equal(party[0].ctx.rest.currentHp(), hp0);
+  assert.equal(JSON.stringify(party[1].state.slotsUsed), slots0);
+});
+
+test("伤害归一化与抗免判定", () => {
+  const c = new d20.Character();
+  const t = new d20.Combatant({ name: "目标", side: "foe", kind: "monster",
+    ac: 10, max_hp: 20, hp: 20, dex: 10, speed: 30,
+    immune: new Set(["火焰"]), resist: new Set(["挥砍"]), vuln: new Set(["雷鸣"]) });
+  const b = new d20.Battle();
+  b.log = [];
+  assert.equal(c.ctx.battle._applyDamage(t, 10, "火焰", b), 0);
+  assert.equal(c.ctx.battle._applyDamage(t, 10, "挥砍", b), 5);
+  assert.equal(c.ctx.battle._applyDamage(t, 4, "雷鸣", b), 8);
+  assert.equal(t.hp, 7);
+});
+
+// ---------------------------------------------------------------------------
+//  架构一致性：19 服务全挂载（防回归）
+// ---------------------------------------------------------------------------
+test("19 个服务全部挂载", () => {
+  const c = new d20.Character();
+  const all19 = ["attributes","background","battle","classes","combat","condition","derived","dice",
     "equipment","feats","monster","perks","race","reference","rest","sheet","skills",
     "slots","techniques"];
-  for (const id of all18) assert.ok(c.ctx.has(id), `服务应挂载: ${id}`);
-  assert.equal(d20.COMPOSITION.length, 18, `COMPOSITION 应有 18 项 (实际 ${d20.COMPOSITION.length})`);
+  for (const id of all19) assert.ok(c.ctx.has(id), `服务应挂载: ${id}`);
+  assert.equal(d20.COMPOSITION.length, 19, `COMPOSITION 应有 19 项 (实际 ${d20.COMPOSITION.length})`);
 });

@@ -80,3 +80,8 @@ services:
   - id: reference
     service: d20.reference.ReferenceService
     inject: []
+
+  # ---- v2.2：模拟对战（回合制完整对战 + 遭遇构建 + 蒙特卡洛）----
+  - id: battle
+    service: d20.battle.BattleService
+    inject: [dice, monster, condition]

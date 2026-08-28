@@ -205,13 +205,14 @@ class Character:
         from .monster import MonsterService
         from .classes import ClassService
         from .reference import ReferenceService
+        from .battle import BattleService
 
         for svc in (AttributesService, EquipmentService, PerksService,
                     TechniquesService, RaceService, BackgroundService,
                     FeatsService, SkillsService, DiceService, DerivedService,
                     SpellSlotsService, RestService, CombatService, SheetService,
                     ConditionService, MonsterService, ClassService,
-                    ReferenceService):
+                    ReferenceService, BattleService):
             self.ctx.mount(svc)
 
     # ==================================================================
@@ -431,6 +432,39 @@ class Character:
 
     def armor_info(self, name: str) -> dict | None:
         return self.ctx.reference.armor(name)
+
+    # ---- 扩充 v2.2：模拟对战（BattleService）----
+    def battle_create(self, party: list, foes: list, distance: float = 60) -> object:
+        return self.ctx.battle.create(party, foes, distance)
+
+    def battle_new(self, party: list, foes: list, distance: float = 60) -> object:
+        return self.ctx.battle.new_battle(party, foes, distance)
+
+    def battle_step(self) -> bool:
+        return self.ctx.battle.step_current()
+
+    def battle_run(self, max_rounds: int | None = None) -> dict:
+        return self.ctx.battle.run_current(max_rounds)
+
+    def battle_report(self) -> str:
+        return self.ctx.battle.report_current()
+
+    def battle_state(self) -> dict:
+        return self.ctx.battle.state_current()
+
+    def battle_simulate(self, party: list, foes: list, trials: int = 100,
+                        max_rounds: int | None = None) -> dict:
+        return self.ctx.battle.simulate(party, foes, trials, max_rounds)
+
+    def battle_evaluate(self, levels: list[int], monsters: list[str]) -> dict:
+        return self.ctx.battle.evaluate(levels, monsters)
+
+    def battle_build(self, levels: list[int], difficulty: str = "medium",
+                     target_count: int | None = None) -> dict:
+        return self.ctx.battle.build_encounter(levels, difficulty, target_count)
+
+    def battle_xp_budget(self, levels: list[int], difficulty: str = "medium") -> int:
+        return self.ctx.battle.xp_budget(levels, difficulty)
 
     # ---- 衍生数值 ----
     def hp(self) -> int:

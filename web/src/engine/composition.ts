@@ -25,6 +25,7 @@ import { ConditionService } from "./condition";
 import { MonsterService } from "./monster";
 import { ClassService } from "./classes";
 import { ReferenceService } from "./reference";
+import { BattleService } from "./battle";
 
 export interface CompositionEntry {
   id: string;
@@ -55,4 +56,6 @@ export const COMPOSITION: CompositionEntry[] = [
   //      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
   { id: "classes", service: ClassService, inject: [] },
   { id: "reference", service: ReferenceService, inject: [] },
+  // ---- v2.2：模拟对战（回合制完整对战 + 遭遇构建 + 蒙特卡洛）----
+  { id: "battle", service: BattleService, inject: ["dice", "monster", "condition"] },
 ];

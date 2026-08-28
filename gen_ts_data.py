@@ -14,6 +14,7 @@ sys.path.insert(0, D20)
 from d20 import (  # noqa: E402
     data_spells, data_magicitems, data_monsters, data_conditions,
     data_classes, data_equipment_srd, data_proficiencies, data_reference,
+    data_battle,
 )
 
 OUT = os.path.join(D20, "web", "src", "engine")
@@ -180,8 +181,31 @@ ref_body += "".join(
 with open(os.path.join(OUT, "data_reference.ts"), "w", encoding="utf-8") as f:
     f.write(ref_body)
 
+# ---------------------------------------------------------------------------
+#  v2.2：data_battle.ts（DMG 2014 遭遇构建 + AI 启发式 + 伤害归一化常量）
+# ---------------------------------------------------------------------------
+bt_body = HEADER.format(
+    fname="data_battle",
+    desc="模拟对战规则常量（遭遇构建/AI/伤害归一化）",
+    pyname="data_battle",
+)
+bt_body += "".join(
+    f"export const {name} = " + dump(getattr(data_battle, name)) + ";\n\n"
+    for name in ("XP_THRESHOLDS", "ENCOUNTER_MULTIPLIERS", "DAILY_XP_BUDGET",
+                 "DIFFICULTIES", "DIFFICULTY_CN", "DAMAGE_TYPE_ALIAS",
+                 "CONDITION_KEYWORDS", "SAVE_ABILITY_MAP", "AI_ACTION_PRIORITY",
+                 "AI_WIS_WOUNDED_THRESHOLD", "AI_INT_ADAPT_THRESHOLD",
+                 "AI_INT_OPTIMAL_THRESHOLD", "MELEE_REACH",
+                 "DEFAULT_START_DISTANCE", "DEATH_SAVE_TARGET",
+                 "DEATH_SAVE_SUCCESSES", "DEATH_SAVE_FAILURES", "CRIT_ROLL",
+                 "DEFAULT_MAX_ROUNDS", "ROUND_SECONDS")
+)
+with open(os.path.join(OUT, "data_battle.ts"), "w", encoding="utf-8") as f:
+    f.write(bt_body)
+
 print("generated: data_spells.ts, data_magicitems.ts, data_monsters.ts, data_conditions.ts, "
-      "data_classes.ts, data_equipment_srd.ts, data_proficiencies.ts, data_reference.ts")
+      "data_classes.ts, data_equipment_srd.ts, data_proficiencies.ts, data_reference.ts, "
+      "data_battle.ts")
 print("spells:", len(data_spells.SRD_SPELLS),
       "magic:", len(data_magicitems.MAGIC_ITEMS),
       "monsters:", len(data_monsters.MONSTERS),

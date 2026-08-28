@@ -262,4 +262,37 @@ const sheet3 = m1.showSheet();
 ok(sheet3.includes("职业: 法师 5 级（塑能学派）") && sheet3.includes("生命骰 d6"),
   "角色卡含职业/等级/子职业与生命骰行");
 
+// ===========================================================================
+//  v2.2 模拟对战
+// ===========================================================================
+console.log("--- v2.2 模拟对战 ---");
+ok(d20.XP_THRESHOLDS[1].deadly === 100 && d20.XP_THRESHOLDS[20].deadly === 12700,
+  "DMG XP 阈值表与 2014 官方一致");
+const ev = new d20.Character().battleEvaluate([1, 1, 1, 1], ["哥布林", "哥布林", "哥布林", "哥布林"]);
+ok(ev.base_xp === 200 && ev.adjusted_xp === 400 && ev.difficulty === "deadly",
+  `4×L1 vs 哥布林×4 = 致命（200×2=400）(实际 ${ev.adjusted_xp}/${ev.difficulty})`);
+
+const f3 = new d20.Character();
+f3.setClass("战士"); f3.levelTo(3); f3.setAttribute("力量", 16);
+f3.purchaseSkill("近战攻击", 12); f3.purchaseSkill("活力", 6);
+f3.equipItem("鳞甲"); f3.equipItem("长剑");
+const w3 = new d20.Character();
+w3.setClass("法师"); w3.levelTo(3); w3.setAttribute("智力", 16);
+w3.purchaseSkill("奥术施法", 12); w3.purchaseSkill("活力", 4);
+w3.purchaseTechnique("火焰箭"); w3.purchaseTechnique("魔法飞弹");
+w3.buySlot(1); w3.buySlot(1);
+const party3 = [f3, w3];
+
+const bb = f3.battleCreate(party3, [["哥布林", 2]]);
+ok(bb.combatants.length === 4 && bb.total_xp === 100, `对战创建：4 单位 / 100 XP (实际 ${bb.combatants.length}/${bb.total_xp})`);
+const br = f3.battleRun();
+ok(["party", "foe", "draw"].includes(br.winner) && br.rounds >= 1,
+  `对战跑完分出胜负 (${br.winner}, ${br.rounds} 回合)`);
+ok(f3.battleReport().includes("模拟对战报告") && f3.battleReport().includes("战况"),
+  "对战报告含战况与日志");
+
+const mc = f3.battleSimulate(party3, [["哥布林", 2]], 100);
+ok(mc.win_rate > 0.85, `简单遭遇胜率 ${(mc.win_rate * 100).toFixed(1)}%（应 >85%）`);
+ok(f3.ctx.rest.currentHp() === f3.hp(), "模拟后 PC 状态恢复");
+
 console.log("\n全部烟雾测试通过 ✅");

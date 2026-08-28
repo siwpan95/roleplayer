@@ -7,6 +7,7 @@
  */
 import { Service } from "./core";
 import { TECHNIQUES, SPELL_RINGS } from "./data";
+import { weaponDice } from "./dice";
 
 const rand = (n: number) => Math.floor(Math.random() * n) + 1;
 
@@ -67,42 +68,71 @@ export class CombatService extends Service {
   }
 
   // ====================================================================
-  //  D&D 风格战技 / 法术
+  //  结构化攻击结算（战斗宏与模拟对战共用的单一真相，对应 Python resolve_attack）
   // ====================================================================
-  private macroMeleeAttack(k: any = {}): string {
-    const atkBonus = this.ctx.derived.attackBonus(true);
-    const penalty = k.gwm && this.ctx.feats.hasFeat("巨武宗师") ? -5 : 0;
+  resolveAttack(kind = "melee", targetAc = 10,
+                gwm = false, sharpshooter = false, sneak = false): Record<string, any> {
+    const melee = kind === "melee";
+    const atkBonus = this.ctx.derived.attackBonus(melee);
+    let penalty = 0;
+    if (gwm && this.ctx.feats.hasFeat("巨武宗师")) penalty = -5;
+    if (sharpshooter && this.ctx.feats.hasFeat("神射手")) penalty = -5;
     const bonusDmg = penalty ? 10 : 0;
     const roll = this.ctx.dice.d20Roll();
     const total = roll + atkBonus + penalty;
-    const targetAc = k.targetAc ?? 10;
-    const hit = total >= targetAc;
-    const tag = penalty ? " [巨武宗师]" : "";
-    const lines = [`⚔ 近战攻击: d20+${atkBonus}${penalty}${tag} = ${roll}+${atkBonus + penalty} = ${total} vs AC ${targetAc}`];
-    if (hit) {
-      const weapon = this.ctx.equipment.getEquippedWeapon();
-      const [dmgRolls, dmgDesc] = this.ctx.dice.rollWeaponDamageStr(weapon);
-      const totalDmg = dmgRolls.reduce((a: number, b: number) => a + b, 0) + this.strMod() + bonusDmg;
-      lines.push(`  ✓ 命中！伤害: ${dmgDesc}+${this.strMod()}(力量)` +
-        (bonusDmg ? `+${bonusDmg}(巨武)` : "") + ` = ${totalDmg}`);
+    const crit = roll === 20;
+    const hit = total >= targetAc || crit;
+    const weapon = this.ctx.equipment.getEquippedWeapon();
+    const [dmgRolls, dmgDesc0] = this.ctx.dice.rollWeaponDamageStr(weapon);
+    let dmgDesc = dmgDesc0;
+    let damage = dmgRolls.reduce((a: number, b: number) => a + b, 0) +
+      (melee ? this.strMod() : 0) + bonusDmg;
+    let critBonus = 0;
+    if (crit) {
+      const [num, die] = weaponDice(weapon);
+      const extra = Array.from({ length: num }, () => rand(die));
+      critBonus = extra.reduce((a: number, b: number) => a + b, 0);
+      damage += critBonus;
+      dmgDesc += `+${num}d${die}(暴击)=${JSON.stringify(extra)}`;
+    }
+    let sneakBonus = 0;
+    if (sneak && hit) {
+      const sd = this.sneakAttackDice();
+      sneakBonus = Array.from({ length: sd }, () => rand(6))
+        .reduce((a: number, b: number) => a + b, 0);
+      damage += sneakBonus;
+      dmgDesc += ` + 偷袭${sd}d6`;
+    }
+    return {
+      kind, roll, atk_bonus: atkBonus, penalty, bonus_dmg: bonusDmg, total,
+      crit, hit, target_ac: targetAc, weapon, dmg_rolls: dmgRolls, dmg_desc: dmgDesc,
+      damage, sneak_bonus: sneakBonus, crit_bonus: critBonus,
+      str_mod: melee ? this.strMod() : 0,
+    };
+  }
+
+  // ====================================================================
+  //  D&D 风格战技 / 法术
+  // ====================================================================
+  private macroMeleeAttack(k: any = {}): string {
+    const r = this.resolveAttack("melee", k.targetAc ?? 10, k.gwm, false, false);
+    const tag = r.penalty ? " [巨武宗师]" : "";
+    const pfx = r.penalty ? `${r.penalty}` : "";
+    const lines = [`⚔ 近战攻击: d20+${r.atk_bonus}${pfx}${tag} = ${r.roll}+${r.atk_bonus + r.penalty} = ${r.total} vs AC ${r.target_ac}`];
+    if (r.hit) {
+      lines.push(`  ✓ 命中！伤害: ${r.dmg_desc}+${r.str_mod}(力量)` +
+        (r.bonus_dmg ? `+${r.bonus_dmg}(巨武)` : "") + ` = ${r.damage}`);
     } else lines.push("  ✗ 未命中");
     return lines.join("\n");
   }
 
   private macroRangedAttack(k: any = {}): string {
-    const atkBonus = this.ctx.derived.attackBonus(false);
-    const penalty = k.sharpshooter && this.ctx.feats.hasFeat("神射手") ? -5 : 0;
-    const bonusDmg = penalty ? 10 : 0;
-    const roll = this.ctx.dice.d20Roll();
-    const total = roll + atkBonus + penalty;
-    const targetAc = k.targetAc ?? 10;
-    const tag = penalty ? " [神射手]" : "";
-    const lines = [`🏹 远程攻击: d20+${atkBonus}${penalty}${tag} = ${roll}+${atkBonus + penalty} = ${total} vs AC ${targetAc}`];
-    if (total >= targetAc) {
-      const weapon = this.ctx.equipment.getEquippedWeapon();
-      const [dmgRolls, dmgDesc] = this.ctx.dice.rollWeaponDamageStr(weapon);
-      const totalDmg = dmgRolls.reduce((a: number, b: number) => a + b, 0) + bonusDmg;
-      lines.push(`  ✓ 命中！伤害: ${dmgDesc}` + (bonusDmg ? `+${bonusDmg}(神射)` : "") + ` = ${totalDmg}`);
+    const r = this.resolveAttack("ranged", k.targetAc ?? 10, false, k.sharpshooter, false);
+    const tag = r.penalty ? " [神射手]" : "";
+    const pfx = r.penalty ? `${r.penalty}` : "";
+    const lines = [`🏹 远程攻击: d20+${r.atk_bonus}${pfx}${tag} = ${r.roll}+${r.atk_bonus + r.penalty} = ${r.total} vs AC ${r.target_ac}`];
+    if (r.hit) {
+      lines.push(`  ✓ 命中！伤害: ${r.dmg_desc}` + (r.bonus_dmg ? `+${r.bonus_dmg}(神射)` : "") + ` = ${r.damage}`);
     } else lines.push("  ✗ 未命中");
     return lines.join("\n");
   }

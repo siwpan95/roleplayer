@@ -36,6 +36,7 @@ export * from "./condition";
 export * from "./monster";
 export * from "./classes";
 export * from "./reference";
+export * from "./battle";
 
 export interface D20Options {
   startingCp?: number;

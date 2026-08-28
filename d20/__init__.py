@@ -13,7 +13,8 @@ Cordis 化架构（Context / Service / 依赖注入 / 事件 / 生命周期）�
       ├── ctx.dice         DiceService         骰子检定
       ├── ctx.sheet        SheetService        角色卡渲染
       ├── ctx.classes      ClassService        职业与等级成长（v2.1）
-      └── ctx.reference    ReferenceService    SRD 规则速查（v2.1）
+      ├── ctx.reference    ReferenceService    SRD 规则速查（v2.1）
+      └── ctx.battle       BattleService        模拟对战与遭遇构建（v2.2）
 
 子系统由 composition.yml 装配（纯 YAML 组合），加载器按 inject 依赖拓扑排序。
 Character 仅作兼容门面：公共方法委托给 ctx.<service>，实例状态代理到 ctx.state。
@@ -44,6 +45,13 @@ from .data_reference import (
     LANGUAGES, SRD_SKILLS, RULES, RULE_SECTIONS,
 )
 
+# v2.2 模拟对战规则常量（DMG 2014 遭遇构建 + AI 启发式）
+from .data_battle import (
+    XP_THRESHOLDS, DAILY_XP_BUDGET, ENCOUNTER_MULTIPLIERS,
+    encounter_multiplier, party_thresholds, judge_difficulty,
+    normalize_damage_type, DIFFICULTY_CN,
+)
+
 __all__ = [
     "Character",
     "ATTRIBUTES", "EQUIPMENT_LIBRARY", "SKILL_LIBRARY", "DIFFICULTY_COST",
@@ -56,6 +64,9 @@ __all__ = [
     "SRD_EQUIPMENT", "WEAPON_PROPERTIES", "PROFICIENCIES",
     "ABILITY_SCORES", "ALIGNMENTS", "DAMAGE_TYPES", "MAGIC_SCHOOLS",
     "LANGUAGES", "SRD_SKILLS", "RULES", "RULE_SECTIONS",
+    "XP_THRESHOLDS", "DAILY_XP_BUDGET", "ENCOUNTER_MULTIPLIERS",
+    "encounter_multiplier", "party_thresholds", "judge_difficulty",
+    "normalize_damage_type", "DIFFICULTY_CN",
 ]
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"

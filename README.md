@@ -1,4 +1,4 @@
-# D&D-GURPS 变体角色构建器 v2.1
+# D&D-GURPS 变体角色构建器 v2.2
 
 融合 **D&D 三宝书**（玩家手册 PHB / 地下城主指南 DMG / 怪物图鉴 MM）与
 **GURPS Basic Set** 规则的点数制角色构建器。支持属性购买、优缺点、天赋、
@@ -36,6 +36,7 @@ d20/
 ├── monster.py         # MonsterService     怪物图鉴（SRD 334 种 + stat block + DM 结算）
 ├── classes.py         # ★ ClassService      职业系统（12 职业 + 等级 + 子职业，v2.1）
 ├── reference.py       # ★ ReferenceService  规则速查与 SRD 检索（v2.1）
+├── battle.py          # ★ BattleService      模拟对战与遭遇构建（v2.2）
 ├── data_spells.py     # SRD 全谱法术名册（0–9 环，319 款，权威 API 转换）
 ├── data_magicitems.py # DMG 魔法物品（按 rarity 分级，361 件，权威 API 转换）
 ├── data_monsters.py   # SRD 怪物图鉴数据（334 种 + CR→XP 表，权威 API 转换）
@@ -43,11 +44,12 @@ d20/
 ├── data_classes.py    # ★ SRD 职业系统数据（12 职业 + 240 条等级 + 12 子职业 + 407 特性）
 ├── data_equipment_srd.py # ★ SRD 装备库（237 件 + 11 条武器属性，v2.1）
 ├── data_proficiencies.py # ★ SRD 熟练项（117 项，v2.1）
-└── data_reference.py  # ★ SRD 参考常量与规则速查（属性值/阵营/伤害类型/学派/语言/技能/规则章节）
+├── data_reference.py  # ★ SRD 参考常量与规则速查（属性值/阵营/伤害类型/学派/语言/技能/规则章节）
+└── data_battle.py     # ★ 对战规则常量（DMG 遭遇构建 + AI 启发式 + 伤害归一化，v2.2）
 
 gui/app.py             # tkinter 图形界面
 cli.py                 # 命令行界面
-tests/                 # pytest 单元测试（225 项，含 Cordis 装配不变性 + 扩充子系统 + v2.1 SRD）
+tests/                 # pytest 单元测试（255 项，含 Cordis 装配不变性 + v2.1 SRD + v2.2 模拟对战）
 mvp_builder.py         # 向后兼容 shim → d20
 mvp_gui.py             # 向后兼容 shim → gui.app
 ```
@@ -57,7 +59,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 - `Context`：服务容器 + 事件总线（`emit` / `waterfall` / `serial` / `parallel`）+ effect 生命周期。
   服务以稳定 key 挂到 `ctx.<name>`，其他服务通过 `ctx.<service>` 互调。
 - `Service`：能力单位，声明 `inject` 依赖；`mount` 前校验依赖已就绪（缺失即报错）。
-- `composition.yml`：声明 18 个服务的 `id` / `service`（点分路径）/ `inject` 依赖。
+- `composition.yml`：声明 19 个服务的 `id` / `service`（点分路径）/ `inject` 依赖。
   加载器按依赖拓扑排序后挂载，真正「显式装配、可插拔、无静态 MRO」。
 
 `Character` 是**兼容门面**：公共方法委托给 `ctx.<service>.<method>`，实例状态字段
@@ -165,15 +167,54 @@ mvp_gui.py             # 向后兼容 shim → gui.app
   定价曲线、Service 行为、集成与「卸载即回落」；全量 **225 项 pytest 通过、盗贼基准零回归**。
 - 方案与决策记录见 `docs/srd-v21-expansion.md`。
 
+**2026-08-28 v2.2 扩充**（联网调研 D&D 5e 遭遇构建与怪物 AI，新增 1 个 Service + 1 个数据模块）：
+
+> **缺口**：v2.0/v2.1 的战斗停留在「单次战斗宏」——没有回合、没有先攻、没有胜负闭环。
+> 本次补上**完整回合制模拟对战**，把战斗从「掷一次骰」升级为「跑一场架」。
+>
+> **规则来源（联网检索 + 本地权威交叉核对）**：
+> ① DMG 2014 第 3 章遭遇构建（每角色 XP 阈值表 1–20 级 × 四档难度、遭遇倍数
+> 1/1.5/2/2.5/3/4、队伍规模上下浮动、每日冒险 XP 预算）；
+> ② 本地 `_srd_pull/rule_sections/` 的 SRD 官方战斗规则原文（The Order of Combat /
+> Actions in Combat / Making an Attack / Damage and Healing / Cover / Movement and Position）；
+> ③ 联网调研的 5e 怪物 AI 实践（目标选择「最近优先 + WIS≥12 重伤优先」、动作优先级
+> 「解状态 > 特殊能力 > 远程 > 近战」、按 INT 做抗力/免疫适配、集火与「悠悠球治疗」）。
+
+- **对战引擎** `BattleService`（`ctx.battle`，inject `[dice, monster, condition]`）：
+  - **先攻与回合**：d20+敏捷调整，平手比骰面再比敏捷；回合 = 动作 + 移动 + 附赠（反应/传奇）；
+  - **动作经济**：攻击 / **多攻击**（解析 stat block 的 Multiattack 文本）/ 疾行 / 施法 /
+    特殊能力（含 **Recharge 5-6 充能**与 **DC N 豁免**解析）；
+  - **伤害结算**：暴击双倍、抗力减半、免疫无效、易伤加倍；伤害类型经
+    `normalize_damage_type` 归一（怪物库中英混用/简称亦正确判定）；
+  - **状态**：从 stat block 英文原文解析「DC 豁免 + 状态」，命中后按豁免判定，
+    状态真实影响攻防（倒地=近战优势/远程劣势、目盲=攻击劣势、麻痹=被攻优势…）；
+  - **死亡**：怪物 0 HP 即死；PC 0 HP 濒死 + 每回合死亡豁免（3 成稳定/3 败死亡/20 回 1 HP）；
+  - **怪物 AI**：最近优先（WIS≥12 重伤优先）、规避抗免（INT≥10）、期望伤害最优（INT≥18）；
+  - **PC AI**：集火最低 HP 敌人、濒死同伴悠悠球治疗、施法者会放魔法飞弹/火焰箭；
+  - **传奇动作**：每轮每个传奇怪物回合外额外行动一次；
+  - **结构化结算单一真相**：`combat.resolve_attack()` 同时供战斗宏渲染与对战引擎消费，
+    命中/伤害公式只有一份（近战/远程宏已重构为基于它渲染，输出与旧版一致）。
+- **遭遇构建（DMG 2014）**：`evaluate`（XP 阈值+遭遇倍数+队伍规模 → 难度评估）、
+  `build_encounter`（按目标难度贪心编组并裁剪归档）、`xp_budget`。验证例：
+  4×L1 vs 哥布林×4 = 200×2 = 400 = **致命**；L3×4 中等 → 单只石化蜥蜴（700 XP）。
+- **蒙特卡洛**：`simulate(trials)` 统计胜率/平均回合/平均剩余 HP，模拟前后自动
+  快照/恢复 PC 的 HP、法术位与条件（不污染玩家状态）。校准例（3 级双人队）：
+  哥布林×2（简单）胜率 97%、兽人×2（中等）91%、哥布林×4（困难）45%——与 DMG 档位一致。
+- **CLI**：新增 `12.模拟对战`（遭遇评估 / 按难度构建 / 单场对战 / 蒙特卡洛）。
+- 测试：`tests/test_battle.py`（30 项）覆盖遭遇构建常量与 DMG 一致、动作文本解析、
+  对战流程/多攻击/传奇、伤害抗免与状态、死亡豁免、蒙特卡洛状态恢复；
+  全量 **255 项 pytest 通过、盗贼基准零回归**。
+- 方案与决策记录见 `docs/srd-v22-battle.md`。
+
 ## 浏览器扩展（TypeScript 移植，web/）
 
 以 deepseek-harness 的 `web-cordis` 示例（浏览器界面 + Cordis 插件内存挂载/卸载）为参考，
 把 `d20` 包**1:1 移植为 TypeScript** 并包装成 WebExtension（React 18 + Vite + 零依赖
 mini-Cordis），见 `web/`：
 
-- 引擎层（`web/src/engine/`）逐文件对应 `d20/`：core/data/18 个 Service/Character/loader/
+- 引擎层（`web/src/engine/`）逐文件对应 `d20/`：core/data/19 个 Service/Character/loader/
   composition，逻辑 1:1；`d20Plugin(ctx, options)` 可把 D20 整体挂入任意遵循契约的宿主 Context。
-- 插件面板复刻 web-cordis：18 个服务运行时热挂载/卸载，卸载被依赖服务后对应能力即报错
+- 插件面板复刻 web-cordis：19 个服务运行时热挂载/卸载，卸载被依赖服务后对应能力即报错
   （如卸载 feats 后 HP/先攻回落、卸载 slots 后施法宏报错）；classes/reference 为可选增强，
   卸载后依赖方自动回落原行为。
 - 验证：`npm run build`（tsc 类型检查 + vite 打包）＋ `node smoke.cjs`（运行时检查：
@@ -185,7 +226,7 @@ mini-Cordis），见 `web/`：
   职业装备熟练穿重甲、豁免熟练 +2、生命骰随职业、规则速查、卸载 classes 后回落）。
 - 单元测试：`npm test`（Node 内置 `node:test`，零新依赖，规避本机 npm 大包安装不可靠）
   跑 `web/test/engine.test.cjs`，覆盖骰子纯函数/属性调整/战斗条件叠加/怪物图鉴/盗贼基准/
-  18 服务挂载 + v2.1 数据契约与 ClassService/ReferenceService 行为，共 19 项全过；
+  19 服务挂载 + v2.1 数据契约与 ClassService/ReferenceService 行为 + v2.2 对战（遭遇评估/模拟/蒙特卡洛/抗免判定），共 25 项全过；
   构建前由 `test:build` 复用 `tsconfig.smoke.json` 产出 `dist-smoke`。
 - CI 门禁：根 `.github/workflows/ci.yml` 固化 Python(pytest) + web(typecheck/build/smoke/unit)
   双 job，push/PR 即触发。
@@ -208,6 +249,10 @@ mini-Cordis），见 `web/`：
 > 单一事实来源为 `d20/data_*.py`（再由 `gen_ts_data.py` 同步到 `web/src/engine/data_*.ts`）。
 
 ### D&D 三宝书（PHB/DMG/MM）
+- **完整回合制模拟对战**：先攻/回合轮转/动作经济（多攻击·疾行·施法·充能·豁免）/
+  状态与死亡豁免/传奇动作/怪物 AI 与 PC AI/胜负与 XP 结算
+- **DMG 2014 遭遇构建**：每角色 XP 阈值×四档难度、遭遇倍数与队伍规模调整、
+  难度评估、按预算编组、蒙特卡洛胜率统计
 - **12 个 SRD 职业全量 + 20 级成长**：生命骰、关键属性、豁免/武器/护甲熟练、
   技能自选池、施法进程（full/half/pact/none，由官方 20 级法术位反推）、
   每级特性与法术位表、职业专属数值（狂暴次数/偷袭骰/气点/武艺骰）
@@ -278,6 +323,22 @@ c.search_rules("short rest")      # 关键词检索
 c.gear_info("长剑")["damage"]      # '1d8'
 ```
 
+**模拟对战（v2.2）**：完整回合制对战 + DMG 遭遇构建 + 蒙特卡洛。
+
+```python
+from d20 import Character
+
+c = Character()
+c.battle_create([c], ["哥布林", ("兽人", 2)])   # 当前角色 vs 3 个敌人
+result = c.battle_run()               # 跑完全场：先攻→回合→胜负
+print(c.battle_report())              # 战况 + 战斗日志 + XP
+print(result["winner"], result["rounds"], result["total_xp"])
+
+c.battle_evaluate([3, 3, 3, 3], ["石化蜥蜴"])     # 难度评估（DMG 2014）
+c.battle_build([3, 3, 3, 3], "medium")            # 按难度编组怪物
+c.battle_simulate([c], ["哥布林", "哥布林"], trials=200)  # 蒙特卡洛胜率
+```
+
 ### 命令行
 ```bash
 python cli.py
@@ -330,7 +391,9 @@ python -m pytest tests/ -v
 1. **Cordis 化重构**：按职责拆为 9 个 Service + Context/事件生命周期 + data 数据中枢，
    由 `composition.yml` 装配；`Character` 退化为兼容门面（不再多重继承 mixin）
 2. **内容增强**：联网检索 D&D 三宝书与 GURPS Basic Set，扩充技能/技术/装备/优缺点
-3. **测试补齐**：pytest 单元测试覆盖全部模块（225 项全通过，含 Cordis 装配不变性测试 +
-   SRD 内容测试 + v2.1 职业/装备/熟练/参考测试）
+3. **测试补齐**：pytest 单元测试覆盖全部模块（255 项全通过，含 Cordis 装配不变性测试 +
+   SRD 内容测试 + v2.1 职业/装备/熟练/参考测试 + v2.2 模拟对战测试）
 4. **v2.1 SRD 全量扩充**：联网拉取 `dnd5eapi.co/api/2014` 剩余 20 个端点（1100+ JSON，零错误），
    新增职业/子职业/等级成长/特性/装备/熟练/规则速查，双端同步（详见 `docs/srd-v21-expansion.md`）
+5. **v2.2 模拟对战**：回合制完整对战引擎 + DMG 2014 遭遇构建 + 怪物/PC AI + 蒙特卡洛，
+   双端同步（详见 `docs/srd-v22-battle.md`）

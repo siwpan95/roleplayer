@@ -240,6 +240,26 @@ export class Character {
   weaponInfo(name: string): any { return this.ctx.reference.weapon(name); }
   armorInfo(name: string): any { return this.ctx.reference.armor(name); }
 
+  // ---- 扩充 v2.2：模拟对战（BattleService）----
+  battleCreate(party: any[], foes: any[], distance = 60): any { return this.ctx.battle.create(party, foes, distance); }
+  battleNew(party: any[], foes: any[], distance = 60): any { return this.ctx.battle.newBattle(party, foes, distance); }
+  battleStep(): boolean { return this.ctx.battle.stepCurrent(); }
+  battleRun(maxRounds?: number): Record<string, any> { return this.ctx.battle.runCurrent(maxRounds); }
+  battleReport(): string { return this.ctx.battle.reportCurrent(); }
+  battleState(): Record<string, any> { return this.ctx.battle.stateCurrent(); }
+  battleSimulate(party: any[], foes: any[], trials = 100, maxRounds?: number): Record<string, any> {
+    return this.ctx.battle.simulate(party, foes, trials, maxRounds);
+  }
+  battleEvaluate(levels: number[], monsters: string[]): Record<string, any> {
+    return this.ctx.battle.evaluate(levels, monsters);
+  }
+  battleBuild(levels: number[], difficulty = "medium", targetCount?: number): Record<string, any> {
+    return this.ctx.battle.buildEncounter(levels, difficulty, targetCount);
+  }
+  battleXpBudget(levels: number[], difficulty = "medium"): number {
+    return this.ctx.battle.xpBudget(levels, difficulty);
+  }
+
   // ---- 衍生数值 ----
   hp(): number { return this.ctx.derived.hp(); }
   attackBonus(melee = true): number { return this.ctx.derived.attackBonus(melee); }

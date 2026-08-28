@@ -217,16 +217,66 @@ def _reference(char: Character):
               + ("…" if len(names) > 40 else ""))
 
 
+def _battle_cli(char: Character):
+    """模拟对战：遭遇评估 / 构建 / 单场 / 蒙特卡洛。"""
+    print("  [1]遭遇难度评估  [2]按难度构建遭遇  [3]单场模拟对战  [4]蒙特卡洛  [0]返回")
+    t = input("  选: ").strip()
+    try:
+        if t == "1":
+            lvs = [int(x) for x in input("  队伍等级（逗号分隔，如 3,3,4）: ").split(",")]
+            names = [n.strip() for n in input("  怪物名（逗号分隔，中文名）: ").split(",")]
+            ev = char.battle_evaluate(lvs, names)
+            print(f"    基础 XP {ev['base_xp']} × {ev['multiplier']}（遭遇倍数）"
+                  f" = 调整 XP {ev['adjusted_xp']}")
+            print(f"    难度: {ev['difficulty_cn']}（阈值 "
+                  f"{' / '.join(f'{k}={v}' for k, v in ev['thresholds'].items())}）")
+            print(f"    每日预算: {ev['daily_budget']} XP")
+        elif t == "2":
+            lvs = [int(x) for x in input("  队伍等级（逗号分隔）: ").split(",")]
+            diff = input("  难度（easy/medium/hard/deadly，默认 medium）: ").strip() or "medium"
+            ev = char.battle_build(lvs, diff)
+            print(f"    编组: {' + '.join(ev['monsters'])}")
+            print(f"    难度: {ev['difficulty_cn']}（调整 XP {ev['adjusted_xp']}）")
+        elif t == "3":
+            names = [n.strip() for n in input("  怪物（逗号分隔，可用 名x数量，如 哥布林x3,兽人）: ").split(",")]
+            foes = []
+            for n in names:
+                if "x" in n:
+                    nm, cnt = n.rsplit("x", 1)
+                    foes.append((nm.strip(), int(cnt)))
+                else:
+                    foes.append(n)
+            char.battle_create([char], foes)
+            r = char.battle_run()
+            print(char.battle_report())
+        elif t == "4":
+            names = [n.strip() for n in input("  怪物（逗号分隔，可用 名x数量）: ").split(",")]
+            foes = []
+            for n in names:
+                if "x" in n:
+                    nm, cnt = n.rsplit("x", 1)
+                    foes.append((nm.strip(), int(cnt)))
+                else:
+                    foes.append(n)
+            trials = int(input("  次数（默认 200）: ") or 200)
+            r = char.battle_simulate([char], foes, trials=trials)
+            print(f"    胜率 {r['win_rate'] * 100:.1f}% | 败率 {r['loss_rate'] * 100:.1f}% | "
+                  f"平局 {r['draw_rate'] * 100:.1f}%")
+            print(f"    平均 {r['avg_rounds']} 回合 | 平均剩余 HP {r['avg_remaining_hp']}")
+    except (ValueError, IndexError):
+        print("  无效输入")
+
+
 def main():
     char = Character()
     print("=" * 50)
-    print(" D&D-GURPS 变体角色构建器 v2.1")
+    print(" D&D-GURPS 变体角色构建器 v2.2")
     print(" 融合 D&D 三宝书 + GURPS Basic Set 规则")
     print("=" * 50)
     while True:
         print(f"\n当前 CP: {char.cp} | HP: {char.hp()} | AC: {char.ac}")
         print("1.属性  2.优缺点  3.天赋  4.技能  5.技术  6.装备  "
-              "7.角色卡  8.掷骰  9.战斗宏  10.职业  11.规则速查  0.完成退出")
+              "7.角色卡  8.掷骰  9.战斗宏  10.职业  11.规则速查  12.模拟对战  0.完成退出")
         cmd = input("选择: ").strip()
         if cmd == "1":
             _set_attributes(char)
@@ -250,6 +300,8 @@ def main():
             _classes(char)
         elif cmd == "11":
             _reference(char)
+        elif cmd == "12":
+            _battle_cli(char)
         elif cmd == "0":
             missing = char.check_foundations()
             if missing:

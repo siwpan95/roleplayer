@@ -7,6 +7,7 @@ ctx.combat。跨子系统调用一律走 ctx.<service>。
 """
 from .core import Service
 from .data import TECHNIQUES, SPELL_RINGS
+from .dice import weapon_dice
 import random
 
 
@@ -67,42 +68,81 @@ class CombatService(Service):
         return self.ctx.slots.spend_slot(ring)
 
     # ====================================================================
-    #  D&D 风格战技 / 法术
+    #  结构化攻击结算（战斗宏与模拟对战共用的单一真相）
     # ====================================================================
-    def _macro_melee_attack(self, dc: int = 10, target_ac: int = 10, gwm: bool = False) -> str:
-        atk_bonus = self.ctx.derived.attack_bonus(melee=True)
-        penalty = -5 if (gwm and self.ctx.feats.has_feat("巨武宗师")) else 0
+    def resolve_attack(self, kind: str = "melee", target_ac: int = 10,
+                       gwm: bool = False, sharpshooter: bool = False,
+                       sneak: bool = False) -> dict:
+        """结算一次武器攻击，返回结构化结果。
+
+        战斗宏把本结果渲染为字符串；``d20.battle`` 的模拟对战直接消费本结果，
+        保证两处命中/伤害公式唯一（不会各写一套）。
+        """
+        melee = kind == "melee"
+        atk_bonus = self.ctx.derived.attack_bonus(melee=melee)
+        penalty = 0
+        if gwm and self.ctx.feats.has_feat("巨武宗师"):
+            penalty = -5
+        if sharpshooter and self.ctx.feats.has_feat("神射手"):
+            penalty = -5
         bonus_dmg = 10 if penalty else 0
         roll = self.ctx.dice.d20_roll()
         total = roll + atk_bonus + penalty
-        hit = total >= target_ac
-        tag = " [巨武宗师]" if penalty else ""
-        lines = [f"⚔ 近战攻击: d20+{atk_bonus}{penalty}{tag} = {roll}+{atk_bonus + penalty} = {total} vs AC {target_ac}"]
-        if hit:
-            weapon = self.ctx.equipment._get_equipped_weapon()
-            dmg_rolls, dmg_desc = self.ctx.dice._roll_weapon_damage(weapon)
-            total_dmg = sum(dmg_rolls) + self._str_mod() + bonus_dmg
-            lines.append(f"  ✓ 命中！伤害: {dmg_desc}+{self._str_mod()}(力量)" +
-                         (f"+{bonus_dmg}(巨武)" if bonus_dmg else "") + f" = {total_dmg}")
+        crit = roll == 20
+        hit = total >= target_ac or crit
+        weapon = self.ctx.equipment._get_equipped_weapon()
+        dmg_rolls, dmg_desc = self.ctx.dice._roll_weapon_damage(weapon)
+        damage = sum(dmg_rolls) + (self._str_mod() if melee else 0) + bonus_dmg
+        # 暴击：武器骰翻倍（SRD）
+        crit_bonus = 0
+        if crit:
+            num, die = weapon_dice(weapon)
+            extra = [random.randint(1, die) for _ in range(num)]
+            crit_bonus = sum(extra)
+            damage += crit_bonus
+            dmg_desc += f"+{num}d{die}(暴击)={extra}"
+        sneak_bonus = 0
+        if sneak and hit:
+            sd = self._sneak_attack_dice()
+            sneak_bonus = sum(random.randint(1, 6) for _ in range(sd))
+            damage += sneak_bonus
+            dmg_desc += f" + 偷袭{sd}d6"
+        return {
+            "kind": kind, "roll": roll, "atk_bonus": atk_bonus,
+            "penalty": penalty, "bonus_dmg": bonus_dmg, "total": total,
+            "crit": crit, "hit": hit, "target_ac": target_ac,
+            "weapon": weapon, "dmg_rolls": dmg_rolls, "dmg_desc": dmg_desc,
+            "damage": damage, "sneak_bonus": sneak_bonus,
+            "crit_bonus": crit_bonus, "str_mod": self._str_mod() if melee else 0,
+        }
+
+    # ====================================================================
+    #  D&D 风格战技 / 法术
+    # ====================================================================
+    def _macro_melee_attack(self, dc: int = 10, target_ac: int = 10, gwm: bool = False) -> str:
+        r = self.resolve_attack("melee", target_ac, gwm=gwm)
+        tag = " [巨武宗师]" if r["penalty"] else ""
+        pfx = f"{r['penalty']:+d}" if r["penalty"] else ""
+        lines = [f"⚔ 近战攻击: d20+{r['atk_bonus']}{pfx}{tag} = "
+                 f"{r['roll']}+{r['atk_bonus'] + r['penalty']} = {r['total']} vs AC {target_ac}"]
+        if r["hit"]:
+            lines.append(f"  ✓ 命中！伤害: {r['dmg_desc']}+{r['str_mod']}(力量)" +
+                         (f"+{r['bonus_dmg']}(巨武)" if r["bonus_dmg"] else "") +
+                         f" = {r['damage']}")
         else:
             lines.append("  ✗ 未命中")
         return "\n".join(lines)
 
     def _macro_ranged_attack(self, dc: int = 10, target_ac: int = 10, sharpshooter: bool = False) -> str:
-        atk_bonus = self.ctx.derived.attack_bonus(melee=False)
-        penalty = -5 if (sharpshooter and self.ctx.feats.has_feat("神射手")) else 0
-        bonus_dmg = 10 if penalty else 0
-        roll = self.ctx.dice.d20_roll()
-        total = roll + atk_bonus + penalty
-        hit = total >= target_ac
-        tag = " [神射手]" if penalty else ""
-        lines = [f"🏹 远程攻击: d20+{atk_bonus}{penalty}{tag} = {roll}+{atk_bonus + penalty} = {total} vs AC {target_ac}"]
-        if hit:
-            weapon = self.ctx.equipment._get_equipped_weapon()
-            dmg_rolls, dmg_desc = self.ctx.dice._roll_weapon_damage(weapon)
-            total_dmg = sum(dmg_rolls) + bonus_dmg
-            lines.append(f"  ✓ 命中！伤害: {dmg_desc}" +
-                         (f"+{bonus_dmg}(神射)" if bonus_dmg else "") + f" = {total_dmg}")
+        r = self.resolve_attack("ranged", target_ac, sharpshooter=sharpshooter)
+        tag = " [神射手]" if r["penalty"] else ""
+        pfx = f"{r['penalty']:+d}" if r["penalty"] else ""
+        lines = [f"🏹 远程攻击: d20+{r['atk_bonus']}{pfx}{tag} = "
+                 f"{r['roll']}+{r['atk_bonus'] + r['penalty']} = {r['total']} vs AC {target_ac}"]
+        if r["hit"]:
+            lines.append(f"  ✓ 命中！伤害: {r['dmg_desc']}" +
+                         (f"+{r['bonus_dmg']}(神射)" if r["bonus_dmg"] else "") +
+                         f" = {r['damage']}")
         else:
             lines.append("  ✗ 未命中")
         return "\n".join(lines)
