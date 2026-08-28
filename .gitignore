@@ -1,0 +1,18 @@
+# ---- Python ----
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ---- Node / web 构建产物 ----
+node_modules/
+web/dist/
+web/dist-smoke/
+
+# ---- 按要求全程排除的归档（D21） ----
+D21/
+
+# ---- OS / 编辑器 ----
+.DS_Store
+Thumbs.db
+*.log

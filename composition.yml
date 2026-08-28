@@ -1,0 +1,72 @@
+# composition.yml - D20 子系统装配（cordis.yml 风格）
+#
+# 每个服务以稳定 id 挂到 ctx.<id>；其他服务通过 ctx.<id> 互调。
+# inject 声明依赖，加载器（d20.loader）按依赖做拓扑排序后挂载，
+# 缺失依赖直接报错（misconfiguration fails loud）。
+# 想加一套新规则系统（法术位/专长/背景/种族/休整）：写个 Service + 在此加一行即可，
+# 无需改动 Character 的 MRO。
+
+services:
+  - id: attributes
+    service: d20.attributes.AttributesService
+    inject: []
+
+  - id: equipment
+    service: d20.equipment.EquipmentService
+    inject: []
+
+  - id: perks
+    service: d20.perks.PerksService
+    inject: []
+
+  - id: techniques
+    service: d20.techniques.TechniquesService
+    inject: []
+
+  - id: race
+    service: d20.race.RaceService
+    inject: []
+
+  - id: background
+    service: d20.background.BackgroundService
+    inject: []
+
+  - id: feats
+    service: d20.feats.FeatsService
+    inject: []
+
+  - id: skills
+    service: d20.skills.SkillsService
+    inject: [perks, feats]
+
+  - id: dice
+    service: d20.dice.DiceService
+    inject: [skills, feats]
+
+  - id: derived
+    service: d20.derived.DerivedService
+    inject: [skills, equipment, feats, race]
+
+  - id: slots
+    service: d20.slots.SpellSlotsService
+    inject: [skills]
+
+  - id: combat
+    service: d20.combat.CombatService
+    inject: [derived, equipment, dice, techniques, skills, slots, feats, rest]
+
+  - id: rest
+    service: d20.rest.RestService
+    inject: [derived, dice, slots, feats, race]
+
+  - id: sheet
+    service: d20.sheet.SheetService
+    inject: [perks, skills, equipment, derived, slots, race, background, feats, rest, condition]
+
+  - id: condition
+    service: d20.condition.ConditionService
+    inject: []
+
+  - id: monster
+    service: d20.monster.MonsterService
+    inject: [dice]
