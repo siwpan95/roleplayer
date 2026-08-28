@@ -1,0 +1,14 @@
+{
+ "index": "heavy-armor",
+ "type": "Armor",
+ "name": "Heavy Armor",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/heavy-armor",
+ "reference": {
+  "index": "heavy-armor",
+  "name": "Heavy Armor",
+  "url": "/api/2014/equipment-categories/heavy-armor"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

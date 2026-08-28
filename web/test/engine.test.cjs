@@ -132,12 +132,125 @@ test("盗贼基准：CP/HP/AC/攻击/豁免 逐值一致", () => {
 });
 
 // ---------------------------------------------------------------------------
-//  架构一致性：16 服务全挂载（防回归）
+//  v2.1 SRD 扩充：职业 / 装备 / 熟练 / 参考常量 数据契约
 // ---------------------------------------------------------------------------
-test("16 个服务全部挂载", () => {
+test("v2.1 数据规模与 Python 侧一致", () => {
+  assert.equal(Object.keys(d20.CLASSES).length, 12, "12 职业");
+  assert.equal(Object.keys(d20.SUBCLASSES).length, 12, "12 子职业");
+  assert.equal(Object.keys(d20.FEATURES).length, 318, "318 特性（407 条记录去重后）");
+  assert.equal(Object.keys(d20.SRD_EQUIPMENT).length, 237, "237 件 SRD 装备");
+  assert.equal(Object.keys(d20.PROFICIENCIES).length, 117, "117 项熟练");
+  assert.equal(Object.keys(d20.DAMAGE_TYPES).length, 13);
+  assert.equal(Object.keys(d20.MAGIC_SCHOOLS).length, 8);
+  assert.equal(Object.keys(d20.LANGUAGES).length, 16);
+  assert.equal(Object.keys(d20.SRD_SKILLS).length, 18);
+  assert.equal(Object.keys(d20.RULE_SECTIONS).length, 33);
+  let lv = 0;
+  for (const cls of Object.keys(d20.CLASS_LEVELS)) lv += Object.keys(d20.CLASS_LEVELS[cls]).length;
+  assert.equal(lv, 240, "12 职业 × 20 级");
+});
+
+test("职业数据与 SRD 官方表一致", () => {
+  assert.equal(d20.CLASSES["法师"].hit_die, 6);
+  assert.equal(d20.CLASSES["法师"].spellcasting.progression, "full");
+  assert.equal(d20.CLASSES["圣武士"].spellcasting.progression, "half");
+  assert.equal(d20.CLASSES["魔契师"].spellcasting.progression, "pact");
+  assert.equal(d20.CLASSES["野蛮人"].spellcasting, null);
+  assert.equal(d20.CLASS_LEVELS["游荡者"]["5"].class_specific.sneak_attack.dice_count, 3);
+});
+
+test("weaponDice 回退 SRD 装备库", () => {
+  assert.deepEqual(d20.weaponDice("长剑"), [1, 8], "手工库优先");
+  assert.deepEqual(d20.weaponDice("巨剑"), [2, 6]);
+  const srdOnly = Object.keys(d20.SRD_EQUIPMENT).find(
+    (k) => d20.SRD_EQUIPMENT[k].cat === "武器" && d20.SRD_EQUIPMENT[k].damage && !(k in d20.WEAPON_DICE)
+  );
+  const [n, d] = d20.weaponDice(srdOnly);
+  assert.ok(n >= 1 && d >= 4, `SRD 武器 ${srdOnly} 应解析出伤害骰`);
+});
+
+// ---------------------------------------------------------------------------
+//  v2.1 ClassService 行为与集成
+// ---------------------------------------------------------------------------
+test("职业选择/升级/子职业与熟练授予", () => {
   const c = new d20.Character();
-  const all16 = ["attributes","background","combat","condition","derived","dice",
-    "equipment","feats","monster","perks","race","rest","sheet","skills","slots","techniques"];
-  for (const id of all16) assert.ok(c.ctx.has(id), `服务应挂载: ${id}`);
-  assert.equal(d20.COMPOSITION.length, 16, `COMPOSITION 应有 16 项 (实际 ${d20.COMPOSITION.length})`);
+  const [ok] = c.setClass("法师", ["奥术知识", "历史"]);
+  assert.ok(ok);
+  assert.equal(c.level, 1);
+  assert.equal(c.cp, 150, "1 级免费");
+  assert.equal(c.proficiencies.length, 2);
+  assert.ok(c.saveProficiencies.includes("意志豁免"));
+
+  assert.equal(c.levelTo(5)[0], true);
+  assert.equal(c.level, 5);
+  assert.equal(c.cp, 138, "2–5 级共 12 CP");
+  assert.equal(c.hitDie(), 6);
+  assert.equal(c.profBonus(), 3);
+  assert.equal(c.casterLevel(), 5);
+  assert.equal(c.maxSpellRing(), 3);
+
+  assert.equal(c.setSubclass("塑能学派")[0], true);
+  assert.ok(c.classFeatures().includes("施法：法师"));
+});
+
+test("职业等级定价（决策 G 递增标价）", () => {
+  assert.equal(d20.levelUpCost(1), 0);
+  assert.equal(d20.levelUpCost(2), 3);
+  assert.equal(d20.levelUpCost(6), 4);
+  assert.equal(d20.levelUpCost(11), 5);
+  assert.equal(d20.levelUpCost(16), 6);
+  assert.equal(d20.cumulativeCost(20), 87);
+});
+
+test("职业装备熟练豁免护甲技能要求 + 施法资格", () => {
+  const c = new d20.Character();
+  assert.equal(c.equipItem("全身板甲")[0], false, "无职业无技能应被拒");
+
+  const f = new d20.Character();
+  f.setClass("战士");
+  assert.equal(f.equipItem("全身板甲")[0], true, "战士有全部护甲熟练");
+
+  const w = new d20.Character();
+  w.setClass("法师");
+  w.levelTo(5);
+  assert.equal(w.buySlot(3)[0], true, "凭职业等级可买 3 环法术位");
+  assert.equal(w.ctx.slots.available(3), 1);
+});
+
+test("职业豁免熟练 +2（决策 H）", () => {
+  const base = new d20.Character().saveBonus("will");
+  const m = new d20.Character();
+  m.setClass("法师");
+  assert.equal(m.saveBonus("will"), base + 2);
+  assert.equal(m.saveBonus("fort"), base);
+});
+
+test("生命骰随职业（决策 J）", () => {
+  assert.equal(new d20.Character().hitDie(), 6, "无职业回落 d6");
+  const f = new d20.Character();
+  f.setClass("战士");
+  assert.equal(f.hitDie(), 10);
+  assert.equal(f.ctx.rest.hitDice(), 10);
+});
+
+test("ReferenceService 规则速查", () => {
+  const c = new d20.Character();
+  assert.ok(c.rule("休息").length > 0);
+  assert.ok(c.gearInfo("长剑").damage === "1d8");
+  assert.equal(c.armorInfo("全身板甲").armor_class, 18);
+  assert.equal(c.weaponInfo("全身板甲"), undefined);
+  assert.ok(c.gearByCategory("武器").includes("长剑"));
+  assert.ok(c.classFeatureDetail("狂暴").class === "野蛮人");
+});
+
+// ---------------------------------------------------------------------------
+//  架构一致性：18 服务全挂载（防回归）
+// ---------------------------------------------------------------------------
+test("18 个服务全部挂载", () => {
+  const c = new d20.Character();
+  const all18 = ["attributes","background","classes","combat","condition","derived","dice",
+    "equipment","feats","monster","perks","race","reference","rest","sheet","skills",
+    "slots","techniques"];
+  for (const id of all18) assert.ok(c.ctx.has(id), `服务应挂载: ${id}`);
+  assert.equal(d20.COMPOSITION.length, 18, `COMPOSITION 应有 18 项 (实际 ${d20.COMPOSITION.length})`);
 });

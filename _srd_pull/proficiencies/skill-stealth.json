@@ -1,0 +1,14 @@
+{
+ "index": "skill-stealth",
+ "type": "Skills",
+ "name": "Skill: Stealth",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/skill-stealth",
+ "reference": {
+  "index": "stealth",
+  "name": "Stealth",
+  "url": "/api/2014/skills/stealth"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

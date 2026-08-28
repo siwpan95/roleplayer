@@ -5,6 +5,8 @@ D&D 5e SRD：先攻 = d20 + 敏捷调整（+战斗反射/警觉/木精灵加成�
 长休回满 HP、恢复法术位、回一半生命骰、重置每日能力。
 挂到 ctx.rest。
 """
+import random
+
 from .core import Service
 from .data import ability_mod
 from .dice import roll_d20, roll_d6
@@ -74,7 +76,8 @@ class RestService(Service):
         if st.hit_dice_used >= max_hd:
             return "无可用生命骰"
         con_mod = ability_mod(st.attributes["体质"])
-        _, total = roll_d6(1, con_mod)
+        hd = self.hit_dice()          # 决策 J：有职业时用职业生命骰，否则回落 d6
+        _, total = roll_d6(1, con_mod) if hd == 6 else self._roll_hit_die(hd, con_mod)
         if "快速回复" in st.advantages:
             total *= 2
         if self.ctx.feats.has_feat("顽强"):
@@ -82,9 +85,20 @@ class RestService(Service):
         st.hit_dice_used += 1
         st.breath_used = False
         self.heal(total)
-        return (f"短休：掷生命骰 1d6+{con_mod} 回复 {total} 点，"
+        return (f"短休：掷生命骰 1d{hd}+{con_mod} 回复 {total} 点，"
                 f"HP {self.current_hp()}/{self.ctx.derived.hp()}，"
                 f"已用生命骰 {st.hit_dice_used}/{max_hd}")
+
+    def hit_dice(self) -> int:
+        """当前生命骰面数（决策 J：职业生命骰，未选职业回落 6）。"""
+        if self.ctx.has("classes"):
+            return self.ctx.classes.hit_die()
+        return 6
+
+    def _roll_hit_die(self, hd: int, con_mod: int) -> tuple[list[int], int]:
+        """掷任意面数的生命骰（d8/d10/d12）。负值的钳制由 heal() 统一处理。"""
+        roll = random.randint(1, hd)
+        return [roll], roll + con_mod
 
     def long_rest(self) -> str:
         """长休：回满 HP、恢复全部法术位、回一半生命骰、重置每日能力。"""

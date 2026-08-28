@@ -37,9 +37,11 @@ EXPECTED_FIELDS = [
     "强韧: +11 | 反射: +10 | 意志: +10",
 ]
 
-SIXTEEN_SERVICES = [
-    "attributes", "background", "combat", "condition", "derived", "dice", "equipment",
-    "feats", "monster", "perks", "race", "rest", "sheet", "skills", "slots", "techniques",
+#: v2.1 起为 18 个 Service（新增 classes 职业 / reference 规则速查）
+EIGHTEEN_SERVICES = [
+    "attributes", "background", "classes", "combat", "condition", "derived", "dice",
+    "equipment", "feats", "monster", "perks", "race", "reference", "rest", "sheet",
+    "skills", "slots", "techniques",
 ]
 
 
@@ -58,9 +60,10 @@ class TestCompositionWiring:
     def test_composition_file_exists(self):
         assert os.path.exists(COMPOSITION_PATH), "composition.yml 未生成"
 
-    def test_sixteen_services_mounted(self):
+    def test_eighteen_services_mounted(self):
+        """composition.yml 装配出 18 个 Service（含 v2.1 的 classes / reference）。"""
         c = Character()
-        assert sorted(c.ctx._services.keys()) == sorted(SIXTEEN_SERVICES)
+        assert sorted(c.ctx._services.keys()) == sorted(EIGHTEEN_SERVICES)
 
     def test_state_shared_with_ctx(self):
         # 真实 Cordis 接线：门面代理的状态就是 ctx.state，服务读写它即改角色

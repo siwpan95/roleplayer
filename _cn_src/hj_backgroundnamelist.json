@@ -1,0 +1,947 @@
+{
+  "type": "background",
+  "data": [
+    {
+      "id": "Aberrant Heir|EFA",
+      "src": "EFA",
+      "name_en": "Aberrant Heir",
+      "name_zh": "畸变继承人"
+    },
+    {
+      "id": "Acolyte|PHB",
+      "src": "PHB",
+      "name_en": "Acolyte",
+      "name_zh": "侍僧"
+    },
+    {
+      "id": "Acolyte|XPHB",
+      "src": "XPHB",
+      "name_en": "Acolyte",
+      "name_zh": "侍僧"
+    },
+    {
+      "id": "Anthropologist|ToA",
+      "src": "ToA",
+      "name_en": "Anthropologist",
+      "name_zh": "人类学家"
+    },
+    {
+      "id": "Archaeologist|EFA",
+      "src": "EFA",
+      "name_en": "Archaeologist",
+      "name_zh": "考古学家"
+    },
+    {
+      "id": "Archaeologist|ToA",
+      "src": "ToA",
+      "name_en": "Archaeologist",
+      "name_zh": "考古学家"
+    },
+    {
+      "id": "Artisan|XPHB",
+      "src": "XPHB",
+      "name_en": "Artisan",
+      "name_zh": "工匠"
+    },
+    {
+      "id": "Astral Drifter|AAG",
+      "src": "AAG",
+      "name_en": "Astral Drifter",
+      "name_zh": "星界浪客"
+    },
+    {
+      "id": "Athlete|MOT",
+      "src": "MOT",
+      "name_en": "Athlete",
+      "name_zh": "运动员"
+    },
+    {
+      "id": "Augen Trust (Spy)|EGW",
+      "src": "EGW",
+      "name_en": "Augen Trust (Spy)",
+      "name_zh": "间谍 (奥根真知社)"
+    },
+    {
+      "id": "Azorius Functionary|GGR",
+      "src": "GGR",
+      "name_en": "Azorius Functionary",
+      "name_zh": "俄佐立官员"
+    },
+    {
+      "id": "Baldur's Gate Acolyte|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Acolyte",
+      "name_zh": "博德之门侍僧"
+    },
+    {
+      "id": "Baldur's Gate Charlatan|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Charlatan",
+      "name_zh": "博德之门骗子"
+    },
+    {
+      "id": "Baldur's Gate Criminal|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Criminal",
+      "name_zh": "博德之门罪犯"
+    },
+    {
+      "id": "Baldur's Gate Entertainer|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Entertainer",
+      "name_zh": "博德之门艺人"
+    },
+    {
+      "id": "Baldur's Gate Folk Hero|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Folk Hero",
+      "name_zh": "博德之门平民英雄"
+    },
+    {
+      "id": "Baldur's Gate Guild Artisan|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Guild Artisan",
+      "name_zh": "博德之门公会工匠"
+    },
+    {
+      "id": "Baldur's Gate Hermit|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Hermit",
+      "name_zh": "博德之门隐士"
+    },
+    {
+      "id": "Baldur's Gate Noble|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Noble",
+      "name_zh": "博德之门贵族"
+    },
+    {
+      "id": "Baldur's Gate Outlander|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Outlander",
+      "name_zh": "博德之门化外之民"
+    },
+    {
+      "id": "Baldur's Gate Sage|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Sage",
+      "name_zh": "博德之门贤者"
+    },
+    {
+      "id": "Baldur's Gate Sailor|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Sailor",
+      "name_zh": "博德之门水手"
+    },
+    {
+      "id": "Baldur's Gate Soldier|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Soldier",
+      "name_zh": "博德之门士兵"
+    },
+    {
+      "id": "Baldur's Gate Urchin|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Baldur's Gate Urchin",
+      "name_zh": "博德之门流浪儿"
+    },
+    {
+      "id": "Boros Legionnaire|GGR",
+      "src": "GGR",
+      "name_en": "Boros Legionnaire",
+      "name_zh": "波洛斯军团兵"
+    },
+    {
+      "id": "Carouser|ABH",
+      "src": "ABH",
+      "name_en": "Carouser",
+      "name_zh": "狂欢客"
+    },
+    {
+      "id": "Celebrity Adventurer's Scion|AI",
+      "src": "AI",
+      "name_en": "Celebrity Adventurer's Scion",
+      "name_zh": "名人冒险家的后裔"
+    },
+    {
+      "id": "Charlatan|PHB",
+      "src": "PHB",
+      "name_en": "Charlatan",
+      "name_zh": "骗子"
+    },
+    {
+      "id": "Charlatan|XPHB",
+      "src": "XPHB",
+      "name_en": "Charlatan",
+      "name_zh": "骗子"
+    },
+    {
+      "id": "Chondathan Freebooter|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Chondathan Freebooter",
+      "name_zh": "琼达斯海盗"
+    },
+    {
+      "id": "City Watch|SCAG",
+      "src": "SCAG",
+      "name_en": "City Watch",
+      "name_zh": "城市守卫"
+    },
+    {
+      "id": "Clan Crafter|SCAG",
+      "src": "SCAG",
+      "name_en": "Clan Crafter",
+      "name_zh": "宗族工匠"
+    },
+    {
+      "id": "Cloistered Scholar|SCAG",
+      "src": "SCAG",
+      "name_en": "Cloistered Scholar",
+      "name_zh": "与世隔绝的学者"
+    },
+    {
+      "id": "Cobalt Scholar (Sage)|EGW",
+      "src": "EGW",
+      "name_en": "Cobalt Scholar (Sage)",
+      "name_zh": "钴蓝学者（贤者）"
+    },
+    {
+      "id": "Courtier|SCAG",
+      "src": "SCAG",
+      "name_en": "Courtier",
+      "name_zh": "朝臣"
+    },
+    {
+      "id": "Criminal|PHB",
+      "src": "PHB",
+      "name_en": "Criminal",
+      "name_zh": "罪犯"
+    },
+    {
+      "id": "Criminal|XPHB",
+      "src": "XPHB",
+      "name_en": "Criminal",
+      "name_zh": "罪犯"
+    },
+    {
+      "id": "Custom Background|PHB",
+      "src": "PHB",
+      "name_en": "Custom Background",
+      "name_zh": "自定义背景"
+    },
+    {
+      "id": "Dead Magic Dweller|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Dead Magic Dweller",
+      "name_zh": "死魔法区住民"
+    },
+    {
+      "id": "Dimir Operative|GGR",
+      "src": "GGR",
+      "name_en": "Dimir Operative",
+      "name_zh": "底密尔特务"
+    },
+    {
+      "id": "Dragon Cultist|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Dragon Cultist",
+      "name_zh": "龙巫教信徒"
+    },
+    {
+      "id": "Emerald Enclave Caretaker|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Emerald Enclave Caretaker",
+      "name_zh": "翠绿闲庭庇护者"
+    },
+    {
+      "id": "Entertainer|PHB",
+      "src": "PHB",
+      "name_en": "Entertainer",
+      "name_zh": "艺人"
+    },
+    {
+      "id": "Entertainer|XPHB",
+      "src": "XPHB",
+      "name_en": "Entertainer",
+      "name_zh": "艺人"
+    },
+    {
+      "id": "Faceless|BGDIA",
+      "src": "BGDIA",
+      "name_en": "Faceless",
+      "name_zh": "无面者"
+    },
+    {
+      "id": "Faction Agent|SCAG",
+      "src": "SCAG",
+      "name_en": "Faction Agent",
+      "name_zh": "组织代理人"
+    },
+    {
+      "id": "Failed Merchant|AI",
+      "src": "AI",
+      "name_en": "Failed Merchant",
+      "name_zh": "失败商人"
+    },
+    {
+      "id": "Far Traveler|SCAG",
+      "src": "SCAG",
+      "name_en": "Far Traveler",
+      "name_zh": "远行者"
+    },
+    {
+      "id": "Farmer|XPHB",
+      "src": "XPHB",
+      "name_en": "Farmer",
+      "name_zh": "农民"
+    },
+    {
+      "id": "Feylost|WBtW",
+      "src": "WBtW",
+      "name_en": "Feylost",
+      "name_zh": "精界迷失者"
+    },
+    {
+      "id": "Fisher|GoS",
+      "src": "GoS",
+      "name_en": "Fisher",
+      "name_zh": "渔民"
+    },
+    {
+      "id": "Flaming Fist Mercenary|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Flaming Fist Mercenary",
+      "name_zh": "焰拳佣兵"
+    },
+    {
+      "id": "Folk Hero|PHB",
+      "src": "PHB",
+      "name_en": "Folk Hero",
+      "name_zh": "平民英雄"
+    },
+    {
+      "id": "Gambler|AI",
+      "src": "AI",
+      "name_en": "Gambler",
+      "name_zh": "赌徒"
+    },
+    {
+      "id": "Gate Warden|SatO",
+      "src": "SatO",
+      "name_en": "Gate Warden",
+      "name_zh": "门镇守卫"
+    },
+    {
+      "id": "Genie Touched|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Genie Touched",
+      "name_zh": "巨灵接触者"
+    },
+    {
+      "id": "Giant Foundling|BGG",
+      "src": "BGG",
+      "name_en": "Giant Foundling",
+      "name_zh": "巨人养子"
+    },
+    {
+      "id": "Golgari Agent|GGR",
+      "src": "GGR",
+      "name_en": "Golgari Agent",
+      "name_zh": "葛加理成员"
+    },
+    {
+      "id": "Grinner|EGW",
+      "src": "EGW",
+      "name_en": "Grinner",
+      "name_zh": "自由斗士（笑面人）"
+    },
+    {
+      "id": "Gruul Anarch|GGR",
+      "src": "GGR",
+      "name_en": "Gruul Anarch",
+      "name_zh": "古鲁反抗者"
+    },
+    {
+      "id": "Guard|XPHB",
+      "src": "XPHB",
+      "name_en": "Guard",
+      "name_zh": "警卫"
+    },
+    {
+      "id": "Guide|XPHB",
+      "src": "XPHB",
+      "name_en": "Guide",
+      "name_zh": "向导"
+    },
+    {
+      "id": "Guild Artisan|PHB",
+      "src": "PHB",
+      "name_en": "Guild Artisan",
+      "name_zh": "公会工匠"
+    },
+    {
+      "id": "Harper|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Harper",
+      "name_zh": "竖琴手"
+    },
+    {
+      "id": "Haunted One|VRGR",
+      "src": "VRGR",
+      "name_en": "Haunted One",
+      "name_zh": "噩梦缠身"
+    },
+    {
+      "id": "Hermit|PHB",
+      "src": "PHB",
+      "name_en": "Hermit",
+      "name_zh": "隐士"
+    },
+    {
+      "id": "Hermit|XPHB",
+      "src": "XPHB",
+      "name_en": "Hermit",
+      "name_zh": "隐士"
+    },
+    {
+      "id": "House Agent|EFA",
+      "src": "EFA",
+      "name_en": "House Agent",
+      "name_zh": "房产代理"
+    },
+    {
+      "id": "House Agent|ERLW",
+      "src": "ERLW",
+      "name_en": "House Agent",
+      "name_zh": "房产代理"
+    },
+    {
+      "id": "House Cannith Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Cannith Heir",
+      "name_zh": "卡尼斯家族继承人"
+    },
+    {
+      "id": "House Deneith Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Deneith Heir",
+      "name_zh": "邓奈斯家族继承人"
+    },
+    {
+      "id": "House Ghallanda Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Ghallanda Heir",
+      "name_zh": "伽兰达家族继承人"
+    },
+    {
+      "id": "House Jorasco Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Jorasco Heir",
+      "name_zh": "乔拉斯克家族继承人"
+    },
+    {
+      "id": "House Kundarak Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Kundarak Heir",
+      "name_zh": "昆达拉克家族继承人"
+    },
+    {
+      "id": "House Lyrandar Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Lyrandar Heir",
+      "name_zh": "林兰德家族继承人"
+    },
+    {
+      "id": "House Medani Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Medani Heir",
+      "name_zh": "梅丹尼家族继承人"
+    },
+    {
+      "id": "House Orien Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Orien Heir",
+      "name_zh": "欧瑞恩家族继承人"
+    },
+    {
+      "id": "House Phiarlan Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Phiarlan Heir",
+      "name_zh": "费奥兰家族继承人"
+    },
+    {
+      "id": "House Sivis Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Sivis Heir",
+      "name_zh": "西维斯家族继承人"
+    },
+    {
+      "id": "House Tharashk Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Tharashk Heir",
+      "name_zh": "萨拉释克家族继承人"
+    },
+    {
+      "id": "House Thuranni Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Thuranni Heir",
+      "name_zh": "索兰尼家族继承人"
+    },
+    {
+      "id": "House Vadalis Heir|EFA",
+      "src": "EFA",
+      "name_en": "House Vadalis Heir",
+      "name_zh": "瓦塔利斯家族继承人"
+    },
+    {
+      "id": "Ice Fisher|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Ice Fisher",
+      "name_zh": "冰上钓客"
+    },
+    {
+      "id": "Inheritor|SCAG",
+      "src": "SCAG",
+      "name_en": "Inheritor",
+      "name_zh": "继承人"
+    },
+    {
+      "id": "Initiate|PSA",
+      "src": "PSA",
+      "name_en": "Initiate",
+      "name_zh": "学徒"
+    },
+    {
+      "id": "Initiate (Dissenter)|PSA",
+      "src": "PSA",
+      "name_en": "Initiate (Dissenter)",
+      "name_zh": "学徒（异教徒）"
+    },
+    {
+      "id": "Inquisitive|EFA",
+      "src": "EFA",
+      "name_en": "Inquisitive",
+      "name_zh": "调查员"
+    },
+    {
+      "id": "Inquisitor|PSI",
+      "src": "PSI",
+      "name_en": "Inquisitor",
+      "name_zh": "审判官"
+    },
+    {
+      "id": "Investigator|VRGR",
+      "src": "VRGR",
+      "name_en": "Investigator",
+      "name_zh": "调查员"
+    },
+    {
+      "id": "Izzet Engineer|GGR",
+      "src": "GGR",
+      "name_en": "Izzet Engineer",
+      "name_zh": "伊捷工程师"
+    },
+    {
+      "id": "Knight of Solamnia|DSotDQ",
+      "src": "DSotDQ",
+      "name_en": "Knight of Solamnia",
+      "name_zh": "索兰尼亚骑士"
+    },
+    {
+      "id": "Knight of the Gauntlet|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Knight of the Gauntlet",
+      "name_zh": "臂铠骑士"
+    },
+    {
+      "id": "Knight of the Order|SCAG",
+      "src": "SCAG",
+      "name_en": "Knight of the Order",
+      "name_zh": "教团骑士"
+    },
+    {
+      "id": "Lords' Alliance Vassal|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Lords' Alliance Vassal",
+      "name_zh": "领主联盟臣属"
+    },
+    {
+      "id": "Lorehold Student|SCC",
+      "src": "SCC",
+      "name_en": "Lorehold Student",
+      "name_zh": "衡鉴学生"
+    },
+    {
+      "id": "Lorwyn Expert|LFL",
+      "src": "LFL",
+      "name_en": "Lorwyn Expert",
+      "name_zh": "洛温专家"
+    },
+    {
+      "id": "Luxonborn (Acolyte)|EGW",
+      "src": "EGW",
+      "name_en": "Luxonborn (Acolyte)",
+      "name_zh": "拉克桑之子（侍僧）"
+    },
+    {
+      "id": "Mage of High Sorcery|DSotDQ",
+      "src": "DSotDQ",
+      "name_en": "Mage of High Sorcery",
+      "name_zh": "高等术法会法师"
+    },
+    {
+      "id": "Marine|GoS",
+      "src": "GoS",
+      "name_en": "Marine",
+      "name_zh": "水手"
+    },
+    {
+      "id": "Mercenary Veteran|SCAG",
+      "src": "SCAG",
+      "name_en": "Mercenary Veteran",
+      "name_zh": "老佣兵"
+    },
+    {
+      "id": "Merchant|XPHB",
+      "src": "XPHB",
+      "name_en": "Merchant",
+      "name_zh": "商人"
+    },
+    {
+      "id": "Moonwell Pilgrim|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Moonwell Pilgrim",
+      "name_zh": "月井朝圣者"
+    },
+    {
+      "id": "Mulhorandi Tomb Raider|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Mulhorandi Tomb Raider",
+      "name_zh": "穆尔霍兰德盗墓者"
+    },
+    {
+      "id": "Myriad Operative (Criminal)|EGW",
+      "src": "EGW",
+      "name_en": "Myriad Operative (Criminal)",
+      "name_zh": "万象会特工（罪犯）"
+    },
+    {
+      "id": "Mythalkeeper|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Mythalkeeper",
+      "name_zh": "迷锁守卫者"
+    },
+    {
+      "id": "Noble|PHB",
+      "src": "PHB",
+      "name_en": "Noble",
+      "name_zh": "贵族"
+    },
+    {
+      "id": "Noble|XPHB",
+      "src": "XPHB",
+      "name_en": "Noble",
+      "name_zh": "贵族"
+    },
+    {
+      "id": "Orzhov Representative|GGR",
+      "src": "GGR",
+      "name_en": "Orzhov Representative",
+      "name_zh": "欧佐夫议员"
+    },
+    {
+      "id": "Outlander|PHB",
+      "src": "PHB",
+      "name_en": "Outlander",
+      "name_zh": "化外之民"
+    },
+    {
+      "id": "Plaintiff|AI",
+      "src": "AI",
+      "name_en": "Plaintiff",
+      "name_zh": "起诉人"
+    },
+    {
+      "id": "Planar Philosopher|SatO",
+      "src": "SatO",
+      "name_en": "Planar Philosopher",
+      "name_zh": "位面哲学家"
+    },
+    {
+      "id": "Prismari Student|SCC",
+      "src": "SCC",
+      "name_en": "Prismari Student",
+      "name_zh": "粹丽学生"
+    },
+    {
+      "id": "Purple Dragon Squire|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Purple Dragon Squire",
+      "name_zh": "紫龙骑士侍从"
+    },
+    {
+      "id": "Quandrix Student|SCC",
+      "src": "SCC",
+      "name_en": "Quandrix Student",
+      "name_zh": "量析学生"
+    },
+    {
+      "id": "Rakdos Cultist|GGR",
+      "src": "GGR",
+      "name_en": "Rakdos Cultist",
+      "name_zh": "拉铎司邪教徒"
+    },
+    {
+      "id": "Rashemi Wanderer|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Rashemi Wanderer",
+      "name_zh": "莱瑟曼流浪者"
+    },
+    {
+      "id": "Revelry Pirate (Sailor)|EGW",
+      "src": "EGW",
+      "name_en": "Revelry Pirate (Sailor)",
+      "name_zh": "狂欢众（水手）"
+    },
+    {
+      "id": "Rewarded|BMT",
+      "src": "BMT",
+      "name_en": "Rewarded",
+      "name_zh": "受宠者"
+    },
+    {
+      "id": "Rival Intern|AI",
+      "src": "AI",
+      "name_en": "Rival Intern",
+      "name_zh": "竞争对手实习生"
+    },
+    {
+      "id": "Ruined|BMT",
+      "src": "BMT",
+      "name_en": "Ruined",
+      "name_zh": "受难者"
+    },
+    {
+      "id": "Rune Carver|BGG",
+      "src": "BGG",
+      "name_en": "Rune Carver",
+      "name_zh": "符文雕刻者"
+    },
+    {
+      "id": "Sage|PHB",
+      "src": "PHB",
+      "name_en": "Sage",
+      "name_zh": "智者"
+    },
+    {
+      "id": "Sage|XPHB",
+      "src": "XPHB",
+      "name_en": "Sage",
+      "name_zh": "智者"
+    },
+    {
+      "id": "Sailor|PHB",
+      "src": "PHB",
+      "name_en": "Sailor",
+      "name_zh": "水手"
+    },
+    {
+      "id": "Sailor|XPHB",
+      "src": "XPHB",
+      "name_en": "Sailor",
+      "name_zh": "水手"
+    },
+    {
+      "id": "Scribe|XPHB",
+      "src": "XPHB",
+      "name_en": "Scribe",
+      "name_zh": "抄写员"
+    },
+    {
+      "id": "Selesnya Initiate|GGR",
+      "src": "GGR",
+      "name_en": "Selesnya Initiate",
+      "name_zh": "瑟雷尼亚祀徒"
+    },
+    {
+      "id": "Shadowmasters Exile|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Shadowmasters Exile",
+      "name_zh": "影宗放逐者"
+    },
+    {
+      "id": "Shadowmoor Expert|LFL",
+      "src": "LFL",
+      "name_en": "Shadowmoor Expert",
+      "name_zh": "暗影沼泽专家"
+    },
+    {
+      "id": "Shipwright|GoS",
+      "src": "GoS",
+      "name_en": "Shipwright",
+      "name_zh": "船木工"
+    },
+    {
+      "id": "Silverquill Student|SCC",
+      "src": "SCC",
+      "name_en": "Silverquill Student",
+      "name_zh": "银毫学徒"
+    },
+    {
+      "id": "Simic Scientist|GGR",
+      "src": "GGR",
+      "name_en": "Simic Scientist",
+      "name_zh": "析米克科学家"
+    },
+    {
+      "id": "Smuggler|GoS",
+      "src": "GoS",
+      "name_en": "Smuggler",
+      "name_zh": "走私犯"
+    },
+    {
+      "id": "Soldier|PHB",
+      "src": "PHB",
+      "name_en": "Soldier",
+      "name_zh": "士兵"
+    },
+    {
+      "id": "Soldier|XPHB",
+      "src": "XPHB",
+      "name_en": "Soldier",
+      "name_zh": "士兵"
+    },
+    {
+      "id": "Spellfire Initiate|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Spellfire Initiate",
+      "name_zh": "咒火学徒"
+    },
+    {
+      "id": "Urban Bounty Hunter|SCAG",
+      "src": "SCAG",
+      "name_en": "Urban Bounty Hunter",
+      "name_zh": "城市猎人"
+    },
+    {
+      "id": "Urchin|PHB",
+      "src": "PHB",
+      "name_en": "Urchin",
+      "name_zh": "流浪儿"
+    },
+    {
+      "id": "Uthgardt Tribe Member|SCAG",
+      "src": "SCAG",
+      "name_en": "Uthgardt Tribe Member",
+      "name_zh": "乌斯伽部族成员"
+    },
+    {
+      "id": "Vampire Devotee|ABH",
+      "src": "ABH",
+      "name_en": "Vampire Devotee",
+      "name_zh": "血徒"
+    },
+    {
+      "id": "Vampire Survivor|ABH",
+      "src": "ABH",
+      "name_en": "Vampire Survivor",
+      "name_zh": "吸血鬼幸存者"
+    },
+    {
+      "id": "Variant City Watch (Investigator)|SCAG",
+      "src": "SCAG",
+      "name_en": "Variant City Watch (Investigator)",
+      "name_zh": "变体：调查员"
+    },
+    {
+      "id": "Variant Criminal (Spy)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Criminal (Spy)",
+      "name_zh": "变体罪犯：密探"
+    },
+    {
+      "id": "Variant Entertainer (Gladiator)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Entertainer (Gladiator)",
+      "name_zh": "变体艺人：角斗士"
+    },
+    {
+      "id": "Variant Guild Artisan (Guild Merchant)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Guild Artisan (Guild Merchant)",
+      "name_zh": "变体公会工匠：公会商人"
+    },
+    {
+      "id": "Variant Noble (Knight)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Noble (Knight)",
+      "name_zh": "变体贵族：骑士"
+    },
+    {
+      "id": "Variant Noble (Retainers)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Noble (Retainers)",
+      "name_zh": "变体特性：家仆"
+    },
+    {
+      "id": "Variant Sailor (Pirate)|PHB",
+      "src": "PHB",
+      "name_en": "Variant Sailor (Pirate)",
+      "name_zh": "变体水手：海盗"
+    },
+    {
+      "id": "Vizier|PSA",
+      "src": "PSA",
+      "name_en": "Vizier",
+      "name_zh": "大臣"
+    },
+    {
+      "id": "Vizier (Dissenter)|PSA",
+      "src": "PSA",
+      "name_en": "Vizier (Dissenter)",
+      "name_zh": "大臣（异议者）"
+    },
+    {
+      "id": "Volstrucker Agent|EGW",
+      "src": "EGW",
+      "name_en": "Volstrucker Agent",
+      "name_zh": "沃什塔克特工"
+    },
+    {
+      "id": "Waterdhavian Noble|SCAG",
+      "src": "SCAG",
+      "name_en": "Waterdhavian Noble",
+      "name_zh": "深水人贵族"
+    },
+    {
+      "id": "Wayfarer|XPHB",
+      "src": "XPHB",
+      "name_en": "Wayfarer",
+      "name_zh": "流浪者"
+    },
+    {
+      "id": "Wildspacer|AAG",
+      "src": "AAG",
+      "name_en": "Wildspacer",
+      "name_zh": "荒空之人"
+    },
+    {
+      "id": "Witchlight Hand|WBtW",
+      "src": "WBtW",
+      "name_en": "Witchlight Hand",
+      "name_zh": "巫光雇工"
+    },
+    {
+      "id": "Witherbloom Student|SCC",
+      "src": "SCC",
+      "name_en": "Witherbloom Student",
+      "name_zh": "靡华学生"
+    },
+    {
+      "id": "Zhentarim Mercenary|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Zhentarim Mercenary",
+      "name_zh": "散塔林会佣兵"
+    }
+  ]
+}

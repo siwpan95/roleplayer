@@ -62,14 +62,27 @@ export class RestService extends Service {
     const maxHd = st.skills["活力"] || 0;
     if (st.hitDiceUsed >= maxHd) return "无可用生命骰";
     const conMod = abilityMod(st.attributes["体质"]);
-    const [, total] = rollD6(1, conMod);
+    const hd = this.hitDice();          // 决策 J：有职业时用职业生命骰，否则回落 d6
+    const [, total] = hd === 6 ? rollD6(1, conMod) : this._rollHitDie(hd, conMod);
     let healed = total;
     if (st.advantages.includes("快速回复")) healed *= 2;
     if (this.ctx.feats.hasFeat("顽强")) healed = Math.max(healed, 2 * conMod);
     st.hitDiceUsed += 1;
     st.breathUsed = false;
     this.heal(healed);
-    return `短休：掷生命骰 1d6+${conMod} 回复 ${healed} 点，HP ${this.currentHp()}/${this.ctx.derived.hp()}，已用生命骰 ${st.hitDiceUsed}/${maxHd}`;
+    return `短休：掷生命骰 1d${hd}+${conMod} 回复 ${healed} 点，HP ${this.currentHp()}/${this.ctx.derived.hp()}，已用生命骰 ${st.hitDiceUsed}/${maxHd}`;
+  }
+
+  /** 当前生命骰面数（决策 J：职业生命骰，未选职业回落 6）。 */
+  hitDice(): number {
+    if (this.ctx.has("classes")) return (this.ctx as any).classes.hitDie();
+    return 6;
+  }
+
+  /** 掷任意面数的生命骰（d8/d10/d12）；负值的钳制由 heal() 统一处理。 */
+  private _rollHitDie(hd: number, conMod: number): [number[], number] {
+    const roll = Math.floor(Math.random() * hd) + 1;
+    return [[roll], roll + conMod];
   }
 
   longRest(): string {

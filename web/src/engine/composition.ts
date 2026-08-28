@@ -23,6 +23,8 @@ import { RestService } from "./rest";
 import { SheetService } from "./sheet";
 import { ConditionService } from "./condition";
 import { MonsterService } from "./monster";
+import { ClassService } from "./classes";
+import { ReferenceService } from "./reference";
 
 export interface CompositionEntry {
   id: string;
@@ -49,4 +51,8 @@ export const COMPOSITION: CompositionEntry[] = [
   { id: "sheet", service: SheetService, inject: ["perks", "skills", "equipment", "derived", "slots", "race", "background", "feats", "rest", "condition"] },
   { id: "condition", service: ConditionService, inject: [] },
   { id: "monster", service: MonsterService, inject: ["dice"] },
+  // ---- v2.1：职业与规则速查（可选增强，无人 inject 它们；
+  //      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
+  { id: "classes", service: ClassService, inject: [] },
+  { id: "reference", service: ReferenceService, inject: [] },
 ];

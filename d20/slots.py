@@ -24,8 +24,11 @@ class SpellSlotsService(Service):
             return False, f"非法环位: {ring}（1-9）"
         prereq = SPELL_RING_PREREQ[ring]
         eff = self.ctx.skills.effective_skill_rank("奥术施法")
-        if eff < prereq:
-            return False, f"需要 奥术施法 有效等级 ≥ {prereq} 才能购买 {ring} 环法术位"
+        # 决策 I：职业施法能力是「奥术施法技能」之外的另一条资格路径（满足其一即可）
+        if eff < prereq and self._class_max_ring() < ring:
+            return False, (f"需要 奥术施法 有效等级 ≥ {prereq}，"
+                           f"或职业等级足以使用 {ring} 环法术")
+
         cap = self.SPELL_SLOT_CAPS[ring - 1]
         owned = st.slots.get(ring, 0)
         if owned >= cap:
@@ -40,6 +43,12 @@ class SpellSlotsService(Service):
         st.purchases += 1
         self.ctx.emit("character/changed", "slots")
         return True, f"购买 {ring} 环法术位，消耗 {cost} CP（当前 {owned + 1}/{cap}）"
+
+    def _class_max_ring(self) -> int:
+        """职业可购最高环位（ClassService 可选增强：未挂载时为 0）。"""
+        if not self.ctx.has("classes"):
+            return 0
+        return self.ctx.classes.max_ring()
 
     # ---------- 消耗 / 查询 ----------
     def available(self, ring: int) -> int:

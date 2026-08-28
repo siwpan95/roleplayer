@@ -11,7 +11,9 @@ Cordis 化架构（Context / Service / 依赖注入 / 事件 / 生命周期）�
       ├── ctx.derived      DerivedService      HP/AC/攻击/豁免
       ├── ctx.combat       CombatService       战斗宏
       ├── ctx.dice         DiceService         骰子检定
-      └── ctx.sheet        SheetService        角色卡渲染
+      ├── ctx.sheet        SheetService        角色卡渲染
+      ├── ctx.classes      ClassService        职业与等级成长（v2.1）
+      └── ctx.reference    ReferenceService    SRD 规则速查（v2.1）
 
 子系统由 composition.yml 装配（纯 YAML 组合），加载器按 inject 依赖拓扑排序。
 Character 仅作兼容门面：公共方法委托给 ctx.<service>，实例状态代理到 ctx.state。
@@ -31,7 +33,16 @@ from .data import (
     ADVANTAGES_LIBRARY, DISADVANTAGES_LIBRARY, WEAPON_DICE, FINESSE_WEAPONS,
     DEFAULT_STARTING_CP, DEFAULT_MAX_DISADVANTAGE_CP, ability_mod,
 )
-from .dice import roll_d20, roll_d100, roll_d6, roll_3d6, gurps_success_chance
+from .dice import roll_d20, roll_d100, roll_d6, roll_3d6, gurps_success_chance, weapon_dice
+
+# v2.1 SRD 扩充数据（由 gen_srd_v21.py 从 dnd5eapi.co/api/2014 生成）
+from .data_classes import CLASSES, CLASS_LEVELS, SUBCLASSES, FEATURES
+from .data_equipment_srd import SRD_EQUIPMENT, WEAPON_PROPERTIES
+from .data_proficiencies import PROFICIENCIES
+from .data_reference import (
+    ABILITY_SCORES, ALIGNMENTS, DAMAGE_TYPES, MAGIC_SCHOOLS,
+    LANGUAGES, SRD_SKILLS, RULES, RULE_SECTIONS,
+)
 
 __all__ = [
     "Character",
@@ -40,6 +51,11 @@ __all__ = [
     "ADVANTAGES_LIBRARY", "DISADVANTAGES_LIBRARY", "WEAPON_DICE", "FINESSE_WEAPONS",
     "DEFAULT_STARTING_CP", "DEFAULT_MAX_DISADVANTAGE_CP", "ability_mod",
     "roll_d20", "roll_d100", "roll_d6", "roll_3d6", "gurps_success_chance",
+    "weapon_dice",
+    "CLASSES", "CLASS_LEVELS", "SUBCLASSES", "FEATURES",
+    "SRD_EQUIPMENT", "WEAPON_PROPERTIES", "PROFICIENCIES",
+    "ABILITY_SCORES", "ALIGNMENTS", "DAMAGE_TYPES", "MAGIC_SCHOOLS",
+    "LANGUAGES", "SRD_SKILLS", "RULES", "RULE_SECTIONS",
 ]
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"

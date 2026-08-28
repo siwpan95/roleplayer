@@ -34,6 +34,8 @@ export * from "./background";
 export * from "./rest";
 export * from "./condition";
 export * from "./monster";
+export * from "./classes";
+export * from "./reference";
 
 export interface D20Options {
   startingCp?: number;

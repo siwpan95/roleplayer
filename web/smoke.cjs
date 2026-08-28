@@ -193,4 +193,73 @@ const sheet2 = s1.showSheet();
 ok(sheet2.includes("种族: 精灵") && sheet2.includes("背景: 学者（研究者）") && sheet2.includes("专长: 警觉"),
   "角色卡含种族/背景/专长行");
 
+// ===========================================================================
+//  v2.1 SRD 扩充：职业 / 子职业 / 等级 / 特性 / 装备 / 熟练 / 规则速查
+//  （数值与 Python 侧 tests/test_srd_v21.py 逐值一致）
+// ===========================================================================
+console.log("--- v2.1 SRD 扩充 ---");
+ok(Object.keys(d20.CLASSES).length === 12, `职业 12 种 (实际 ${Object.keys(d20.CLASSES).length})`);
+ok(Object.keys(d20.SUBCLASSES).length === 12, `子职业 12 种 (实际 ${Object.keys(d20.SUBCLASSES).length})`);
+ok(Object.keys(d20.FEATURES).length === 318, `特性 318 条 (实际 ${Object.keys(d20.FEATURES).length})`);
+ok(Object.keys(d20.SRD_EQUIPMENT).length === 237, `SRD 装备 237 件 (实际 ${Object.keys(d20.SRD_EQUIPMENT).length})`);
+ok(Object.keys(d20.PROFICIENCIES).length === 117, `熟练 117 项 (实际 ${Object.keys(d20.PROFICIENCIES).length})`);
+let lvCount = 0;
+for (const cls of Object.keys(d20.CLASS_LEVELS)) lvCount += Object.keys(d20.CLASS_LEVELS[cls]).length;
+ok(lvCount === 240, `职业等级记录 240 条 (实际 ${lvCount})`);
+
+ok(d20.CLASSES["法师"].hit_die === 6 && d20.CLASSES["法师"].spellcasting.progression === "full",
+  "法师 d6 / full 施法（与 PHB 一致）");
+ok(d20.CLASSES["野蛮人"].spellcasting === null, "野蛮人无施法能力");
+ok(d20.CLASS_LEVELS["游荡者"]["5"].class_specific.sneak_attack.dice_count === 3,
+  "游荡者 5 级偷袭 3d6（SRD 权威值）");
+
+// 职业选择 / 升级 / 子职业
+const m1 = new d20.Character();
+ok(m1.setClass("法师", ["奥术知识", "历史"])[0] === true, "创建期选择职业 法师");
+ok(m1.level === 1 && m1.cp === 150, `1 级免费 (CP ${m1.cp})`);
+ok(m1.proficiencies.length === 2, `法师自选 2 项技能熟练 (实际 ${m1.proficiencies.length})`);
+ok(m1.saveProficiencies.includes("意志豁免"), "法师授予意志豁免熟练");
+ok(m1.levelTo(5)[0] === true && m1.cp === 138, `升至 5 级共 12 CP (剩余 ${m1.cp})`);
+ok(m1.profBonus() === 3, `5 级熟练加值 +3 (实际 ${m1.profBonus()})`);
+ok(m1.setSubclass("塑能学派")[0] === true, "5 级可选子职业 塑能学派");
+ok(m1.classFeatures().includes("施法：法师"), "特性表含 施法：法师");
+
+// 施法资格（决策 I）
+ok(m1.casterLevel() === 5 && m1.maxSpellRing() === 3,
+  `法师 5 级：施法者等级 5 / 最高 3 环 (实际 ${m1.casterLevel()}/${m1.maxSpellRing()})`);
+ok(m1.buySlot(3)[0] === true && m1.ctx.slots.available(3) === 1,
+  "凭职业等级（无奥术施法技能）即可购 3 环法术位");
+
+// 装备熟练（决策 H）
+const w1 = new d20.Character();
+ok(w1.equipItem("全身板甲")[0] === false, "无职业无技能 -> 重甲被拒");
+const w2 = new d20.Character();
+w2.setClass("战士");
+ok(w2.equipItem("全身板甲")[0] === true, "战士「全部护甲」熟练 -> 可穿全身板甲");
+
+// 豁免熟练（决策 H）
+const baseWill = new d20.Character().saveBonus("will");
+ok(m1.saveBonus("will") === baseWill + 2, `职业豁免熟练 +2 (实际 ${m1.saveBonus("will")})`);
+
+// 生命骰（决策 J）
+ok(new d20.Character().hitDie() === 6, "无职业回落 d6");
+ok(w2.hitDie() === 10 && w2.ctx.rest.hitDice() === 10, `战士生命骰 d${w2.hitDie()}`);
+
+// 规则速查
+ok(m1.rule("休息").length > 0, "规则章节「休息」可取正文");
+ok(m1.gearInfo("长剑").damage === "1d8", "SRD 装备检索 长剑 1d8");
+ok(m1.armorInfo("全身板甲").armor_class === 18, "SRD 护甲检索 全身板甲 AC18");
+ok(m1.classFeatureDetail("狂暴").class === "野蛮人", "特性详情 狂暴 -> 野蛮人");
+
+// 可选增强：卸载 classes 后回落原行为
+const noCls = new d20.Character();
+d20.unmountService(noCls.ctx, "classes");
+ok(noCls.ctx.rest.hitDice() === 6, "卸载 classes 后生命骰回落 d6");
+ok(noCls.equipItem("全身板甲")[0] === false, "卸载 classes 后重甲仍需技能");
+
+// 角色卡职业行
+const sheet3 = m1.showSheet();
+ok(sheet3.includes("职业: 法师 5 级（塑能学派）") && sheet3.includes("生命骰 d6"),
+  "角色卡含职业/等级/子职业与生命骰行");
+
 console.log("\n全部烟雾测试通过 ✅");

@@ -70,3 +70,13 @@ services:
   - id: monster
     service: d20.monster.MonsterService
     inject: [dice]
+
+  # ---- v2.1：职业与规则速查（两者均为可选增强，无人 inject 它们；
+  #      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
+  - id: classes
+    service: d20.classes.ClassService
+    inject: []
+
+  - id: reference
+    service: d20.reference.ReferenceService
+    inject: []

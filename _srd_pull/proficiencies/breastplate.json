@@ -1,0 +1,14 @@
+{
+ "index": "breastplate",
+ "type": "Armor",
+ "name": "Breastplate",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/breastplate",
+ "reference": {
+  "index": "breastplate",
+  "name": "Breastplate",
+  "url": "/api/2014/equipment/breastplate"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

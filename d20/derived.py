@@ -38,10 +38,12 @@ class DerivedService(Service):
         dodge_rank = st.skills.get("闪避防御", 0)
         dodge_bonus = dodge_rank // 2
         ac = 10 + effective_dex + dodge_bonus + st.armor_bonus
-        # 双持大师：双持两把近战武器 +1
-        weapons = [e for e in st.equipment
-                   if self.ctx.equipment.EQUIPMENT_LIBRARY.get(e, ("",))[0] == "武器"
-                   and self.ctx.equipment.EQUIPMENT_LIBRARY[e][1] in ("近战", "近战-轻", "近战-双手")]
+        # 双持大师：双持两把近战武器 +1（用统一解析器，对手工库与 SRD 库一致生效）
+        weapons = []
+        for e in st.equipment:
+            info = self.ctx.equipment.resolve(e)
+            if info and info[0] == "武器" and "近战" in info[1]:
+                weapons.append(e)
         if self.ctx.feats.has_feat("双持大师") and len(weapons) >= 2:
             ac += 1
         # 防御决斗者：装备灵巧武器 +2
@@ -66,4 +68,11 @@ class DerivedService(Service):
         skill, attr = mapping[save_type]
         rank = self.ctx.skills.effective_skill_rank(skill)
         mod = ability_mod(self.ctx.state.attributes[attr])
-        return rank + mod + self.ctx.race.save_bonus_adjust(save_type)
+        return (rank + mod + self.ctx.race.save_bonus_adjust(save_type)
+                + self._class_save_adjust(skill))
+
+    def _class_save_adjust(self, save_skill: str) -> int:
+        """职业豁免熟练加值（ClassService 可选增强：未挂载时为 0）。"""
+        if not self.ctx.has("classes"):
+            return 0
+        return self.ctx.classes.save_bonus_adjust(save_skill)

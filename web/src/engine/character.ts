@@ -44,6 +44,12 @@ export class CharacterState {
   breathUsed: boolean;
   relentlessUsed: boolean;
   conditions: string[];
+  // ---- 扩充子系统 v2.1：职业（ClassService）----
+  cls: string;                      // 职业名（中文）
+  level: number;                    // 职业等级（0 = 未选职业）
+  subclass: string;                 // 子职业名（中文）
+  gearProficiencies: string[];      // 装备熟练（武器/护甲/工具）
+  saveProficiencies: string[];      // 豁免熟练（强韧/反射/意志豁免）
 
   constructor(startingCp: number, maxDisadvantageCp: number) {
     this.cp = startingCp;
@@ -72,6 +78,11 @@ export class CharacterState {
     this.breathUsed = false;
     this.relentlessUsed = false;
     this.conditions = [];
+    this.cls = "";
+    this.level = 0;
+    this.subclass = "";
+    this.gearProficiencies = [];
+    this.saveProficiencies = [];
   }
 }
 
@@ -82,6 +93,7 @@ const STATE_ATTRS = [
   "race", "raceElement", "background", "feats", "proficiencies",
   "slots", "slotsUsed", "currentHp", "hitDiceUsed",
   "luckyUsed", "breathUsed", "relentlessUsed", "conditions",
+  "cls", "level", "subclass", "gearProficiencies", "saveProficiencies",
 ];
 
 export class Character {
@@ -199,6 +211,34 @@ export class Character {
   monsterRollAttack(name: string, actionIndex = 0, targetAc = 10): string { return this.ctx.monster.rollAttack(name, actionIndex, targetAc); }
   monsterByCr(cr: string): string[] { return this.ctx.monster.byCr(cr); }
   monsterQuickEncounter(cr: string, count = 1): string { return this.ctx.monster.quickEncounter(cr, count); }
+
+  // ---- 扩充 v2.1：职业（ClassService）----
+  setClass(name: string, choices: string[] = []): [boolean, string] { return this.ctx.classes.setClass(name, choices); }
+  levelUp(): [boolean, string] { return this.ctx.classes.levelUp(); }
+  levelTo(target: number): [boolean, string] { return this.ctx.classes.levelTo(target); }
+  setSubclass(name: string): [boolean, string] { return this.ctx.classes.setSubclass(name); }
+  classInfo(name?: string): any { return this.ctx.classes.info(name); }
+  classLevelData(level?: number): any { return this.ctx.classes.levelData(level); }
+  hitDie(): number { return this.ctx.classes.hitDie(); }
+  casterLevel(): number { return this.ctx.classes.casterLevel(); }
+  maxSpellRing(): number { return this.ctx.classes.maxRing(); }
+  classSpellSlots(): Record<number, number> { return this.ctx.classes.spellSlots(); }
+  classSpecific(): Record<string, any> { return this.ctx.classes.classSpecific(); }
+  profBonus(): number { return this.ctx.classes.profBonus(); }
+  classFeatures(upto?: number): string[] { return this.ctx.classes.features(upto); }
+  classFeatureDetail(name: string): any { return this.ctx.classes.featureDetail(name); }
+  classSummary(): string { return this.ctx.classes.summary(); }
+
+  // ---- 扩充 v2.1：规则速查与 SRD 检索（ReferenceService）----
+  rule(name: string): string { return this.ctx.reference.rule(name); }
+  searchRules(keyword: string, limit = 8): string[] { return this.ctx.reference.searchRules(keyword, limit); }
+  referenceKinds(): string[] { return this.ctx.reference.kinds(); }
+  referenceNames(kind: string): string[] { return this.ctx.reference.names(kind); }
+  referenceLookup(kind: string, name: string): any { return this.ctx.reference.lookup(kind, name); }
+  gearInfo(name: string): any { return this.ctx.reference.gear(name); }
+  gearByCategory(cat: string): string[] { return this.ctx.reference.gearByCategory(cat); }
+  weaponInfo(name: string): any { return this.ctx.reference.weapon(name); }
+  armorInfo(name: string): any { return this.ctx.reference.armor(name); }
 
   // ---- 衍生数值 ----
   hp(): number { return this.ctx.derived.hp(); }

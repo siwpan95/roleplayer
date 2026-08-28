@@ -1,0 +1,947 @@
+{
+  "type": "race",
+  "data": [
+    {
+      "id": "Aarakocra|DMG",
+      "src": "DMG",
+      "name_en": "Aarakocra",
+      "name_zh": "鸟羽人"
+    },
+    {
+      "id": "Aarakocra|EEPC",
+      "src": "EEPC",
+      "name_en": "Aarakocra",
+      "name_zh": "鸟羽人"
+    },
+    {
+      "id": "Aarakocra|MPMM",
+      "src": "MPMM",
+      "name_en": "Aarakocra",
+      "name_zh": "鸟羽人"
+    },
+    {
+      "id": "Aasimar|DMG",
+      "src": "DMG",
+      "name_en": "Aasimar",
+      "name_zh": "阿斯莫"
+    },
+    {
+      "id": "Aasimar|MPMM",
+      "src": "MPMM",
+      "name_en": "Aasimar",
+      "name_zh": "阿斯莫"
+    },
+    {
+      "id": "Aasimar|VGM",
+      "src": "VGM",
+      "name_en": "Aasimar",
+      "name_zh": "阿斯莫"
+    },
+    {
+      "id": "Aasimar|XPHB",
+      "src": "XPHB",
+      "name_en": "Aasimar",
+      "name_zh": "阿斯莫"
+    },
+    {
+      "id": "Aetherborn|PSK",
+      "src": "PSK",
+      "name_en": "Aetherborn",
+      "name_zh": "乙太种"
+    },
+    {
+      "id": "Astral Elf|AAG",
+      "src": "AAG",
+      "name_en": "Astral Elf",
+      "name_zh": "星界精灵"
+    },
+    {
+      "id": "Autognome|AAG",
+      "src": "AAG",
+      "name_en": "Autognome",
+      "name_zh": "自动侏儒"
+    },
+    {
+      "id": "Aven|PSA",
+      "src": "PSA",
+      "name_en": "Aven",
+      "name_zh": "艾文"
+    },
+    {
+      "id": "Aven|PSD",
+      "src": "PSD",
+      "name_en": "Aven",
+      "name_zh": "艾文"
+    },
+    {
+      "id": "Boggart|LFL",
+      "src": "LFL",
+      "name_en": "Boggart",
+      "name_zh": "波尬"
+    },
+    {
+      "id": "Bugbear|ERLW",
+      "src": "ERLW",
+      "name_en": "Bugbear",
+      "name_zh": "熊地精"
+    },
+    {
+      "id": "Bugbear|MPMM",
+      "src": "MPMM",
+      "name_en": "Bugbear",
+      "name_zh": "熊地精"
+    },
+    {
+      "id": "Bugbear|VGM",
+      "src": "VGM",
+      "name_en": "Bugbear",
+      "name_zh": "熊地精"
+    },
+    {
+      "id": "Bullywug|DMG",
+      "src": "DMG",
+      "name_en": "Bullywug",
+      "name_zh": "啵灵蛙"
+    },
+    {
+      "id": "Centaur|GGR",
+      "src": "GGR",
+      "name_en": "Centaur",
+      "name_zh": "人马"
+    },
+    {
+      "id": "Centaur|MOT",
+      "src": "MOT",
+      "name_en": "Centaur",
+      "name_zh": "人马"
+    },
+    {
+      "id": "Centaur|MPMM",
+      "src": "MPMM",
+      "name_en": "Centaur",
+      "name_zh": "人马"
+    },
+    {
+      "id": "Changeling|EFA",
+      "src": "EFA",
+      "name_en": "Changeling",
+      "name_zh": "幻身灵"
+    },
+    {
+      "id": "Changeling|ERLW",
+      "src": "ERLW",
+      "name_en": "Changeling",
+      "name_zh": "幻身灵"
+    },
+    {
+      "id": "Changeling|MPMM",
+      "src": "MPMM",
+      "name_en": "Changeling",
+      "name_zh": "幻身灵"
+    },
+    {
+      "id": "Custom Lineage|TCE",
+      "src": "TCE",
+      "name_en": "Custom Lineage",
+      "name_zh": "定制血统"
+    },
+    {
+      "id": "Deep Gnome|MPMM",
+      "src": "MPMM",
+      "name_en": "Deep Gnome",
+      "name_zh": "地底侏儒"
+    },
+    {
+      "id": "Dhampir|ABH",
+      "src": "ABH",
+      "name_en": "Dhampir",
+      "name_zh": "半血裔"
+    },
+    {
+      "id": "Dhampir|VRGR",
+      "src": "VRGR",
+      "name_en": "Dhampir",
+      "name_zh": "半血裔"
+    },
+    {
+      "id": "Dragonborn|PHB",
+      "src": "PHB",
+      "name_en": "Dragonborn",
+      "name_zh": "龙裔"
+    },
+    {
+      "id": "Dragonborn|XPHB",
+      "src": "XPHB",
+      "name_en": "Dragonborn",
+      "name_zh": "龙裔"
+    },
+    {
+      "id": "Dragonborn (Chromatic)|FTD",
+      "src": "FTD",
+      "name_en": "Dragonborn (Chromatic)",
+      "name_zh": "龙裔 (色彩)"
+    },
+    {
+      "id": "Dragonborn (Gem)|FTD",
+      "src": "FTD",
+      "name_en": "Dragonborn (Gem)",
+      "name_zh": "龙裔 (宝石)"
+    },
+    {
+      "id": "Dragonborn (Metallic)|FTD",
+      "src": "FTD",
+      "name_en": "Dragonborn (Metallic)",
+      "name_zh": "龙裔 (金属)"
+    },
+    {
+      "id": "Duergar|MPMM",
+      "src": "MPMM",
+      "name_en": "Duergar",
+      "name_zh": "灰矮人"
+    },
+    {
+      "id": "Dwarf|PHB",
+      "src": "PHB",
+      "name_en": "Dwarf",
+      "name_zh": "矮人"
+    },
+    {
+      "id": "Dwarf|XPHB",
+      "src": "XPHB",
+      "name_en": "Dwarf",
+      "name_zh": "矮人"
+    },
+    {
+      "id": "Dwarf (Kaladesh)|PSK",
+      "src": "PSK",
+      "name_en": "Dwarf (Kaladesh)",
+      "name_zh": "矮人 (卡拉德许)"
+    },
+    {
+      "id": "Eladrin|MPMM",
+      "src": "MPMM",
+      "name_en": "Eladrin",
+      "name_zh": "雅灵"
+    },
+    {
+      "id": "Elf|LFL",
+      "src": "LFL",
+      "name_en": "Elf",
+      "name_zh": "精灵"
+    },
+    {
+      "id": "Elf|PHB",
+      "src": "PHB",
+      "name_en": "Elf",
+      "name_zh": "精灵"
+    },
+    {
+      "id": "Elf|XPHB",
+      "src": "XPHB",
+      "name_en": "Elf",
+      "name_zh": "精灵"
+    },
+    {
+      "id": "Elf (Kaladesh)|PSK",
+      "src": "PSK",
+      "name_en": "Elf (Kaladesh)",
+      "name_zh": "精灵 (卡拉德许)"
+    },
+    {
+      "id": "Elf (Zendikar)|PSZ",
+      "src": "PSZ",
+      "name_en": "Elf (Zendikar)",
+      "name_zh": "精灵 (赞迪卡)"
+    },
+    {
+      "id": "Faerie|LFL",
+      "src": "LFL",
+      "name_en": "Faerie",
+      "name_zh": "仙灵"
+    },
+    {
+      "id": "Fairy|MPMM",
+      "src": "MPMM",
+      "name_en": "Fairy",
+      "name_zh": "仙灵"
+    },
+    {
+      "id": "Fairy|WBtW",
+      "src": "WBtW",
+      "name_en": "Fairy",
+      "name_zh": "仙灵"
+    },
+    {
+      "id": "Firbolg|MPMM",
+      "src": "MPMM",
+      "name_en": "Firbolg",
+      "name_zh": "费尔伯格人"
+    },
+    {
+      "id": "Firbolg|VGM",
+      "src": "VGM",
+      "name_en": "Firbolg",
+      "name_zh": "费尔伯格人"
+    },
+    {
+      "id": "Flamekin|LFL",
+      "src": "LFL",
+      "name_en": "Flamekin",
+      "name_zh": "炎身"
+    },
+    {
+      "id": "Genasi|EEPC",
+      "src": "EEPC",
+      "name_en": "Genasi",
+      "name_zh": "元素裔"
+    },
+    {
+      "id": "Genasi|MPMM",
+      "src": "MPMM",
+      "name_en": "Genasi",
+      "name_zh": "元素裔"
+    },
+    {
+      "id": "Giff|AAG",
+      "src": "AAG",
+      "name_en": "Giff",
+      "name_zh": "诘弗人"
+    },
+    {
+      "id": "Gith|MTF",
+      "src": "MTF",
+      "name_en": "Gith",
+      "name_zh": "吉斯人"
+    },
+    {
+      "id": "Githyanki|MPMM",
+      "src": "MPMM",
+      "name_en": "Githyanki",
+      "name_zh": "吉斯洋基人"
+    },
+    {
+      "id": "Githzerai|MPMM",
+      "src": "MPMM",
+      "name_en": "Githzerai",
+      "name_zh": "吉斯泽莱人"
+    },
+    {
+      "id": "Gnoll|DMG",
+      "src": "DMG",
+      "name_en": "Gnoll",
+      "name_zh": "鬣狗人"
+    },
+    {
+      "id": "Gnome|PHB",
+      "src": "PHB",
+      "name_en": "Gnome",
+      "name_zh": "侏儒"
+    },
+    {
+      "id": "Gnome|XPHB",
+      "src": "XPHB",
+      "name_en": "Gnome",
+      "name_zh": "侏儒"
+    },
+    {
+      "id": "Gnome (Deep)|DMG",
+      "src": "DMG",
+      "name_en": "Gnome (Deep)",
+      "name_zh": "侏儒 (地底)"
+    },
+    {
+      "id": "Goblin|DMG",
+      "src": "DMG",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin|ERLW",
+      "src": "ERLW",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin|GGR",
+      "src": "GGR",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin|MPMM",
+      "src": "MPMM",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin|PSZ",
+      "src": "PSZ",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin|VGM",
+      "src": "VGM",
+      "name_en": "Goblin",
+      "name_zh": "地精"
+    },
+    {
+      "id": "Goblin (Dankwood)|AWM",
+      "src": "AWM",
+      "name_en": "Goblin (Dankwood)",
+      "name_zh": "地精 (阴林)"
+    },
+    {
+      "id": "Goliath|MPMM",
+      "src": "MPMM",
+      "name_en": "Goliath",
+      "name_zh": "歌利亚"
+    },
+    {
+      "id": "Goliath|VGM",
+      "src": "VGM",
+      "name_en": "Goliath",
+      "name_zh": "歌利亚"
+    },
+    {
+      "id": "Goliath|XPHB",
+      "src": "XPHB",
+      "name_en": "Goliath",
+      "name_zh": "歌利亚"
+    },
+    {
+      "id": "Grimlock|DMG",
+      "src": "DMG",
+      "name_en": "Grimlock",
+      "name_zh": "幽邃盲族"
+    },
+    {
+      "id": "Grung|OGA",
+      "src": "OGA",
+      "name_en": "Grung",
+      "name_zh": "格龙蛙人"
+    },
+    {
+      "id": "Hadozee|AAG",
+      "src": "AAG",
+      "name_en": "Hadozee",
+      "name_zh": "哈多兹鼯猴人"
+    },
+    {
+      "id": "Half-Elf|PHB",
+      "src": "PHB",
+      "name_en": "Half-Elf",
+      "name_zh": "半精灵"
+    },
+    {
+      "id": "Half-Orc|PHB",
+      "src": "PHB",
+      "name_en": "Half-Orc",
+      "name_zh": "半兽人"
+    },
+    {
+      "id": "Halfling|PHB",
+      "src": "PHB",
+      "name_en": "Halfling",
+      "name_zh": "半身人"
+    },
+    {
+      "id": "Halfling|XPHB",
+      "src": "XPHB",
+      "name_en": "Halfling",
+      "name_zh": "半身人"
+    },
+    {
+      "id": "Harengon|MPMM",
+      "src": "MPMM",
+      "name_en": "Harengon",
+      "name_zh": "兔人"
+    },
+    {
+      "id": "Harengon|WBtW",
+      "src": "WBtW",
+      "name_en": "Harengon",
+      "name_zh": "兔人"
+    },
+    {
+      "id": "Hexblood|VRGR",
+      "src": "VRGR",
+      "name_en": "Hexblood",
+      "name_zh": "巫咒之子"
+    },
+    {
+      "id": "Hobgoblin|DMG",
+      "src": "DMG",
+      "name_en": "Hobgoblin",
+      "name_zh": "大地精"
+    },
+    {
+      "id": "Hobgoblin|ERLW",
+      "src": "ERLW",
+      "name_en": "Hobgoblin",
+      "name_zh": "大地精"
+    },
+    {
+      "id": "Hobgoblin|MPMM",
+      "src": "MPMM",
+      "name_en": "Hobgoblin",
+      "name_zh": "大地精"
+    },
+    {
+      "id": "Hobgoblin|VGM",
+      "src": "VGM",
+      "name_en": "Hobgoblin",
+      "name_zh": "大地精"
+    },
+    {
+      "id": "Human|PHB",
+      "src": "PHB",
+      "name_en": "Human",
+      "name_zh": "人类"
+    },
+    {
+      "id": "Human|XPHB",
+      "src": "XPHB",
+      "name_en": "Human",
+      "name_zh": "人类"
+    },
+    {
+      "id": "Human (Innistrad)|PSI",
+      "src": "PSI",
+      "name_en": "Human (Innistrad)",
+      "name_zh": "人类 (依尼翠)"
+    },
+    {
+      "id": "Human (Ixalan)|PSX",
+      "src": "PSX",
+      "name_en": "Human (Ixalan)",
+      "name_zh": "人类 (依夏兰)"
+    },
+    {
+      "id": "Human (Kaladesh)|PSK",
+      "src": "PSK",
+      "name_en": "Human (Kaladesh)",
+      "name_zh": "人类 (卡拉德许)"
+    },
+    {
+      "id": "Human (Zendikar)|PSZ",
+      "src": "PSZ",
+      "name_en": "Human (Zendikar)",
+      "name_zh": "人类 (赞迪卡)"
+    },
+    {
+      "id": "Kalashtar|EFA",
+      "src": "EFA",
+      "name_en": "Kalashtar",
+      "name_zh": "离梦人"
+    },
+    {
+      "id": "Kalashtar|ERLW",
+      "src": "ERLW",
+      "name_en": "Kalashtar",
+      "name_zh": "离梦人"
+    },
+    {
+      "id": "Kender|DSotDQ",
+      "src": "DSotDQ",
+      "name_en": "Kender",
+      "name_zh": "坎德人"
+    },
+    {
+      "id": "Kenku|DMG",
+      "src": "DMG",
+      "name_en": "Kenku",
+      "name_zh": "天狗"
+    },
+    {
+      "id": "Kenku|MPMM",
+      "src": "MPMM",
+      "name_en": "Kenku",
+      "name_zh": "天狗"
+    },
+    {
+      "id": "Kenku|VGM",
+      "src": "VGM",
+      "name_en": "Kenku",
+      "name_zh": "天狗"
+    },
+    {
+      "id": "Khenra|PSA",
+      "src": "PSA",
+      "name_en": "Khenra",
+      "name_zh": "胡狼人"
+    },
+    {
+      "id": "Khoravar|EFA",
+      "src": "EFA",
+      "name_en": "Khoravar",
+      "name_zh": "科拉瓦"
+    },
+    {
+      "id": "Kithkin|LFL",
+      "src": "LFL",
+      "name_en": "Kithkin",
+      "name_zh": "洁英"
+    },
+    {
+      "id": "Kobold|DMG",
+      "src": "DMG",
+      "name_en": "Kobold",
+      "name_zh": "狗头人"
+    },
+    {
+      "id": "Kobold|MPMM",
+      "src": "MPMM",
+      "name_en": "Kobold",
+      "name_zh": "狗头人"
+    },
+    {
+      "id": "Kobold|VGM",
+      "src": "VGM",
+      "name_en": "Kobold",
+      "name_zh": "狗头人"
+    },
+    {
+      "id": "Kor|PSZ",
+      "src": "PSZ",
+      "name_en": "Kor",
+      "name_zh": "寇族"
+    },
+    {
+      "id": "Kuo-Toa|DMG",
+      "src": "DMG",
+      "name_en": "Kuo-Toa",
+      "name_zh": "寇涛"
+    },
+    {
+      "id": "Leonin|MOT",
+      "src": "MOT",
+      "name_en": "Leonin",
+      "name_zh": "狮族"
+    },
+    {
+      "id": "Lizardfolk|DMG",
+      "src": "DMG",
+      "name_en": "Lizardfolk",
+      "name_zh": "蜥蜴人"
+    },
+    {
+      "id": "Lizardfolk|MPMM",
+      "src": "MPMM",
+      "name_en": "Lizardfolk",
+      "name_zh": "蜥蜴人"
+    },
+    {
+      "id": "Lizardfolk|VGM",
+      "src": "VGM",
+      "name_en": "Lizardfolk",
+      "name_zh": "蜥蜴人"
+    },
+    {
+      "id": "Locathah|LR",
+      "src": "LR",
+      "name_en": "Locathah",
+      "name_zh": "洛卡鱼人"
+    },
+    {
+      "id": "Lorwyn Changeling|LFL",
+      "src": "LFL",
+      "name_en": "Lorwyn Changeling",
+      "name_zh": "洛温幻身灵"
+    },
+    {
+      "id": "Loxodon|GGR",
+      "src": "GGR",
+      "name_en": "Loxodon",
+      "name_zh": "象族"
+    },
+    {
+      "id": "Merfolk|DMG",
+      "src": "DMG",
+      "name_en": "Merfolk",
+      "name_zh": "人鱼"
+    },
+    {
+      "id": "Merfolk|PSZ",
+      "src": "PSZ",
+      "name_en": "Merfolk",
+      "name_zh": "人鱼"
+    },
+    {
+      "id": "Minotaur|GGR",
+      "src": "GGR",
+      "name_en": "Minotaur",
+      "name_zh": "牛头人"
+    },
+    {
+      "id": "Minotaur|MOT",
+      "src": "MOT",
+      "name_en": "Minotaur",
+      "name_zh": "牛头人"
+    },
+    {
+      "id": "Minotaur|MPMM",
+      "src": "MPMM",
+      "name_en": "Minotaur",
+      "name_zh": "牛头人"
+    },
+    {
+      "id": "Minotaur (Amonkhet)|PSA",
+      "src": "PSA",
+      "name_en": "Minotaur (Amonkhet)",
+      "name_zh": "牛头人 (阿芒凯)"
+    },
+    {
+      "id": "Naga|PSA",
+      "src": "PSA",
+      "name_en": "Naga",
+      "name_zh": "纳迦"
+    },
+    {
+      "id": "Orc|DMG",
+      "src": "DMG",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc|EGW",
+      "src": "EGW",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc|ERLW",
+      "src": "ERLW",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc|MPMM",
+      "src": "MPMM",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc|VGM",
+      "src": "VGM",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc|XPHB",
+      "src": "XPHB",
+      "name_en": "Orc",
+      "name_zh": "兽人"
+    },
+    {
+      "id": "Orc (Ixalan)|PSX",
+      "src": "PSX",
+      "name_en": "Orc (Ixalan)",
+      "name_zh": "兽人 (依夏兰)"
+    },
+    {
+      "id": "Owlin|SCC",
+      "src": "SCC",
+      "name_en": "Owlin",
+      "name_zh": "枭人"
+    },
+    {
+      "id": "Plasmoid|AAG",
+      "src": "AAG",
+      "name_en": "Plasmoid",
+      "name_zh": "流浆体"
+    },
+    {
+      "id": "Reborn|VRGR",
+      "src": "VRGR",
+      "name_en": "Reborn",
+      "name_zh": "重生者"
+    },
+    {
+      "id": "Rimekin|LFL",
+      "src": "LFL",
+      "name_en": "Rimekin",
+      "name_zh": "霜身"
+    },
+    {
+      "id": "Satyr|MOT",
+      "src": "MOT",
+      "name_en": "Satyr",
+      "name_zh": "半羊人"
+    },
+    {
+      "id": "Satyr|MPMM",
+      "src": "MPMM",
+      "name_en": "Satyr",
+      "name_zh": "半羊人"
+    },
+    {
+      "id": "Sea Elf|MPMM",
+      "src": "MPMM",
+      "name_en": "Sea Elf",
+      "name_zh": "海精灵"
+    },
+    {
+      "id": "Shadar-Kai|MPMM",
+      "src": "MPMM",
+      "name_en": "Shadar-Kai",
+      "name_zh": "影灵"
+    },
+    {
+      "id": "Shifter|EFA",
+      "src": "EFA",
+      "name_en": "Shifter",
+      "name_zh": "化兽者"
+    },
+    {
+      "id": "Shifter|ERLW",
+      "src": "ERLW",
+      "name_en": "Shifter",
+      "name_zh": "化兽者"
+    },
+    {
+      "id": "Shifter|MPMM",
+      "src": "MPMM",
+      "name_en": "Shifter",
+      "name_zh": "化兽者"
+    },
+    {
+      "id": "Simic Hybrid|GGR",
+      "src": "GGR",
+      "name_en": "Simic Hybrid",
+      "name_zh": "析米克混生体"
+    },
+    {
+      "id": "Siren|PSX",
+      "src": "PSX",
+      "name_en": "Siren",
+      "name_zh": "赛壬"
+    },
+    {
+      "id": "Skeleton|DMG",
+      "src": "DMG",
+      "name_en": "Skeleton",
+      "name_zh": "骷髅"
+    },
+    {
+      "id": "Tabaxi|MPMM",
+      "src": "MPMM",
+      "name_en": "Tabaxi",
+      "name_zh": "斑猫人"
+    },
+    {
+      "id": "Tabaxi|VGM",
+      "src": "VGM",
+      "name_en": "Tabaxi",
+      "name_zh": "斑猫人"
+    },
+    {
+      "id": "Thri-kreen|AAG",
+      "src": "AAG",
+      "name_en": "Thri-kreen",
+      "name_zh": "螳螂人"
+    },
+    {
+      "id": "Tiefling|PHB",
+      "src": "PHB",
+      "name_en": "Tiefling",
+      "name_zh": "提夫林"
+    },
+    {
+      "id": "Tiefling|XPHB",
+      "src": "XPHB",
+      "name_en": "Tiefling",
+      "name_zh": "提夫林"
+    },
+    {
+      "id": "Tortle|MPMM",
+      "src": "MPMM",
+      "name_en": "Tortle",
+      "name_zh": "龟人"
+    },
+    {
+      "id": "Tortle|TTP",
+      "src": "TTP",
+      "name_en": "Tortle",
+      "name_zh": "龟人"
+    },
+    {
+      "id": "Triton|MOT",
+      "src": "MOT",
+      "name_en": "Triton",
+      "name_zh": "梭螺鱼人"
+    },
+    {
+      "id": "Triton|MPMM",
+      "src": "MPMM",
+      "name_en": "Triton",
+      "name_zh": "梭螺鱼人"
+    },
+    {
+      "id": "Triton|VGM",
+      "src": "VGM",
+      "name_en": "Triton",
+      "name_zh": "梭螺鱼人"
+    },
+    {
+      "id": "Troglodyte|DMG",
+      "src": "DMG",
+      "name_en": "Troglodyte",
+      "name_zh": "穴蜥人"
+    },
+    {
+      "id": "Vampire|PSZ",
+      "src": "PSZ",
+      "name_en": "Vampire",
+      "name_zh": "吸血鬼"
+    },
+    {
+      "id": "Vedalken|GGR",
+      "src": "GGR",
+      "name_en": "Vedalken",
+      "name_zh": "维多肯"
+    },
+    {
+      "id": "Vedalken|PSK",
+      "src": "PSK",
+      "name_en": "Vedalken",
+      "name_zh": "维多肯"
+    },
+    {
+      "id": "Verdan|AI",
+      "src": "AI",
+      "name_en": "Verdan",
+      "name_zh": "佛丹人"
+    },
+    {
+      "id": "Warforged|EFA",
+      "src": "EFA",
+      "name_en": "Warforged",
+      "name_zh": "战俑"
+    },
+    {
+      "id": "Warforged|ERLW",
+      "src": "ERLW",
+      "name_en": "Warforged",
+      "name_zh": "战俑"
+    },
+    {
+      "id": "Yuan-Ti|MPMM",
+      "src": "MPMM",
+      "name_en": "Yuan-Ti",
+      "name_zh": "蛇人"
+    },
+    {
+      "id": "Yuan-ti Pureblood|VGM",
+      "src": "VGM",
+      "name_en": "Yuan-ti Pureblood",
+      "name_zh": "纯血原体蛇人"
+    },
+    {
+      "id": "Zombie|DMG",
+      "src": "DMG",
+      "name_en": "Zombie",
+      "name_zh": "丧尸"
+    }
+  ]
+}

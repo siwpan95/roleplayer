@@ -40,6 +40,13 @@ from .data import (
     DEFAULT_STARTING_CP, DEFAULT_MAX_DISADVANTAGE_CP,
     SRD_SPELLS, MAGIC_ITEMS, MONSTERS, CONDITIONS,
 )
+from .data_classes import CLASSES, CLASS_LEVELS, SUBCLASSES, FEATURES
+from .data_equipment_srd import SRD_EQUIPMENT, WEAPON_PROPERTIES
+from .data_proficiencies import PROFICIENCIES
+from .data_reference import (
+    ABILITY_SCORES, ALIGNMENTS, DAMAGE_TYPES, MAGIC_SCHOOLS,
+    LANGUAGES, SRD_SKILLS, RULES, RULE_SECTIONS,
+)
 
 
 # 组合文件：项目根目录 composition.yml（cordis.yml 风格）
@@ -87,6 +94,12 @@ class CharacterState:
         self.relentless_used: bool = False
         # ---- 扩充子系统：战斗条件追踪（ConditionService）----
         self.conditions: list[str] = []
+        # ---- 扩充子系统 v2.1：职业（ClassService）----
+        self.cls: str = ""                              # 职业名（中文）
+        self.level: int = 0                             # 职业等级（0 = 未选职业）
+        self.subclass: str = ""                         # 子职业名（中文）
+        self.gear_proficiencies: list[str] = []         # 装备熟练（武器/护甲/工具）
+        self.save_proficiencies: list[str] = []         # 豁免熟练（强韧/反射/意志豁免）
 
 
 class Character:
@@ -118,6 +131,23 @@ class Character:
     MONSTERS = MONSTERS
     CONDITIONS = CONDITIONS
 
+    # v2.1 SRD 扩充：职业 / 子职业 / 等级成长 / 特性 / 装备 / 熟练 / 参考常量
+    CLASSES = CLASSES
+    CLASS_LEVELS = CLASS_LEVELS
+    SUBCLASSES = SUBCLASSES
+    FEATURES = FEATURES
+    SRD_EQUIPMENT = SRD_EQUIPMENT
+    WEAPON_PROPERTIES = WEAPON_PROPERTIES
+    PROFICIENCIES = PROFICIENCIES
+    ABILITY_SCORES = ABILITY_SCORES
+    ALIGNMENTS = ALIGNMENTS
+    DAMAGE_TYPES = DAMAGE_TYPES
+    MAGIC_SCHOOLS = MAGIC_SCHOOLS
+    LANGUAGES = LANGUAGES
+    SRD_SKILLS = SRD_SKILLS
+    RULES = RULES
+    RULE_SECTIONS = RULE_SECTIONS
+
     # 需要透明代理到 ctx.state 的实例状态字段
     _STATE_ATTRS = (
         "cp", "max_disadvantage_cp", "attributes", "advantages",
@@ -126,6 +156,7 @@ class Character:
         "race", "race_element", "background", "feats", "proficiencies",
         "slots", "slots_used", "current_hp", "hit_dice_used",
         "lucky_used", "breath_used", "relentless_used", "conditions",
+        "cls", "level", "subclass", "gear_proficiencies", "save_proficiencies",
     )
 
     def __init__(self, starting_cp: int = DEFAULT_STARTING_CP,
@@ -172,12 +203,15 @@ class Character:
         from .sheet import SheetService
         from .condition import ConditionService
         from .monster import MonsterService
+        from .classes import ClassService
+        from .reference import ReferenceService
 
         for svc in (AttributesService, EquipmentService, PerksService,
                     TechniquesService, RaceService, BackgroundService,
                     FeatsService, SkillsService, DiceService, DerivedService,
                     SpellSlotsService, RestService, CombatService, SheetService,
-                    ConditionService, MonsterService):
+                    ConditionService, MonsterService, ClassService,
+                    ReferenceService):
             self.ctx.mount(svc)
 
     # ==================================================================
@@ -323,6 +357,80 @@ class Character:
 
     def monster_quick_encounter(self, cr: str, count: int = 1) -> str:
         return self.ctx.monster.quick_encounter(cr, count)
+
+    # ---- 扩充 v2.1：职业（ClassService）----
+    def set_class(self, name: str, choices: list[str] | None = None) -> tuple[bool, str]:
+        return self.ctx.classes.set_class(name, choices)
+
+    def level_up(self) -> tuple[bool, str]:
+        return self.ctx.classes.level_up()
+
+    def level_to(self, target: int) -> tuple[bool, str]:
+        return self.ctx.classes.level_to(target)
+
+    def set_subclass(self, name: str) -> tuple[bool, str]:
+        return self.ctx.classes.set_subclass(name)
+
+    def class_info(self, name: str | None = None) -> dict | None:
+        return self.ctx.classes.info(name)
+
+    def class_level_data(self, level: int | None = None) -> dict:
+        return self.ctx.classes.level_data(level)
+
+    def hit_die(self) -> int:
+        return self.ctx.classes.hit_die()
+
+    def caster_level(self) -> int:
+        return self.ctx.classes.caster_level()
+
+    def max_spell_ring(self) -> int:
+        return self.ctx.classes.max_ring()
+
+    def class_spell_slots(self) -> dict:
+        return self.ctx.classes.spell_slots()
+
+    def class_specific(self) -> dict:
+        return self.ctx.classes.class_specific()
+
+    def prof_bonus(self) -> int:
+        return self.ctx.classes.prof_bonus()
+
+    def class_features(self, upto: int | None = None) -> list[str]:
+        return self.ctx.classes.features(upto)
+
+    def class_feature_detail(self, name: str) -> dict | None:
+        return self.ctx.classes.feature_detail(name)
+
+    def class_summary(self) -> str:
+        return self.ctx.classes.summary()
+
+    # ---- 扩充 v2.1：规则速查与 SRD 检索（ReferenceService）----
+    def rule(self, name: str) -> str:
+        return self.ctx.reference.rule(name)
+
+    def search_rules(self, keyword: str, limit: int = 8) -> list[str]:
+        return self.ctx.reference.search_rules(keyword, limit)
+
+    def reference_kinds(self) -> list[str]:
+        return self.ctx.reference.kinds()
+
+    def reference_names(self, kind: str) -> list[str]:
+        return self.ctx.reference.names(kind)
+
+    def reference_lookup(self, kind: str, name: str) -> dict | None:
+        return self.ctx.reference.lookup(kind, name)
+
+    def gear_info(self, name: str) -> dict | None:
+        return self.ctx.reference.gear(name)
+
+    def gear_by_category(self, cat: str) -> list[str]:
+        return self.ctx.reference.gear_by_category(cat)
+
+    def weapon_info(self, name: str) -> dict | None:
+        return self.ctx.reference.weapon(name)
+
+    def armor_info(self, name: str) -> dict | None:
+        return self.ctx.reference.armor(name)
 
     # ---- 衍生数值 ----
     def hp(self) -> int:

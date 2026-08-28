@@ -1,4 +1,4 @@
-# D&D-GURPS 变体角色构建器 v2.0
+# D&D-GURPS 变体角色构建器 v2.1
 
 融合 **D&D 三宝书**（玩家手册 PHB / 地下城主指南 DMG / 怪物图鉴 MM）与
 **GURPS Basic Set** 规则的点数制角色构建器。支持属性购买、优缺点、天赋、
@@ -34,14 +34,20 @@ d20/
 ├── rest.py            # RestService        先攻/休整（current_hp 追踪）
 ├── condition.py       # ConditionService   战斗条件追踪（SRD 15 条 + 惩罚聚合）
 ├── monster.py         # MonsterService     怪物图鉴（SRD 334 种 + stat block + DM 结算）
+├── classes.py         # ★ ClassService      职业系统（12 职业 + 等级 + 子职业，v2.1）
+├── reference.py       # ★ ReferenceService  规则速查与 SRD 检索（v2.1）
 ├── data_spells.py     # SRD 全谱法术名册（0–9 环，319 款，权威 API 转换）
 ├── data_magicitems.py # DMG 魔法物品（按 rarity 分级，361 件，权威 API 转换）
 ├── data_monsters.py   # SRD 怪物图鉴数据（334 种 + CR→XP 表，权威 API 转换）
-└── data_conditions.py # SRD 15 条战斗条件规则数据
+├── data_conditions.py # SRD 15 条战斗条件规则数据
+├── data_classes.py    # ★ SRD 职业系统数据（12 职业 + 240 条等级 + 12 子职业 + 407 特性）
+├── data_equipment_srd.py # ★ SRD 装备库（237 件 + 11 条武器属性，v2.1）
+├── data_proficiencies.py # ★ SRD 熟练项（117 项，v2.1）
+└── data_reference.py  # ★ SRD 参考常量与规则速查（属性值/阵营/伤害类型/学派/语言/技能/规则章节）
 
 gui/app.py             # tkinter 图形界面
 cli.py                 # 命令行界面
-tests/                 # pytest 单元测试（184 项，含 Cordis 装配不变性 + 扩充子系统）
+tests/                 # pytest 单元测试（225 项，含 Cordis 装配不变性 + 扩充子系统 + v2.1 SRD）
 mvp_builder.py         # 向后兼容 shim → d20
 mvp_gui.py             # 向后兼容 shim → gui.app
 ```
@@ -51,7 +57,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 - `Context`：服务容器 + 事件总线（`emit` / `waterfall` / `serial` / `parallel`）+ effect 生命周期。
   服务以稳定 key 挂到 `ctx.<name>`，其他服务通过 `ctx.<service>` 互调。
 - `Service`：能力单位，声明 `inject` 依赖；`mount` 前校验依赖已就绪（缺失即报错）。
-- `composition.yml`：声明 16 个服务的 `id` / `service`（点分路径）/ `inject` 依赖。
+- `composition.yml`：声明 18 个服务的 `id` / `service`（点分路径）/ `inject` 依赖。
   加载器按依赖拓扑排序后挂载，真正「显式装配、可插拔、无静态 MRO」。
 
 `Character` 是**兼容门面**：公共方法委托给 `ctx.<service>.<method>`，实例状态字段
@@ -105,32 +111,94 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 - 测试：`tests/test_srd_content.py` 覆盖条件/怪物/法术/魔法物品的数据契约与 Service 行为；
   全量 184 项 pytest 通过、盗贼基准零回归。
 
+**2026-08-28 v2.1 扩充**（联网检索 D&D 5e SRD 剩余 20 个端点，新增 2 个 Service + 4 个数据模块）：
+
+> **缺口**：v2.0 只用了 `dnd5eapi.co/api/2014` 的 24 个端点中的 4 类。最大的洞是——
+> **一个角色构建器居然没有「职业」**。本次把这 20 类一次性补齐。
+>
+> **数据来源**：`pull_srd.py` 扩展为 22 类 + 嵌套等级，从 `dnd5eapi.co/api/2014` 拉取
+> **12 职业 / 240 条职业等级（12×20）/ 12 子职业 / 407 条特性 / 237 件装备 / 39 个装备分类 /
+> 117 项熟练 / 18 项技能 / 16 种语言 / 13 种伤害类型 / 8 个魔法学派 / 6 项属性值 / 9 种阵营 /
+> 11 条武器属性 / 6 部规则 + 33 个规则章节 / 38 条种族特性 / 4 个亚种 / 9 个种族**，
+> 共 **1100+ 份规范化 JSON**、**零错误**落盘 `_srd_pull/` 作可验证溯源证据。
+> 再经 `gen_srd_v21.py` 转换为 `d20/data_*.py`。**并非手工撰写**。
+>
+> **中文化（100% 中文键 + `en` 保留英文原名 + `desc_en` 保留官方描述）**：沿用 v2.0 的
+> 「三层来源 + curated 覆盖层」方法论——① `_cn_src/hj_*namelist.json` 灰机 wiki 双语名册
+> （职业 12/12、装备 160/237、子职业经全名桥接 12/12）；② 脚本内规则派生（去复数 /
+> `Eldritch Invocation: X` 类前缀复合 / 龙族「颜色+伤害类型」/ 括号等级）；
+> ③ `EN2CN_*_CURATED` 手工校订层优先级最高（补齐装备缺口 77 项、特性主体表 258 基名，
+> 并将 SRD 的 `Chain Mail`/`Plate Armor` 对齐既有装备库译名 `锁子甲`/`全身板甲`）。
+
+- **职业系统** `ClassService`（`ctx.classes`，inject `[]`）：**12 职业全量**
+  （野蛮人 d12 / 吟游诗人·牧师·德鲁伊·武僧·游荡者·魔契师 d8 / 战士·圣武士·游侠 d10 / 术士·法师 d6），
+  含生命骰、关键属性、豁免熟练、技能自选池、武器护甲熟练、施法能力。
+  **施法进程（full/half/pact/none）由 20 级法术位分布反推而非硬编码**，12 职业与 PHB 官方表逐项一致。
+  提供 `set_class` / `level_up` / `level_to` / `set_subclass` / `hit_die` / `caster_level` /
+  `max_ring` / `spell_slots` / `features` / `class_specific` / `prof_bonus` 等。
+  职业等级 **1 级免费（创建期）+ bracket 递增标价**（2–5 级 3CP、6–10 级 4、11–15 级 5、16–20 级 6；
+  累计 L5=12 / L10=32 / L20=87 CP）——刻意低于同级属性投入，避免挤占 150 起始 CP。
+- **等级成长表** `CLASS_LEVELS`：12 职业 × 1–20 级，每级含特性清单、熟练加值、
+  法术位表（SRD 权威）、`class_specific` 职业专属数值（狂暴次数 / **偷袭骰 1d6→10d6** /
+  气点 / 武艺骰 / 无甲移动…）。
+- **子职业** `SUBCLASSES`：SRD 12 款（狂战士道途 / 逸闻学院 / 生命领域 / 大地结社 / 勇士 /
+  散打宗 / 奉献之誓 / 猎人 / 盗贼 / 龙族血脉 / 邪魔宗主 / 塑能学派），3 级起可选。
+- **特性库** `FEATURES`：407 条职业特性（去重后 318 键），含所属职业/子职业/等级与官方描述。
+- **装备库** `SRD_EQUIPMENT`：SRD **237 件**全量（武器伤害骰+双手骰+武器属性、护甲 AC+
+  力量需求+隐匿劣势、冒险装备/工具/乐器/坐骑/载具…），与手工库 41 件经 `equipment.resolve()`
+  统一为同构 7 元组，**护甲加值/敏捷上限/灵巧判定/伤害骰解析对两库一致生效**；
+  CP 按 `3×log10(金币+1)` 折算（1–30 封顶）。
+- **熟练库** `PROFICIENCIES`：117 项（18 技能熟练与 `SKILL_LIBRARY` 同一命名空间、
+  6 项豁免→D20 三豁免轴、武器/护甲/工具/乐器/赌具/载具）。
+- **规则速查** `ReferenceService`（`ctx.reference`，inject `[]`）：33 个规则章节正文检索、
+  装备/武器/护甲/特性/职业/枚举翻译的只读查询（DM 侧工具）。
+- **参考常量** `data_reference.py`：属性值 6 / 阵营 9 / 伤害类型 13 / 魔法学派 8 /
+  语言 16 / 技能 18 / 规则 6 + 规则章节 33。
+- **集成（决策 H–J）**：职业熟练三轨生效——技能熟练→`proficiencies`(+2)、
+  装备熟练→`gear_proficiencies`（战士「全部护甲」可免技能穿全身板甲）、
+  豁免熟练→`save_proficiencies`（豁免 +2）；
+  法术位前置改为「奥术施法技能 **或** 职业等级满足其一」；短休生命骰改用职业生命骰。
+  所有依赖方以 `ctx.has("classes")` 探测，**卸载 classes 即回落原行为**（不崩、不改既有数值）。
+- CLI 新增 `10.职业` / `11.规则速查` 两个入口；角色卡新增职业/等级/子职业/生命骰/
+  熟练加值/职业特性/职业法术位/装备熟练/豁免熟练行。
+- 测试：`tests/test_srd_v21.py`（41 项）覆盖数据契约、施法进程与官方表一致、
+  定价曲线、Service 行为、集成与「卸载即回落」；全量 **225 项 pytest 通过、盗贼基准零回归**。
+- 方案与决策记录见 `docs/srd-v21-expansion.md`。
+
 ## 浏览器扩展（TypeScript 移植，web/）
 
 以 deepseek-harness 的 `web-cordis` 示例（浏览器界面 + Cordis 插件内存挂载/卸载）为参考，
 把 `d20` 包**1:1 移植为 TypeScript** 并包装成 WebExtension（React 18 + Vite + 零依赖
 mini-Cordis），见 `web/`：
 
-- 引擎层（`web/src/engine/`）逐文件对应 `d20/`：core/data/16 个 Service/Character/loader/
+- 引擎层（`web/src/engine/`）逐文件对应 `d20/`：core/data/18 个 Service/Character/loader/
   composition，逻辑 1:1；`d20Plugin(ctx, options)` 可把 D20 整体挂入任意遵循契约的宿主 Context。
-- 插件面板复刻 web-cordis：16 个服务运行时热挂载/卸载，卸载被依赖服务后对应能力即报错
-  （如卸载 feats 后 HP/先攻回落、卸载 slots 后施法宏报错）。
+- 插件面板复刻 web-cordis：18 个服务运行时热挂载/卸载，卸载被依赖服务后对应能力即报错
+  （如卸载 feats 后 HP/先攻回落、卸载 slots 后施法宏报错）；classes/reference 为可选增强，
+  卸载后依赖方自动回落原行为。
 - 验证：`npm run build`（tsc 类型检查 + vite 打包）＋ `node smoke.cjs`（运行时检查：
   11 项盗贼基准逐值一致 CP=1/HP=65/AC=20/近战+11/远程+8/强韧+11/反射+10/意志+10，
-  扩充子系统与 Python `tests/test_expansion.py` 逐值一致，并额外校验 16 服务挂载、
-  ConditionService（15 条条件/惩罚聚合/auto_fail）、MonsterService（334 种怪物/CR→XP/stat block/DM 结算））。
+  扩充子系统与 Python `tests/test_expansion.py` 逐值一致，并额外校验 18 服务挂载、
+  ConditionService（15 条条件/惩罚聚合/auto_fail）、MonsterService（334 种怪物/CR→XP/stat block/DM 结算），
+  以及 v2.1 的 31 项断言（12 职业/12 子职业/318 特性/237 装备/117 熟练/240 条等级记录、
+  法师 d6·full、游荡者 5 级偷袭 3d6、职业定价 L5=12CP、施法者等级与最高环位、
+  职业装备熟练穿重甲、豁免熟练 +2、生命骰随职业、规则速查、卸载 classes 后回落）。
 - 单元测试：`npm test`（Node 内置 `node:test`，零新依赖，规避本机 npm 大包安装不可靠）
   跑 `web/test/engine.test.cjs`，覆盖骰子纯函数/属性调整/战斗条件叠加/怪物图鉴/盗贼基准/
-  16 服务挂载，共 10 项全过；构建前由 `test:build` 复用 `tsconfig.smoke.json` 产出 `dist-smoke`。
+  18 服务挂载 + v2.1 数据契约与 ClassService/ReferenceService 行为，共 19 项全过；
+  构建前由 `test:build` 复用 `tsconfig.smoke.json` 产出 `dist-smoke`。
 - CI 门禁：根 `.github/workflows/ci.yml` 固化 Python(pytest) + web(typecheck/build/smoke/unit)
   双 job，push/PR 即触发。
 - 代码分割：`vite.config.ts` 经 `manualChunks` 把 bundle 拆为 `data`(静态 SRD 数据集)/
   `vendor-react`/`engine`/`ui` 多 chunk，主逻辑 chunk 由单 1.2MB 降为 popup 0.8KB +
   engine 50KB + ui 11KB + vendor-react 142KB（data 1.02MB 为 gzip 221KB 的静态数据）。
-- **SRD 内容同步**：`web/src/engine/` 现已 1:1 镜像 Python 端 SRD 扩充——新增
+- **SRD 内容同步**：`web/src/engine/` 现已 1:1 镜像 Python 端 SRD 扩充——八个数据模块
   `data_spells.ts`(319 法术) / `data_magicitems.ts`(361 物品) / `data_monsters.ts`(334 怪物+CR_XP) /
-  `data_conditions.ts`(15 条件) 四个数据模块，以及 `condition.ts` / `monster.ts` 两个 Service，
-  经 `composition.ts` 装配 + `Character` 门面委托 + `sheet` 渲染战斗条件行。四个数据模块由
+  `data_conditions.ts`(15 条件) / `data_classes.ts`(12 职业+240 等级+12 子职业+318 特性) /
+  `data_equipment_srd.ts`(237 装备+11 武器属性) / `data_proficiencies.ts`(117 熟练) /
+  `data_reference.ts`(属性值/阵营/伤害类型/学派/语言/技能/规则)，以及 `condition.ts` /
+  `monster.ts` / `classes.ts` / `reference.ts` 四个 Service，经 `composition.ts` 装配 +
+  `Character` 门面委托 + `sheet` 渲染战斗条件行与职业行。八个数据模块全部由
   Python `d20` 对象经 JSON 直转生成（`gen_ts_data.py`），保证前端/后端 SRD 内容零漂移。
 - 安装：`chrome://extensions` → 开发者模式 → 加载 `web/dist`。
 
@@ -140,6 +208,15 @@ mini-Cordis），见 `web/`：
 > 单一事实来源为 `d20/data_*.py`（再由 `gen_ts_data.py` 同步到 `web/src/engine/data_*.ts`）。
 
 ### D&D 三宝书（PHB/DMG/MM）
+- **12 个 SRD 职业全量 + 20 级成长**：生命骰、关键属性、豁免/武器/护甲熟练、
+  技能自选池、施法进程（full/half/pact/none，由官方 20 级法术位反推）、
+  每级特性与法术位表、职业专属数值（狂暴次数/偷袭骰/气点/武艺骰）
+- **12 款子职业**（狂战士道途/逸闻学院/生命领域/大地结社/勇士/散打宗/奉献之誓/
+  猎人/盗贼/龙族血脉/邪魔宗主/塑能学派）+ **407 条职业特性**
+- **237 件 SRD 装备**（武器伤害骰/双手骰/武器属性、护甲 AC/力量需求/隐匿劣势、
+  冒险装备/工具/乐器/坐骑/载具）+ **117 项熟练**
+- **规则速查**：6 部规则 + 33 个规则章节正文；伤害类型 13 / 魔法学派 8 / 语言 16 /
+  阵营 9 / 属性值 6 / 武器属性 11
 - **18 项标准技能**：杂技/运动/察觉/洞察/驯兽/医疗/生存/奥术知识/历史/调查/
   自然知识/宗教/欺瞒/恐吓/表演/说服 + 变体根基科
 - **53 款 SRD 专长**（全量搬运）、**9 族 SRD 种族**模板、**6 款背景**
@@ -178,6 +255,27 @@ c.equip_item("长剑")                   # 装备
 print(c.show_sheet())                 # 渲染角色卡
 print(c.combat_macro("melee_attack", target_ac=12))  # 战斗宏
 print(c.gurps_check("近战攻击"))       # GURPS 3d6 检定
+```
+
+**职业（v2.1）**：角色构建的传统主轴——选职业、升级、拿特性与施法能力。
+
+```python
+from d20 import Character
+
+c = Character()
+c.set_class("法师", choices=["奥术知识", "历史"])   # 创建期选择，1 级免费
+c.level_to(5)                     # 升至 5 级，共 12 CP（bracket 递增标价）
+c.set_subclass("塑能学派")         # 3 级起可选子职业
+c.hit_die(), c.prof_bonus()      # (6, 3) —— 生命骰 d6 / 熟练加值 +3
+c.caster_level(), c.max_spell_ring()   # (5, 3) —— 施法者等级 5 / 最高 3 环
+c.buy_slot(3)                    # 凭职业等级即可购 3 环法术位（无需奥术施法技能）
+c.class_features()               # ['施法：法师', '奥术回复', '奥术传承', '属性提升']
+c.class_feature_detail("奥术回复")  # 官方特性描述
+
+# 规则速查（DM 侧）
+c.rule("休息")                    # 规则章节正文
+c.search_rules("short rest")      # 关键词检索
+c.gear_info("长剑")["damage"]      # '1d8'
 ```
 
 ### 命令行
@@ -232,4 +330,7 @@ python -m pytest tests/ -v
 1. **Cordis 化重构**：按职责拆为 9 个 Service + Context/事件生命周期 + data 数据中枢，
    由 `composition.yml` 装配；`Character` 退化为兼容门面（不再多重继承 mixin）
 2. **内容增强**：联网检索 D&D 三宝书与 GURPS Basic Set，扩充技能/技术/装备/优缺点
-3. **测试补齐**：pytest 单元测试覆盖全部模块（184 项全通过，含 Cordis 装配不变性测试 + SRD 内容测试）
+3. **测试补齐**：pytest 单元测试覆盖全部模块（225 项全通过，含 Cordis 装配不变性测试 +
+   SRD 内容测试 + v2.1 职业/装备/熟练/参考测试）
+4. **v2.1 SRD 全量扩充**：联网拉取 `dnd5eapi.co/api/2014` 剩余 20 个端点（1100+ JSON，零错误），
+   新增职业/子职业/等级成长/特性/装备/熟练/规则速查，双端同步（详见 `docs/srd-v21-expansion.md`）

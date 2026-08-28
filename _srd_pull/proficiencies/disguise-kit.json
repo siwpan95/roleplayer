@@ -1,0 +1,14 @@
+{
+ "index": "disguise-kit",
+ "type": "Artisan's Tools",
+ "name": "Disguise Kit",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/disguise-kit",
+ "reference": {
+  "index": "disguise-kit",
+  "name": "Disguise Kit",
+  "url": "/api/2014/equipment/disguise-kit"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

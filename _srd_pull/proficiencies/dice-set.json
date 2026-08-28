@@ -1,0 +1,14 @@
+{
+ "index": "dice-set",
+ "type": "Gaming Sets",
+ "name": "Dice Set",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/dice-set",
+ "reference": {
+  "index": "dice-set",
+  "name": "Dice Set",
+  "url": "/api/2014/equipment/dice-set"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

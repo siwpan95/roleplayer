@@ -11,7 +11,10 @@ import sys
 
 D20 = r"E:/D20"
 sys.path.insert(0, D20)
-from d20 import data_spells, data_magicitems, data_monsters, data_conditions  # noqa: E402
+from d20 import (  # noqa: E402
+    data_spells, data_magicitems, data_monsters, data_conditions,
+    data_classes, data_equipment_srd, data_proficiencies, data_reference,
+)
 
 OUT = os.path.join(D20, "web", "src", "engine")
 
@@ -101,8 +104,91 @@ cond_body += (
 with open(os.path.join(OUT, "data_conditions.ts"), "w", encoding="utf-8") as f:
     f.write(cond_body)
 
-print("generated: data_spells.ts, data_magicitems.ts, data_monsters.ts, data_conditions.ts")
+# ---------------------------------------------------------------------------
+#  v2.1：data_classes.ts（12 职业 + 12 子职业 + 20 级成长 + 407 特性）
+# ---------------------------------------------------------------------------
+cls_body = HEADER.format(
+    fname="data_classes",
+    desc="SRD 职业系统（职业 / 等级成长 / 子职业 / 特性）",
+    pyname="data_classes",
+)
+cls_body += (
+    "export const CLASSES: Record<string, any> = "
+    + dump(data_classes.CLASSES)
+    + ";\n\n"
+    "export const CLASS_LEVELS: Record<string, Record<string, any>> = "
+    + dump(data_classes.CLASS_LEVELS)
+    + ";\n\n"
+    "export const SUBCLASSES: Record<string, any> = "
+    + dump(data_classes.SUBCLASSES)
+    + ";\n\n"
+    "export const FEATURES: Record<string, any> = "
+    + dump(data_classes.FEATURES)
+    + ";\n"
+)
+with open(os.path.join(OUT, "data_classes.ts"), "w", encoding="utf-8") as f:
+    f.write(cls_body)
+
+# ---------------------------------------------------------------------------
+#  v2.1：data_equipment_srd.ts（237 件 SRD 装备 + 11 条武器属性）
+# ---------------------------------------------------------------------------
+eq_body = HEADER.format(
+    fname="data_equipment_srd",
+    desc="SRD 装备库（237 件）与武器属性（11 条）",
+    pyname="data_equipment_srd",
+)
+eq_body += (
+    "export const SRD_EQUIPMENT: Record<string, any> = "
+    + dump(data_equipment_srd.SRD_EQUIPMENT)
+    + ";\n\n"
+    "export const WEAPON_PROPERTIES: Record<string, any> = "
+    + dump(data_equipment_srd.WEAPON_PROPERTIES)
+    + ";\n"
+)
+with open(os.path.join(OUT, "data_equipment_srd.ts"), "w", encoding="utf-8") as f:
+    f.write(eq_body)
+
+# ---------------------------------------------------------------------------
+#  v2.1：data_proficiencies.ts（117 项熟练）
+# ---------------------------------------------------------------------------
+prof_body = HEADER.format(
+    fname="data_proficiencies",
+    desc="SRD 熟练项（117 项：技能/豁免/武器/护甲/工具/乐器…）",
+    pyname="data_proficiencies",
+)
+prof_body += (
+    "export const PROFICIENCIES: Record<string, any> = "
+    + dump(data_proficiencies.PROFICIENCIES)
+    + ";\n"
+)
+with open(os.path.join(OUT, "data_proficiencies.ts"), "w", encoding="utf-8") as f:
+    f.write(prof_body)
+
+# ---------------------------------------------------------------------------
+#  v2.1：data_reference.ts（参考常量与规则速查）
+# ---------------------------------------------------------------------------
+ref_body = HEADER.format(
+    fname="data_reference",
+    desc="SRD 参考常量与规则速查（属性值/阵营/伤害类型/学派/语言/技能/规则）",
+    pyname="data_reference",
+)
+ref_body += "".join(
+    f"export const {name}: Record<string, any> = " + dump(getattr(data_reference, name)) + ";\n\n"
+    for name in ("ABILITY_SCORES", "ALIGNMENTS", "DAMAGE_TYPES", "MAGIC_SCHOOLS",
+                 "LANGUAGES", "SRD_SKILLS", "RULES", "RULE_SECTIONS")
+)
+with open(os.path.join(OUT, "data_reference.ts"), "w", encoding="utf-8") as f:
+    f.write(ref_body)
+
+print("generated: data_spells.ts, data_magicitems.ts, data_monsters.ts, data_conditions.ts, "
+      "data_classes.ts, data_equipment_srd.ts, data_proficiencies.ts, data_reference.ts")
 print("spells:", len(data_spells.SRD_SPELLS),
       "magic:", len(data_magicitems.MAGIC_ITEMS),
       "monsters:", len(data_monsters.MONSTERS),
       "conditions:", len(data_conditions.CONDITIONS))
+print("classes:", len(data_classes.CLASSES),
+      "levels:", sum(len(v) for v in data_classes.CLASS_LEVELS.values()),
+      "subclasses:", len(data_classes.SUBCLASSES),
+      "features:", len(data_classes.FEATURES),
+      "equipment:", len(data_equipment_srd.SRD_EQUIPMENT),
+      "proficiencies:", len(data_proficiencies.PROFICIENCIES))

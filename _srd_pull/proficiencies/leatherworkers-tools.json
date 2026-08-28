@@ -1,0 +1,14 @@
+{
+ "index": "leatherworkers-tools",
+ "type": "Artisan's Tools",
+ "name": "Leatherworker's Tools",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/leatherworkers-tools",
+ "reference": {
+  "index": "leatherworkers-tools",
+  "name": "Leatherworker's Tools",
+  "url": "/api/2014/equipment/leatherworkers-tools"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

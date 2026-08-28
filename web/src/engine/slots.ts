@@ -14,7 +14,9 @@ export class SpellSlotsService extends Service {
     if (!(ring in SPELL_SLOT_COST)) return [false, `非法环位: ${ring}（1-9）`];
     const prereq = SPELL_RING_PREREQ[ring];
     const eff = this.ctx.skills.effectiveSkillRank("奥术施法");
-    if (eff < prereq) return [false, `需要 奥术施法 有效等级 ≥ ${prereq} 才能购买 ${ring} 环法术位`];
+    // 决策 I：职业施法能力是「奥术施法技能」之外的另一条资格路径（满足其一即可）
+    if (eff < prereq && this._classMaxRing() < ring)
+      return [false, `需要 奥术施法 有效等级 ≥ ${prereq}，或职业等级足以使用 ${ring} 环法术`];
     const cap = this.SPELL_SLOT_CAPS[ring - 1];
     const owned = st.slots[ring] || 0;
     if (owned >= cap) return [false, `${ring} 环法术位已达上限 ${cap}`];
@@ -27,6 +29,12 @@ export class SpellSlotsService extends Service {
     st.purchases += 1;
     this.ctx.emit("character/changed", "slots");
     return [true, `购买 ${ring} 环法术位，消耗 ${cost} CP（当前 ${owned + 1}/${cap}）`];
+  }
+
+  /** 职业可购最高环位（ClassService 可选增强：未挂载时为 0）。 */
+  private _classMaxRing(): number {
+    if (!this.ctx.has("classes")) return 0;
+    return (this.ctx as any).classes.maxRing();
   }
 
   available(ring: number): number {

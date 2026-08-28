@@ -4,9 +4,11 @@
 纯函数可直接 import 使用、便于测试；DiceService 挂到 ``ctx.dice`` 提供实例方法。
 """
 import random
+import re
 
 from .core import Service
 from .data import WEAPON_DICE
+from .data_equipment_srd import SRD_EQUIPMENT
 
 
 # -----------------------------------------------------------------------------
@@ -45,9 +47,26 @@ def gurps_success_chance(skill_level: int) -> int:
     return int(table.get(skill_level, 50))
 
 
+def weapon_dice(weapon_name: str) -> tuple[int, int]:
+    """解析武器伤害骰 -> (骰数, 面数)。
+
+    优先查手工库 ``data.WEAPON_DICE``；未命中则回退 SRD 装备库
+    （``data_equipment_srd.SRD_EQUIPMENT`` 的 ``damage`` 字段，如 '2d6'）。
+    均未命中按徒手 1d4 处理。手工库条目行为完全不变。
+    """
+    if weapon_name in WEAPON_DICE:
+        return WEAPON_DICE[weapon_name]
+    rec = SRD_EQUIPMENT.get(weapon_name)
+    if rec and rec.get("damage"):
+        m = re.match(r"^\s*(\d*)\s*d\s*(\d+)\s*$", rec["damage"])
+        if m:
+            return (int(m.group(1) or 1), int(m.group(2)))
+    return (1, 4)
+
+
 def roll_weapon_damage(weapon_name: str) -> tuple[list[int], str]:
     """掷武器伤害骰，返回 (各骰结果, 骰子描述如 '1d8')。"""
-    num, die = WEAPON_DICE.get(weapon_name, (1, 4))
+    num, die = weapon_dice(weapon_name)
     rolls = [random.randint(1, die) for _ in range(num)]
     return rolls, f"{num}d{die}"
 

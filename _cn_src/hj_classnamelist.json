@@ -1,0 +1,185 @@
+{
+  "type": "class",
+  "data": [
+    {
+      "id": "Artificer|TCE",
+      "src": "TCE",
+      "name_en": "Artificer",
+      "name_zh": "奇械师"
+    },
+    {
+      "id": "Artificer|EFA",
+      "src": "EFA",
+      "name_en": "Artificer",
+      "name_zh": "奇械师"
+    },
+    {
+      "id": "Barbarian|PHB",
+      "src": "PHB",
+      "name_en": "Barbarian",
+      "name_zh": "野蛮人"
+    },
+    {
+      "id": "Barbarian|XPHB",
+      "src": "XPHB",
+      "name_en": "Barbarian",
+      "name_zh": "野蛮人"
+    },
+    {
+      "id": "Bard|PHB",
+      "src": "PHB",
+      "name_en": "Bard",
+      "name_zh": "吟游诗人"
+    },
+    {
+      "id": "Bard|XPHB",
+      "src": "XPHB",
+      "name_en": "Bard",
+      "name_zh": "吟游诗人"
+    },
+    {
+      "id": "Cleric|PHB",
+      "src": "PHB",
+      "name_en": "Cleric",
+      "name_zh": "牧师"
+    },
+    {
+      "id": "Cleric|XPHB",
+      "src": "XPHB",
+      "name_en": "Cleric",
+      "name_zh": "牧师"
+    },
+    {
+      "id": "Druid|PHB",
+      "src": "PHB",
+      "name_en": "Druid",
+      "name_zh": "德鲁伊"
+    },
+    {
+      "id": "Druid|XPHB",
+      "src": "XPHB",
+      "name_en": "Druid",
+      "name_zh": "德鲁伊"
+    },
+    {
+      "id": "Fighter|PHB",
+      "src": "PHB",
+      "name_en": "Fighter",
+      "name_zh": "战士"
+    },
+    {
+      "id": "Fighter|XPHB",
+      "src": "XPHB",
+      "name_en": "Fighter",
+      "name_zh": "战士"
+    },
+    {
+      "id": "Monk|PHB",
+      "src": "PHB",
+      "name_en": "Monk",
+      "name_zh": "武僧"
+    },
+    {
+      "id": "Monk|XPHB",
+      "src": "XPHB",
+      "name_en": "Monk",
+      "name_zh": "武僧"
+    },
+    {
+      "id": "Mystic|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Mystic",
+      "name_zh": "秘术师"
+    },
+    {
+      "id": "Paladin|PHB",
+      "src": "PHB",
+      "name_en": "Paladin",
+      "name_zh": "圣武士"
+    },
+    {
+      "id": "Paladin|XPHB",
+      "src": "XPHB",
+      "name_en": "Paladin",
+      "name_zh": "圣武士"
+    },
+    {
+      "id": "Ranger|PHB",
+      "src": "PHB",
+      "name_en": "Ranger",
+      "name_zh": "游侠"
+    },
+    {
+      "id": "Ranger|XPHB",
+      "src": "XPHB",
+      "name_en": "Ranger",
+      "name_zh": "游侠"
+    },
+    {
+      "id": "Rogue|PHB",
+      "src": "PHB",
+      "name_en": "Rogue",
+      "name_zh": "游荡者"
+    },
+    {
+      "id": "Rogue|XPHB",
+      "src": "XPHB",
+      "name_en": "Rogue",
+      "name_zh": "游荡者"
+    },
+    {
+      "id": "Expert Sidekick|TCE",
+      "src": "TCE",
+      "name_en": "Expert Sidekick",
+      "name_zh": "专家协力者"
+    },
+    {
+      "id": "Spellcaster Sidekick|TCE",
+      "src": "TCE",
+      "name_en": "Spellcaster Sidekick",
+      "name_zh": "施法者协力者"
+    },
+    {
+      "id": "Warrior Sidekick|TCE",
+      "src": "TCE",
+      "name_en": "Warrior Sidekick",
+      "name_zh": "武者协力者"
+    },
+    {
+      "id": "Sorcerer|PHB",
+      "src": "PHB",
+      "name_en": "Sorcerer",
+      "name_zh": "术士"
+    },
+    {
+      "id": "Sorcerer|XPHB",
+      "src": "XPHB",
+      "name_en": "Sorcerer",
+      "name_zh": "术士"
+    },
+    {
+      "id": "Warlock|PHB",
+      "src": "PHB",
+      "name_en": "Warlock",
+      "name_zh": "魔契师"
+    },
+    {
+      "id": "Warlock|XPHB",
+      "src": "XPHB",
+      "name_en": "Warlock",
+      "name_zh": "魔契师"
+    },
+    {
+      "id": "Wizard|PHB",
+      "src": "PHB",
+      "name_en": "Wizard",
+      "name_zh": "法师"
+    },
+    {
+      "id": "Wizard|XPHB",
+      "src": "XPHB",
+      "name_en": "Wizard",
+      "name_zh": "法师"
+    }
+  ]
+}

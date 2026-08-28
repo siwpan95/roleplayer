@@ -351,3 +351,27 @@ export { SRD_SPELLS, SRD_SPELL_RINGS } from "./data_spells";
 export { MAGIC_ITEMS } from "./data_magicitems";
 export { MONSTERS, CR_XP } from "./data_monsters";
 export { CONDITIONS, DISADVANTAGE_PENALTY } from "./data_conditions";
+export { CLASSES, CLASS_LEVELS, SUBCLASSES, FEATURES } from "./data_classes";
+export { SRD_EQUIPMENT, WEAPON_PROPERTIES } from "./data_equipment_srd";
+export { PROFICIENCIES } from "./data_proficiencies";
+export {
+  ABILITY_SCORES, ALIGNMENTS, DAMAGE_TYPES, MAGIC_SCHOOLS,
+  LANGUAGES, SRD_SKILLS, RULES, RULE_SECTIONS,
+} from "./data_reference";
+
+// =============================================================================
+//  职业（D&D 5e SRD；决策 G 递增标价 / 决策 L 创建期选择）
+// =============================================================================
+export const CLASS_LEVEL_MAX = 20;
+
+/** 职业等级递增标价 [起, 止, 每级 CP]；1 级免费（创建期选择）。 */
+export const CLASS_LEVEL_COST_BRACKETS: Array<[number, number, number]> = [
+  [1, 1, 0],
+  [2, 5, 3],
+  [6, 10, 4],
+  [11, 15, 5],
+  [16, 20, 6],
+];
+
+/** 可选子职业的最低职业等级（SRD：多数职业 3 级选范型）。 */
+export const SUBCLASS_MIN_LEVEL = 3;

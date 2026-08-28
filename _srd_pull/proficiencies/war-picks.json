@@ -1,0 +1,14 @@
+{
+ "index": "war-picks",
+ "type": "Weapons",
+ "name": "War picks",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/war-picks",
+ "reference": {
+  "index": "war-pick",
+  "name": "War pick",
+  "url": "/api/2014/equipment/war-pick"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

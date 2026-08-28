@@ -1,0 +1,14 @@
+{
+ "index": "navigators-tools",
+ "type": "Other",
+ "name": "Navigator's Tools",
+ "classes": [],
+ "races": [],
+ "url": "/api/2014/proficiencies/navigators-tools",
+ "reference": {
+  "index": "navigators-tools",
+  "name": "Navigator's Tools",
+  "url": "/api/2014/equipment/navigators-tools"
+ },
+ "updated_at": "2026-04-01T20:35:38.536Z"
+}

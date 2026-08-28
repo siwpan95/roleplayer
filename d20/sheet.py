@@ -34,6 +34,25 @@ class SheetService(Service):
             lines.append(f"背景: {st.background}（{self.ctx.background.feature()}）")
         else:
             lines.append("背景: 无")
+        # ---- v2.1：职业（等级/子职业/特性/职业法术位）----
+        if st.cls and self.ctx.has("classes"):
+            lines.append(f"职业: {self.ctx.classes.summary()}"
+                         f" | 生命骰 d{self.ctx.classes.hit_die()}"
+                         f" | 熟练加值 +{self.ctx.classes.prof_bonus()}")
+            feats = self.ctx.classes.features()
+            if feats:
+                lines.append("职业特性: " + "、".join(feats))
+            cslots = self.ctx.classes.spell_slots()
+            if cslots:
+                lines.append("职业法术位: " + " | ".join(
+                    f"{r}环×{n}" for r, n in sorted(cslots.items())))
+            if st.gear_proficiencies:
+                lines.append("装备熟练: " + "、".join(st.gear_proficiencies))
+            if st.save_proficiencies:
+                lines.append("豁免熟练: " + "、".join(st.save_proficiencies))
+        else:
+            lines.append("职业: 无")
+
         lines.append("专长: " + (", ".join(st.feats) if st.feats else "无"))
         if st.proficiencies:
             lines.append("熟练(+2): " + ", ".join(st.proficiencies))
@@ -63,7 +82,7 @@ class SheetService(Service):
         if st.equipment:
             lines.append("--- 装备 ---")
             for item in st.equipment:
-                info = self.ctx.equipment.EQUIPMENT_LIBRARY[item]
+                info = self.ctx.equipment.resolve(item)       # 手工库 + SRD 库统一解析
                 lines.append(f"{item}: {info[5]} (AC+{info[2]})")
         else:
             lines.append("装备: 无")
@@ -119,4 +138,11 @@ class SheetService(Service):
             "slots": dict(st.slots),
             "slots_used": dict(st.slots_used),
             "current_hp": st.current_hp,
+            "conditions": list(st.conditions),
+            # ---- v2.1 职业 ----
+            "cls": st.cls,
+            "level": st.level,
+            "subclass": st.subclass,
+            "gear_proficiencies": list(st.gear_proficiencies),
+            "save_proficiencies": list(st.save_proficiencies),
         }

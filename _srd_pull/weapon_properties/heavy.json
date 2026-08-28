@@ -1,0 +1,9 @@
+{
+ "index": "heavy",
+ "name": "Heavy",
+ "desc": [
+  "Small creatures have disadvantage on attack rolls with heavy weapons. A heavy weapon's size and bulk make it too large for a Small creature to use effectively."
+ ],
+ "url": "/api/2014/weapon-properties/heavy",
+ "updated_at": "2026-04-01T20:35:39.840Z"
+}

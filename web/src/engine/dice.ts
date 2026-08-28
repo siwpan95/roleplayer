@@ -5,7 +5,7 @@
  * 挂到 ctx.dice 提供实例方法。
  */
 import { Service } from "./core";
-import { WEAPON_DICE } from "./data";
+import { WEAPON_DICE, SRD_EQUIPMENT } from "./data";
 
 // -----------------------------------------------------------------------------
 //  纯函数
@@ -38,8 +38,24 @@ export function gurpsSuccessChance(skillLevel: number): number {
   return Math.round(table[skillLevel] ?? 50);
 }
 
+/**
+ * 解析武器伤害骰 -> [骰数, 面数]。
+ *
+ * 优先查手工库 WEAPON_DICE；未命中回退 SRD 装备库的 damage 字段（如 "2d6"）。
+ * 均未命中按徒手 1d4 处理。手工库条目行为完全不变。
+ */
+export function weaponDice(weaponName: string): [number, number] {
+  if (weaponName in WEAPON_DICE) return WEAPON_DICE[weaponName];
+  const rec = SRD_EQUIPMENT[weaponName];
+  if (rec && rec.damage) {
+    const m = /^\s*(\d*)\s*d\s*(\d+)\s*$/.exec(rec.damage);
+    if (m) return [m[1] ? Number(m[1]) : 1, Number(m[2])];
+  }
+  return [1, 4];
+}
+
 export function rollWeaponDamage(weaponName: string): [number[], string] {
-  const [num, die] = WEAPON_DICE[weaponName] || [1, 4];
+  const [num, die] = weaponDice(weaponName);
   const rolls = Array.from({ length: num }, () => Math.floor(Math.random() * die) + 1);
   return [rolls, `${num}d${die}`];
 }

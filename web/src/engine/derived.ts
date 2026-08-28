@@ -32,8 +32,9 @@ export class DerivedService extends Service {
     const dodgeBonus = Math.floor(dodgeRank / 2);
     let ac = 10 + effectiveDex + dodgeBonus + st.armorBonus;
     // 双持大师：双持两把近战武器 +1
+    // 用统一解析器，对手工库与 SRD 库一致生效
     const weapons = st.equipment.filter((e: string) => {
-      const info = this.ctx.equipment.EQUIPMENT_LIBRARY[e];
+      const info = this.ctx.equipment.resolve(e);
       return info && info[0] === "武器" && ["近战", "近战-轻", "近战-双手"].includes(info[1]);
     });
     if (this.ctx.feats.hasFeat("双持大师") && weapons.length >= 2) ac += 1;
@@ -57,6 +58,12 @@ export class DerivedService extends Service {
     const [skill, attr] = mapping[saveType];
     const rank = (this.ctx as any).skills.effectiveSkillRank(skill);
     const mod = abilityMod(this.ctx.state.attributes[attr]);
-    return rank + mod + this.ctx.race.saveBonusAdjust(saveType);
+    return rank + mod + this.ctx.race.saveBonusAdjust(saveType) + this._classSaveAdjust(skill);
+  }
+
+  /** 职业豁免熟练加值（ClassService 可选增强：未挂载时为 0）。 */
+  private _classSaveAdjust(saveSkill: string): number {
+    if (!this.ctx.has("classes")) return 0;
+    return (this.ctx as any).classes.saveBonusAdjust(saveSkill);
   }
 }

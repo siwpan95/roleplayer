@@ -1,0 +1,1151 @@
+{
+  "type": "subclass",
+  "data": [
+    {
+      "id": "Alchemist|TCE",
+      "src": "TCE",
+      "name_en": "Alchemist",
+      "name_zh": "炼金师"
+    },
+    {
+      "id": "Armorer|TCE",
+      "src": "TCE",
+      "name_en": "Armorer",
+      "name_zh": "装甲师"
+    },
+    {
+      "id": "Artillerist|TCE",
+      "src": "TCE",
+      "name_en": "Artillerist",
+      "name_zh": "魔炮师"
+    },
+    {
+      "id": "Battle Smith|TCE",
+      "src": "TCE",
+      "name_en": "Battle Smith",
+      "name_zh": "战地匠师"
+    },
+    {
+      "id": "Alchemist|EFA",
+      "src": "EFA",
+      "name_en": "Alchemist",
+      "name_zh": "炼金师"
+    },
+    {
+      "id": "Armorer|EFA",
+      "src": "EFA",
+      "name_en": "Armorer",
+      "name_zh": "装甲师"
+    },
+    {
+      "id": "Artillerist|EFA",
+      "src": "EFA",
+      "name_en": "Artillerist",
+      "name_zh": "魔炮师"
+    },
+    {
+      "id": "Battle Smith|EFA",
+      "src": "EFA",
+      "name_en": "Battle Smith",
+      "name_zh": "战地匠师"
+    },
+    {
+      "id": "Cartographer|EFA",
+      "src": "EFA",
+      "name_en": "Cartographer",
+      "name_zh": "制图师"
+    },
+    {
+      "id": "Path of the Berserker|PHB",
+      "src": "PHB",
+      "name_en": "Path of the Berserker",
+      "name_zh": "狂战士道途"
+    },
+    {
+      "id": "Path of the Totem Warrior|PHB",
+      "src": "PHB",
+      "name_en": "Path of the Totem Warrior",
+      "name_zh": "图腾武者道途"
+    },
+    {
+      "id": "Path of the Battlerager|SCAG",
+      "src": "SCAG",
+      "name_en": "Path of the Battlerager",
+      "name_zh": "战狂道途"
+    },
+    {
+      "id": "Path of the Ancestral Guardian|XGE",
+      "src": "XGE",
+      "name_en": "Path of the Ancestral Guardian",
+      "name_zh": "先祖守卫道途"
+    },
+    {
+      "id": "Path of the Storm Herald|XGE",
+      "src": "XGE",
+      "name_en": "Path of the Storm Herald",
+      "name_zh": "风暴先驱道途"
+    },
+    {
+      "id": "Path of the Zealot|XGE",
+      "src": "XGE",
+      "name_en": "Path of the Zealot",
+      "name_zh": "狂热者道途"
+    },
+    {
+      "id": "Path of the Beast|TCE",
+      "src": "TCE",
+      "name_en": "Path of the Beast",
+      "name_zh": "野兽道途"
+    },
+    {
+      "id": "Path of Wild Magic|TCE",
+      "src": "TCE",
+      "name_en": "Path of Wild Magic",
+      "name_zh": "狂野魔法道途"
+    },
+    {
+      "id": "Path of the Giant|BGG",
+      "src": "BGG",
+      "name_en": "Path of the Giant",
+      "name_zh": "巨人道途"
+    },
+    {
+      "id": "Path of the Berserker|XPHB",
+      "src": "XPHB",
+      "name_en": "Path of the Berserker",
+      "name_zh": "狂战士道途"
+    },
+    {
+      "id": "Path of the Wild Heart|XPHB",
+      "src": "XPHB",
+      "name_en": "Path of the Wild Heart",
+      "name_zh": "兽心道途"
+    },
+    {
+      "id": "Path of the World Tree|XPHB",
+      "src": "XPHB",
+      "name_en": "Path of the World Tree",
+      "name_zh": "世界树道途"
+    },
+    {
+      "id": "Path of the Zealot|XPHB",
+      "src": "XPHB",
+      "name_en": "Path of the Zealot",
+      "name_zh": "狂热者道途"
+    },
+    {
+      "id": "College of Lore|PHB",
+      "src": "PHB",
+      "name_en": "College of Lore",
+      "name_zh": "逸闻学院"
+    },
+    {
+      "id": "College of Valor|PHB",
+      "src": "PHB",
+      "name_en": "College of Valor",
+      "name_zh": "勇气学院"
+    },
+    {
+      "id": "College of Glamour|XGE",
+      "src": "XGE",
+      "name_en": "College of Glamour",
+      "name_zh": "魅心学院"
+    },
+    {
+      "id": "College of Swords|XGE",
+      "src": "XGE",
+      "name_en": "College of Swords",
+      "name_zh": "剑舞学院"
+    },
+    {
+      "id": "College of Whispers|XGE",
+      "src": "XGE",
+      "name_en": "College of Whispers",
+      "name_zh": "低语学院"
+    },
+    {
+      "id": "College of Creation|TCE",
+      "src": "TCE",
+      "name_en": "College of Creation",
+      "name_zh": "创造学院"
+    },
+    {
+      "id": "College of Eloquence|TCE",
+      "src": "TCE",
+      "name_en": "College of Eloquence",
+      "name_zh": "雄辩学院"
+    },
+    {
+      "id": "College of Spirits|VRGR",
+      "src": "VRGR",
+      "name_en": "College of Spirits",
+      "name_zh": "精魂学院"
+    },
+    {
+      "id": "College of Dance|XPHB",
+      "src": "XPHB",
+      "name_en": "College of Dance",
+      "name_zh": "舞蹈学院"
+    },
+    {
+      "id": "College of Glamour|XPHB",
+      "src": "XPHB",
+      "name_en": "College of Glamour",
+      "name_zh": "魅心学院"
+    },
+    {
+      "id": "College of Lore|XPHB",
+      "src": "XPHB",
+      "name_en": "College of Lore",
+      "name_zh": "逸闻学院"
+    },
+    {
+      "id": "College of Valor|XPHB",
+      "src": "XPHB",
+      "name_en": "College of Valor",
+      "name_zh": "勇气学院"
+    },
+    {
+      "id": "College of the Moon|FRHoF",
+      "src": "FRHoF",
+      "name_en": "College of the Moon",
+      "name_zh": "皓月学院"
+    },
+    {
+      "id": "Knowledge Domain|PHB",
+      "src": "PHB",
+      "name_en": "Knowledge Domain",
+      "name_zh": "知识领域"
+    },
+    {
+      "id": "Life Domain|PHB",
+      "src": "PHB",
+      "name_en": "Life Domain",
+      "name_zh": "生命领域"
+    },
+    {
+      "id": "Light Domain|PHB",
+      "src": "PHB",
+      "name_en": "Light Domain",
+      "name_zh": "光明领域"
+    },
+    {
+      "id": "Nature Domain|PHB",
+      "src": "PHB",
+      "name_en": "Nature Domain",
+      "name_zh": "自然领域"
+    },
+    {
+      "id": "Tempest Domain|PHB",
+      "src": "PHB",
+      "name_en": "Tempest Domain",
+      "name_zh": "风暴领域"
+    },
+    {
+      "id": "Trickery Domain|PHB",
+      "src": "PHB",
+      "name_en": "Trickery Domain",
+      "name_zh": "诡术领域"
+    },
+    {
+      "id": "War Domain|PHB",
+      "src": "PHB",
+      "name_en": "War Domain",
+      "name_zh": "战争领域"
+    },
+    {
+      "id": "Death Domain|DMG",
+      "src": "DMG",
+      "name_en": "Death Domain",
+      "name_zh": "死亡领域"
+    },
+    {
+      "id": "Arcana Domain|SCAG",
+      "src": "SCAG",
+      "name_en": "Arcana Domain",
+      "name_zh": "奥秘领域"
+    },
+    {
+      "id": "Ambition Domain (PSA)|PSA",
+      "src": "PSA",
+      "name_en": "Ambition Domain (PSA)",
+      "name_zh": "野心领域(PSA)"
+    },
+    {
+      "id": "Knowledge Domain (PSA)|PSA",
+      "src": "PSA",
+      "name_en": "Knowledge Domain (PSA)",
+      "name_zh": "知识领域(PSA)"
+    },
+    {
+      "id": "Solidarity Domain (PSA)|PSA",
+      "src": "PSA",
+      "name_en": "Solidarity Domain (PSA)",
+      "name_zh": "团结领域(PSA)"
+    },
+    {
+      "id": "Strength Domain (PSA)|PSA",
+      "src": "PSA",
+      "name_en": "Strength Domain (PSA)",
+      "name_zh": "力量领域(PSA)"
+    },
+    {
+      "id": "Zeal Domain (PSA)|PSA",
+      "src": "PSA",
+      "name_en": "Zeal Domain (PSA)",
+      "name_zh": "热忱领域(PSA)"
+    },
+    {
+      "id": "Forge Domain|XGE",
+      "src": "XGE",
+      "name_en": "Forge Domain",
+      "name_zh": "锻造领域"
+    },
+    {
+      "id": "Grave Domain|XGE",
+      "src": "XGE",
+      "name_en": "Grave Domain",
+      "name_zh": "坟墓领域"
+    },
+    {
+      "id": "Order Domain|TCE",
+      "src": "TCE",
+      "name_en": "Order Domain",
+      "name_zh": "秩序领域"
+    },
+    {
+      "id": "Peace Domain|TCE",
+      "src": "TCE",
+      "name_en": "Peace Domain",
+      "name_zh": "和平领域"
+    },
+    {
+      "id": "Twilight Domain|TCE",
+      "src": "TCE",
+      "name_en": "Twilight Domain",
+      "name_zh": "暮光领域"
+    },
+    {
+      "id": "Life Domain|XPHB",
+      "src": "XPHB",
+      "name_en": "Life Domain",
+      "name_zh": "生命领域"
+    },
+    {
+      "id": "Light Domain|XPHB",
+      "src": "XPHB",
+      "name_en": "Light Domain",
+      "name_zh": "光明领域"
+    },
+    {
+      "id": "Trickery Domain|XPHB",
+      "src": "XPHB",
+      "name_en": "Trickery Domain",
+      "name_zh": "诡术领域"
+    },
+    {
+      "id": "War Domain|XPHB",
+      "src": "XPHB",
+      "name_en": "War Domain",
+      "name_zh": "战争领域"
+    },
+    {
+      "id": "Knowledge Domain|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Knowledge Domain",
+      "name_zh": "知识领域"
+    },
+    {
+      "id": "Circle of the Land|PHB",
+      "src": "PHB",
+      "name_en": "Circle of the Land",
+      "name_zh": "大地结社"
+    },
+    {
+      "id": "Circle of the Moon|PHB",
+      "src": "PHB",
+      "name_en": "Circle of the Moon",
+      "name_zh": "月亮结社"
+    },
+    {
+      "id": "Circle of Dreams|XGE",
+      "src": "XGE",
+      "name_en": "Circle of Dreams",
+      "name_zh": "梦境结社"
+    },
+    {
+      "id": "Circle of the Shepherd|XGE",
+      "src": "XGE",
+      "name_en": "Circle of the Shepherd",
+      "name_zh": "牧人结社"
+    },
+    {
+      "id": "Circle of Spores|TCE",
+      "src": "TCE",
+      "name_en": "Circle of Spores",
+      "name_zh": "孢子结社"
+    },
+    {
+      "id": "Circle of Stars|TCE",
+      "src": "TCE",
+      "name_en": "Circle of Stars",
+      "name_zh": "星辰结社"
+    },
+    {
+      "id": "Circle of Wildfire|TCE",
+      "src": "TCE",
+      "name_en": "Circle of Wildfire",
+      "name_zh": "野火结社"
+    },
+    {
+      "id": "Circle of the Land|XPHB",
+      "src": "XPHB",
+      "name_en": "Circle of the Land",
+      "name_zh": "大地结社"
+    },
+    {
+      "id": "Circle of the Moon|XPHB",
+      "src": "XPHB",
+      "name_en": "Circle of the Moon",
+      "name_zh": "月亮结社"
+    },
+    {
+      "id": "Circle of the Sea|XPHB",
+      "src": "XPHB",
+      "name_en": "Circle of the Sea",
+      "name_zh": "海洋结社"
+    },
+    {
+      "id": "Circle of the Stars|XPHB",
+      "src": "XPHB",
+      "name_en": "Circle of the Stars",
+      "name_zh": "星辰结社"
+    },
+    {
+      "id": "Battle Master|PHB",
+      "src": "PHB",
+      "name_en": "Battle Master",
+      "name_zh": "战斗大师"
+    },
+    {
+      "id": "Champion|PHB",
+      "src": "PHB",
+      "name_en": "Champion",
+      "name_zh": "勇士"
+    },
+    {
+      "id": "Eldritch Knight|PHB",
+      "src": "PHB",
+      "name_en": "Eldritch Knight",
+      "name_zh": "奥法骑士"
+    },
+    {
+      "id": "Purple Dragon Knight (Banneret)|SCAG",
+      "src": "SCAG",
+      "name_en": "Purple Dragon Knight (Banneret)",
+      "name_zh": "紫龙骑士(旗将)"
+    },
+    {
+      "id": "Arcane Archer|XGE",
+      "src": "XGE",
+      "name_en": "Arcane Archer",
+      "name_zh": "魔射手"
+    },
+    {
+      "id": "Cavalier|XGE",
+      "src": "XGE",
+      "name_en": "Cavalier",
+      "name_zh": "骁骑士"
+    },
+    {
+      "id": "Samurai|XGE",
+      "src": "XGE",
+      "name_en": "Samurai",
+      "name_zh": "武士"
+    },
+    {
+      "id": "Echo Knight|EGW",
+      "src": "EGW",
+      "name_en": "Echo Knight",
+      "name_zh": "回音骑士"
+    },
+    {
+      "id": "Psi Warrior|TCE",
+      "src": "TCE",
+      "name_en": "Psi Warrior",
+      "name_zh": "灵能武士"
+    },
+    {
+      "id": "Rune Knight|TCE",
+      "src": "TCE",
+      "name_en": "Rune Knight",
+      "name_zh": "符文骑士"
+    },
+    {
+      "id": "Battle Master|XPHB",
+      "src": "XPHB",
+      "name_en": "Battle Master",
+      "name_zh": "战斗大师"
+    },
+    {
+      "id": "Champion|XPHB",
+      "src": "XPHB",
+      "name_en": "Champion",
+      "name_zh": "勇士"
+    },
+    {
+      "id": "Eldritch Knight|XPHB",
+      "src": "XPHB",
+      "name_en": "Eldritch Knight",
+      "name_zh": "奥法骑士"
+    },
+    {
+      "id": "Psi Warrior|XPHB",
+      "src": "XPHB",
+      "name_en": "Psi Warrior",
+      "name_zh": "灵能武士"
+    },
+    {
+      "id": "Banneret|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Banneret",
+      "name_zh": "旗将"
+    },
+    {
+      "id": "Way of Shadow|PHB",
+      "src": "PHB",
+      "name_en": "Way of Shadow",
+      "name_zh": "暗影宗"
+    },
+    {
+      "id": "Way of the Four Elements|PHB",
+      "src": "PHB",
+      "name_en": "Way of the Four Elements",
+      "name_zh": "四象宗"
+    },
+    {
+      "id": "Way of the Open Hand|PHB",
+      "src": "PHB",
+      "name_en": "Way of the Open Hand",
+      "name_zh": "散打宗"
+    },
+    {
+      "id": "Way of the Long Death|SCAG",
+      "src": "SCAG",
+      "name_en": "Way of the Long Death",
+      "name_zh": "永亡宗"
+    },
+    {
+      "id": "Way of the Drunken Master|XGE",
+      "src": "XGE",
+      "name_en": "Way of the Drunken Master",
+      "name_zh": "醉拳宗"
+    },
+    {
+      "id": "Way of the Kensei|XGE",
+      "src": "XGE",
+      "name_en": "Way of the Kensei",
+      "name_zh": "剑圣宗"
+    },
+    {
+      "id": "Way of the Sun Soul|XGE",
+      "src": "XGE",
+      "name_en": "Way of the Sun Soul",
+      "name_zh": "日魂宗"
+    },
+    {
+      "id": "Way of Mercy|TCE",
+      "src": "TCE",
+      "name_en": "Way of Mercy",
+      "name_zh": "命流宗"
+    },
+    {
+      "id": "Way of the Astral Self|TCE",
+      "src": "TCE",
+      "name_en": "Way of the Astral Self",
+      "name_zh": "星我宗"
+    },
+    {
+      "id": "Way of the Ascendant Dragon|FTD",
+      "src": "FTD",
+      "name_en": "Way of the Ascendant Dragon",
+      "name_zh": "神龙宗"
+    },
+    {
+      "id": "Warrior of Mercy|XPHB",
+      "src": "XPHB",
+      "name_en": "Warrior of Mercy",
+      "name_zh": "命流武者"
+    },
+    {
+      "id": "Warrior of Shadow|XPHB",
+      "src": "XPHB",
+      "name_en": "Warrior of Shadow",
+      "name_zh": "暗影武者"
+    },
+    {
+      "id": "Warrior of the Elements|XPHB",
+      "src": "XPHB",
+      "name_en": "Warrior of the Elements",
+      "name_zh": "四象武者"
+    },
+    {
+      "id": "Warrior of the Open Hand|XPHB",
+      "src": "XPHB",
+      "name_en": "Warrior of the Open Hand",
+      "name_zh": "散打武者"
+    },
+    {
+      "id": "Order of the Avatar|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Avatar",
+      "name_zh": "具现者修会"
+    },
+    {
+      "id": "Order of the Awakened|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Awakened",
+      "name_zh": "觉醒者修会"
+    },
+    {
+      "id": "Order of the Immortal|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Immortal",
+      "name_zh": "不朽者修会"
+    },
+    {
+      "id": "Order of the Nomad|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Nomad",
+      "name_zh": "漫游者修会"
+    },
+    {
+      "id": "Order of the Soul Knife|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Soul Knife",
+      "name_zh": "魂刃修会"
+    },
+    {
+      "id": "Order of the Wu Jen|UATheMysticClass",
+      "src": "UATheMysticClass",
+      "name_en": "Order of the Wu Jen",
+      "name_zh": "巫觋修会"
+    },
+    {
+      "id": "Oath of Devotion|PHB",
+      "src": "PHB",
+      "name_en": "Oath of Devotion",
+      "name_zh": "奉献之誓"
+    },
+    {
+      "id": "Oath of the Ancients|PHB",
+      "src": "PHB",
+      "name_en": "Oath of the Ancients",
+      "name_zh": "古贤之誓"
+    },
+    {
+      "id": "Oath of Vengeance|PHB",
+      "src": "PHB",
+      "name_en": "Oath of Vengeance",
+      "name_zh": "复仇之誓"
+    },
+    {
+      "id": "Oathbreaker|DMG",
+      "src": "DMG",
+      "name_en": "Oathbreaker",
+      "name_zh": "破誓者"
+    },
+    {
+      "id": "Oath of the Crown|SCAG",
+      "src": "SCAG",
+      "name_en": "Oath of the Crown",
+      "name_zh": "王冠之誓"
+    },
+    {
+      "id": "Oath of Conquest|XGE",
+      "src": "XGE",
+      "name_en": "Oath of Conquest",
+      "name_zh": "征服之誓"
+    },
+    {
+      "id": "Oath of Redemption|XGE",
+      "src": "XGE",
+      "name_en": "Oath of Redemption",
+      "name_zh": "救赎之誓"
+    },
+    {
+      "id": "Oath of Glory|TCE",
+      "src": "TCE",
+      "name_en": "Oath of Glory",
+      "name_zh": "荣耀之誓"
+    },
+    {
+      "id": "Oath of the Watchers|TCE",
+      "src": "TCE",
+      "name_en": "Oath of the Watchers",
+      "name_zh": "守望之誓"
+    },
+    {
+      "id": "Oath of Devotion|XPHB",
+      "src": "XPHB",
+      "name_en": "Oath of Devotion",
+      "name_zh": "奉献之誓"
+    },
+    {
+      "id": "Oath of Glory|XPHB",
+      "src": "XPHB",
+      "name_en": "Oath of Glory",
+      "name_zh": "荣耀之誓"
+    },
+    {
+      "id": "Oath of the Ancients|XPHB",
+      "src": "XPHB",
+      "name_en": "Oath of the Ancients",
+      "name_zh": "古贤之誓"
+    },
+    {
+      "id": "Oath of Vengeance|XPHB",
+      "src": "XPHB",
+      "name_en": "Oath of Vengeance",
+      "name_zh": "复仇之誓"
+    },
+    {
+      "id": "Oath of the Noble Genies|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Oath of the Noble Genies",
+      "name_zh": "巨灵贵族之誓"
+    },
+    {
+      "id": "Beast Master|PHB",
+      "src": "PHB",
+      "name_en": "Beast Master",
+      "name_zh": "驯兽师"
+    },
+    {
+      "id": "Hunter|PHB",
+      "src": "PHB",
+      "name_en": "Hunter",
+      "name_zh": "猎人"
+    },
+    {
+      "id": "Gloom Stalker|XGE",
+      "src": "XGE",
+      "name_en": "Gloom Stalker",
+      "name_zh": "幽域追踪者"
+    },
+    {
+      "id": "Horizon Walker|XGE",
+      "src": "XGE",
+      "name_en": "Horizon Walker",
+      "name_zh": "边界行者"
+    },
+    {
+      "id": "Monster Slayer|XGE",
+      "src": "XGE",
+      "name_en": "Monster Slayer",
+      "name_zh": "怪物杀手"
+    },
+    {
+      "id": "Fey Wanderer|TCE",
+      "src": "TCE",
+      "name_en": "Fey Wanderer",
+      "name_zh": "妖精漫游者"
+    },
+    {
+      "id": "Swarmkeeper|TCE",
+      "src": "TCE",
+      "name_en": "Swarmkeeper",
+      "name_zh": "集群守卫"
+    },
+    {
+      "id": "Drakewarden|FTD",
+      "src": "FTD",
+      "name_en": "Drakewarden",
+      "name_zh": "龙兽守卫"
+    },
+    {
+      "id": "Beast Master|XPHB",
+      "src": "XPHB",
+      "name_en": "Beast Master",
+      "name_zh": "驯兽师"
+    },
+    {
+      "id": "Fey Wanderer|XPHB",
+      "src": "XPHB",
+      "name_en": "Fey Wanderer",
+      "name_zh": "妖精漫游者"
+    },
+    {
+      "id": "Gloom Stalker|XPHB",
+      "src": "XPHB",
+      "name_en": "Gloom Stalker",
+      "name_zh": "幽域追踪者"
+    },
+    {
+      "id": "Hunter|XPHB",
+      "src": "XPHB",
+      "name_en": "Hunter",
+      "name_zh": "猎人"
+    },
+    {
+      "id": "Winter Walker|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Winter Walker",
+      "name_zh": "凛冬行者"
+    },
+    {
+      "id": "Arcane Trickster|PHB",
+      "src": "PHB",
+      "name_en": "Arcane Trickster",
+      "name_zh": "诡术师"
+    },
+    {
+      "id": "Assassin|PHB",
+      "src": "PHB",
+      "name_en": "Assassin",
+      "name_zh": "刺客"
+    },
+    {
+      "id": "Thief|PHB",
+      "src": "PHB",
+      "name_en": "Thief",
+      "name_zh": "盗贼"
+    },
+    {
+      "id": "Inquisitive|XGE",
+      "src": "XGE",
+      "name_en": "Inquisitive",
+      "name_zh": "调查员"
+    },
+    {
+      "id": "Mastermind|XGE",
+      "src": "XGE",
+      "name_en": "Mastermind",
+      "name_zh": "策士"
+    },
+    {
+      "id": "Scout|XGE",
+      "src": "XGE",
+      "name_en": "Scout",
+      "name_zh": "斥候"
+    },
+    {
+      "id": "Swashbuckler|XGE",
+      "src": "XGE",
+      "name_en": "Swashbuckler",
+      "name_zh": "剑客"
+    },
+    {
+      "id": "Phantom|TCE",
+      "src": "TCE",
+      "name_en": "Phantom",
+      "name_zh": "鬼魅"
+    },
+    {
+      "id": "Soulknife|TCE",
+      "src": "TCE",
+      "name_en": "Soulknife",
+      "name_zh": "魂刃"
+    },
+    {
+      "id": "Arcane Trickster|XPHB",
+      "src": "XPHB",
+      "name_en": "Arcane Trickster",
+      "name_zh": "诡术师"
+    },
+    {
+      "id": "Assassin|XPHB",
+      "src": "XPHB",
+      "name_en": "Assassin",
+      "name_zh": "刺客"
+    },
+    {
+      "id": "Soulknife|XPHB",
+      "src": "XPHB",
+      "name_en": "Soulknife",
+      "name_zh": "魂刃"
+    },
+    {
+      "id": "Thief|XPHB",
+      "src": "XPHB",
+      "name_en": "Thief",
+      "name_zh": "盗贼"
+    },
+    {
+      "id": "Scion of the Three|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Scion of the Three",
+      "name_zh": "三神门徒"
+    },
+    {
+      "id": "Draconic Bloodline|PHB",
+      "src": "PHB",
+      "name_en": "Draconic Bloodline",
+      "name_zh": "龙族血脉"
+    },
+    {
+      "id": "Wild Magic|PHB",
+      "src": "PHB",
+      "name_en": "Wild Magic",
+      "name_zh": "狂野魔法"
+    },
+    {
+      "id": "Pyromancer (PSK)|PSK",
+      "src": "PSK",
+      "name_en": "Pyromancer (PSK)",
+      "name_zh": "烈焰术士(PSK)"
+    },
+    {
+      "id": "Divine Soul|XGE",
+      "src": "XGE",
+      "name_en": "Divine Soul",
+      "name_zh": "神圣之魂"
+    },
+    {
+      "id": "Shadow Magic|XGE",
+      "src": "XGE",
+      "name_en": "Shadow Magic",
+      "name_zh": "暗影魔法"
+    },
+    {
+      "id": "Storm Sorcery|XGE",
+      "src": "XGE",
+      "name_en": "Storm Sorcery",
+      "name_zh": "风暴术法"
+    },
+    {
+      "id": "Aberrant Mind|TCE",
+      "src": "TCE",
+      "name_en": "Aberrant Mind",
+      "name_zh": "畸变心智"
+    },
+    {
+      "id": "Clockwork Soul|TCE",
+      "src": "TCE",
+      "name_en": "Clockwork Soul",
+      "name_zh": "时械之魂"
+    },
+    {
+      "id": "Lunar Sorcery|DSotDQ",
+      "src": "DSotDQ",
+      "name_en": "Lunar Sorcery",
+      "name_zh": "月之术法"
+    },
+    {
+      "id": "Aberrant Sorcery|XPHB",
+      "src": "XPHB",
+      "name_en": "Aberrant Sorcery",
+      "name_zh": "畸变术法"
+    },
+    {
+      "id": "Clockwork Sorcery|XPHB",
+      "src": "XPHB",
+      "name_en": "Clockwork Sorcery",
+      "name_zh": "时械术法"
+    },
+    {
+      "id": "Draconic Sorcery|XPHB",
+      "src": "XPHB",
+      "name_en": "Draconic Sorcery",
+      "name_zh": "龙族术法"
+    },
+    {
+      "id": "Wild Magic Sorcery|XPHB",
+      "src": "XPHB",
+      "name_en": "Wild Magic Sorcery",
+      "name_zh": "狂野术法"
+    },
+    {
+      "id": "Spellfire Sorcery|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Spellfire Sorcery",
+      "name_zh": "咒火术法"
+    },
+    {
+      "id": "The Archfey|PHB",
+      "src": "PHB",
+      "name_en": "The Archfey",
+      "name_zh": "至高妖精"
+    },
+    {
+      "id": "The Fiend|PHB",
+      "src": "PHB",
+      "name_en": "The Fiend",
+      "name_zh": "邪魔宗主"
+    },
+    {
+      "id": "The Great Old One|PHB",
+      "src": "PHB",
+      "name_en": "The Great Old One",
+      "name_zh": "旧日支配者宗主"
+    },
+    {
+      "id": "The Undying|SCAG",
+      "src": "SCAG",
+      "name_en": "The Undying",
+      "name_zh": "不朽者宗主"
+    },
+    {
+      "id": "The Celestial|XGE",
+      "src": "XGE",
+      "name_en": "The Celestial",
+      "name_zh": "天界宗主"
+    },
+    {
+      "id": "The Hexblade|XGE",
+      "src": "XGE",
+      "name_en": "The Hexblade",
+      "name_zh": "咒剑宗主"
+    },
+    {
+      "id": "The Fathomless|TCE",
+      "src": "TCE",
+      "name_en": "The Fathomless",
+      "name_zh": "深海意志宗主"
+    },
+    {
+      "id": "The Genie|TCE",
+      "src": "TCE",
+      "name_en": "The Genie",
+      "name_zh": "巨灵宗主"
+    },
+    {
+      "id": "The Undead|VRGR",
+      "src": "VRGR",
+      "name_en": "The Undead",
+      "name_zh": "死灵宗主"
+    },
+    {
+      "id": "Archfey Patron|XPHB",
+      "src": "XPHB",
+      "name_en": "Archfey Patron",
+      "name_zh": "至高妖精宗主"
+    },
+    {
+      "id": "Celestial Patron|XPHB",
+      "src": "XPHB",
+      "name_en": "Celestial Patron",
+      "name_zh": "天界宗主"
+    },
+    {
+      "id": "Fiend Patron|XPHB",
+      "src": "XPHB",
+      "name_en": "Fiend Patron",
+      "name_zh": "邪魔宗主"
+    },
+    {
+      "id": "Great Old One Patron|XPHB",
+      "src": "XPHB",
+      "name_en": "Great Old One Patron",
+      "name_zh": "旧日支配者宗主"
+    },
+    {
+      "id": "School of Abjuration|PHB",
+      "src": "PHB",
+      "name_en": "School of Abjuration",
+      "name_zh": "防护学派"
+    },
+    {
+      "id": "School of Conjuration|PHB",
+      "src": "PHB",
+      "name_en": "School of Conjuration",
+      "name_zh": "咒法学派"
+    },
+    {
+      "id": "School of Divination|PHB",
+      "src": "PHB",
+      "name_en": "School of Divination",
+      "name_zh": "预言学派"
+    },
+    {
+      "id": "School of Enchantment|PHB",
+      "src": "PHB",
+      "name_en": "School of Enchantment",
+      "name_zh": "惑控学派"
+    },
+    {
+      "id": "School of Evocation|PHB",
+      "src": "PHB",
+      "name_en": "School of Evocation",
+      "name_zh": "塑能学派"
+    },
+    {
+      "id": "School of Illusion|PHB",
+      "src": "PHB",
+      "name_en": "School of Illusion",
+      "name_zh": "幻术学派"
+    },
+    {
+      "id": "School of Necromancy|PHB",
+      "src": "PHB",
+      "name_en": "School of Necromancy",
+      "name_zh": "死灵学派"
+    },
+    {
+      "id": "School of Transmutation|PHB",
+      "src": "PHB",
+      "name_en": "School of Transmutation",
+      "name_zh": "变化学派"
+    },
+    {
+      "id": "War Magic|XGE",
+      "src": "XGE",
+      "name_en": "War Magic",
+      "name_zh": "战争魔法"
+    },
+    {
+      "id": "Chronurgy Magic|EGW",
+      "src": "EGW",
+      "name_en": "Chronurgy Magic",
+      "name_zh": "时间魔法"
+    },
+    {
+      "id": "Graviturgy Magic|EGW",
+      "src": "EGW",
+      "name_en": "Graviturgy Magic",
+      "name_zh": "重力魔法"
+    },
+    {
+      "id": "Bladesinging|TCE",
+      "src": "TCE",
+      "name_en": "Bladesinging",
+      "name_zh": "剑咏者"
+    },
+    {
+      "id": "Order of Scribes|TCE",
+      "src": "TCE",
+      "name_en": "Order of Scribes",
+      "name_zh": "书士会"
+    },
+    {
+      "id": "Abjurer|XPHB",
+      "src": "XPHB",
+      "name_en": "Abjurer",
+      "name_zh": "防护师"
+    },
+    {
+      "id": "Diviner|XPHB",
+      "src": "XPHB",
+      "name_en": "Diviner",
+      "name_zh": "预言师"
+    },
+    {
+      "id": "Evoker|XPHB",
+      "src": "XPHB",
+      "name_en": "Evoker",
+      "name_zh": "塑能师"
+    },
+    {
+      "id": "Illusionist|XPHB",
+      "src": "XPHB",
+      "name_en": "Illusionist",
+      "name_zh": "幻术师"
+    },
+    {
+      "id": "Bladesinger|FRHoF",
+      "src": "FRHoF",
+      "name_en": "Bladesinger",
+      "name_zh": "剑咏者"
+    }
+  ]
+}

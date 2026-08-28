@@ -25,6 +25,24 @@ export class SheetService extends Service {
     // ---- 扩充子系统 ----
     lines.push("种族: " + (st.race || "无"));
     lines.push(st.background ? `背景: ${st.background}（${this.ctx.background.feature()}）` : "背景: 无");
+    // ---- v2.1：职业（等级/子职业/特性/职业法术位）----
+    if (st.cls && this.ctx.has("classes")) {
+      const cls = (this.ctx as any).classes;
+      lines.push(`职业: ${cls.summary()} | 生命骰 d${cls.hitDie()} | 熟练加值 +${cls.profBonus()}`);
+      const feats: string[] = cls.features();
+      if (feats.length) lines.push("职业特性: " + feats.join("、"));
+      const cslots: Record<number, number> = cls.spellSlots();
+      const slotTxt = Object.keys(cslots).map(Number).sort((a, b) => a - b)
+        .map((r) => `${r}环×${cslots[r]}`).join(" | ");
+      if (slotTxt) lines.push("职业法术位: " + slotTxt);
+      if ((st.gearProficiencies || []).length)
+        lines.push("装备熟练: " + st.gearProficiencies.join("、"));
+      if ((st.saveProficiencies || []).length)
+        lines.push("豁免熟练: " + st.saveProficiencies.join("、"));
+    } else {
+      lines.push("职业: 无");
+    }
+
     lines.push("专长: " + (st.feats.length ? st.feats.join(", ") : "无"));
     if (st.proficiencies.length) lines.push("熟练(+2): " + st.proficiencies.join(", "));
     if (Object.keys(st.slots).length) {
@@ -56,7 +74,7 @@ export class SheetService extends Service {
     if (st.equipment.length) {
       lines.push("--- 装备 ---");
       for (const item of st.equipment) {
-        const info = (this.ctx as any).equipment.EQUIPMENT_LIBRARY[item];
+        const info = (this.ctx as any).equipment.resolve(item);   // 手工库 + SRD 库统一解析
         lines.push(`${item}: ${info[5]} (AC+${info[2]})`);
       }
     } else lines.push("装备: 无");
@@ -109,6 +127,13 @@ export class SheetService extends Service {
       slots: { ...st.slots },
       slotsUsed: { ...st.slotsUsed },
       currentHp: st.currentHp,
+      conditions: [...(st.conditions || [])],
+      // ---- v2.1 职业 ----
+      cls: st.cls,
+      level: st.level,
+      subclass: st.subclass,
+      gearProficiencies: [...(st.gearProficiencies || [])],
+      saveProficiencies: [...(st.saveProficiencies || [])],
     };
   }
 }
