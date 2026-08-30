@@ -275,6 +275,25 @@ class MagicService(Service):
             return {"ok": False, "reason": "no_fp",
                     "text": f"{self._name(actor)} 疲劳不足（{cur_fp}/{sp['energy']} FP），无法施展 {spell}"}
 
+        # 低玛那 -5 减值（批次1 A1：官方低玛那仅法师可施且全法术 -5）
+        modifier = int(modifier or 0)
+        if self.mana == "低":
+            modifier -= 5
+
+        # 专注打断（批次1 A2）：震慑/眩晕/盲目状态下先做 -3 意志检定，失败则中止（不耗 FP）
+        conds = getattr(actor.state, "conditions", []) or []
+        if any(c in ("震慑", "眩晕", "盲目") for c in conds):
+            will = self.ctx.ruleset.check(
+                actor, CheckRequest(actor=self._id(actor), kind="attribute",
+                                    key="智力", modifier=-3,
+                                    label=f"{self._name(actor)} 专注维持"))
+            if not will.success:
+                out = {"ok": False, "ruleset": "gurps", "spell": spell,
+                       "reason": "concentration_broken", "roll": will.roll,
+                       "text": will.text + " → 专注被打断，法术中止"}
+                self._log(out)
+                return out
+
         # 技能检定（法术即技能，复用 GURPS 适配器）
         res = self.ctx.ruleset.check(
             actor, CheckRequest(actor=self._id(actor), kind="skill",

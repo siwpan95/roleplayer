@@ -226,6 +226,66 @@ def test_gurps_crit_fail_table_rolls_all_branches_safely():
     assert len(seen) > 1, f"大失败表未掷出多种后果，仅见 {seen}"
 
 
+def test_gurps_low_mana_penalizes_casting():
+    """批次1 A1：低玛那下全法术检定 -5（官方结构性事实）。"""
+    sim, mage = _gurps_sim()
+    sim.ctx.magic.set_mana("低")
+    assert sim.ctx.magic.learn_gurps_spell(mage, "点火")[0]  # 低玛那仅法师可学，mage 有魔法天赋1级
+    captured = {}
+    orig = sim.ctx.ruleset.check
+
+    def spy(actor, req):
+        captured["modifier"] = req.modifier
+        return orig(actor, req)
+
+    sim.ctx.ruleset.check = spy
+    sim.ctx.magic.cast_gurps(mage, "点火")
+    assert captured.get("modifier") == -5
+
+
+def test_gurps_concentration_broken_when_stunned():
+    """批次1 A2：震慑状态下施法先做 -3 意志检定，失败则专注被打断且不耗 FP。"""
+    sim, mage = _gurps_sim()
+    assert sim.ctx.magic.learn_gurps_spell(mage, "点火")[0]
+    # 确定性必败：智力 1 → 意志目标 = 1 - 3(打断) - 4(震慑状态) < 0
+    mage.state.attributes["智力"] = 1
+    mage.state.conditions = ["震慑"]
+    fp0, mx = sim.ctx.magic.fp_of(mage)
+    res = sim.ctx.magic.cast_gurps(mage, "点火")
+    assert res.get("reason") == "concentration_broken"
+    assert "专注被打断" in res.get("text", "")
+    assert sim.ctx.magic.fp_of(mage)[0] == fp0          # 未耗 FP
+
+
+def test_gurps_skill_cost_difficulty_ladders():
+    """批次1 A3：四档难度成本阶梯（普通档保持既有简化行为）。"""
+    from troupe.data_world import gurps_skill_cost
+    # 普通档（默认，旧行为）：0→1、1→2、2→4、3→8
+    assert gurps_skill_cost(0) == 1
+    assert gurps_skill_cost(1) == 2
+    assert gurps_skill_cost(2) == 4
+    assert gurps_skill_cost(3) == 8
+    # 易（偏移 0）：1 点=Att、2=+1、4=+2、8=+3
+    assert gurps_skill_cost(0, "易") == 1
+    assert gurps_skill_cost(1, "易") == 2
+    assert gurps_skill_cost(2, "易") == 4
+    assert gurps_skill_cost(3, "易") == 8
+    # 难（偏移 -2）：1 点=Att-2、2=Att-1、4=Att、8=Att+1
+    assert gurps_skill_cost(-2, "难") == 1
+    assert gurps_skill_cost(-1, "难") == 2
+    assert gurps_skill_cost(0, "难") == 4
+    assert gurps_skill_cost(1, "难") == 8
+    # 极难（偏移 -3）
+    assert gurps_skill_cost(-3, "极难") == 1
+    assert gurps_skill_cost(-2, "极难") == 2
+    assert gurps_skill_cost(-1, "极难") == 4
+    assert gurps_skill_cost(0, "极难") == 8
+    # 未知档报错
+    import pytest as _pytest
+    with _pytest.raises(ValueError):
+        gurps_skill_cost(0, "不存在")
+
+
 def _lookup_level(name: str) -> int:
     from d20.data_spells import SRD_SPELLS
     return int(SRD_SPELLS[name]["level"])

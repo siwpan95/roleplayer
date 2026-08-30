@@ -42,18 +42,32 @@ GURPS_SKILL_DIFFICULTY = {"易": 0, "普通": -1, "难": -2, "极难": -3}
 GURPS_SKILL_COST_STEPS = (1, 2, 4)
 
 
-def gurps_skill_cost(relative_levels: int) -> int:
+def gurps_skill_cost(relative_levels: int, difficulty: str = "普通") -> int:
     """购买到「相对基础等级 +n」所需累计点数。
 
-    n<=0 → 1 点（仅掌握）；+1 → 2 点；+2 → 4 点；之后每级 +4 点。
+    「普通」档（默认）保持项目既有简化阶梯：n<=0 → 1 点（仅掌握）；
+    +1 → 2 点；+2 → 4 点；之后每级 +4 点。
+    传入「易/难/极难」时按官方四档偏移阶梯（偏移 易=0 / 难=-2 / 极难=-3）：
+    1 点 = 偏移档；2 点 = 偏移+1；4 点 = 偏移+2；此后每级 +4 点。
     """
-    if relative_levels <= 0:
-        return GURPS_SKILL_COST_STEPS[0]
-    if relative_levels == 1:
-        return GURPS_SKILL_COST_STEPS[1]
-    if relative_levels == 2:
-        return GURPS_SKILL_COST_STEPS[2]
-    return GURPS_SKILL_COST_STEPS[2] + (relative_levels - 2) * 4
+    if difficulty == "普通":
+        if relative_levels <= 0:
+            return GURPS_SKILL_COST_STEPS[0]
+        if relative_levels == 1:
+            return GURPS_SKILL_COST_STEPS[1]
+        if relative_levels == 2:
+            return GURPS_SKILL_COST_STEPS[2]
+        return GURPS_SKILL_COST_STEPS[2] + (relative_levels - 2) * 4
+    offset = GURPS_SKILL_DIFFICULTY.get(difficulty)
+    if offset is None:
+        raise ValueError(f"未知技能难度档: {difficulty}（应为 易/普通/难/极难）")
+    if relative_levels <= offset:
+        return 1
+    if relative_levels == offset + 1:
+        return 2
+    if relative_levels == offset + 2:
+        return 4
+    return 4 + (relative_levels - (offset + 2)) * 4
 
 
 # =============================================================================
