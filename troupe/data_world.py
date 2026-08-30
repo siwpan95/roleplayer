@@ -196,12 +196,13 @@ def knockdown_success(roll: int, st: int) -> bool:
 # =============================================================================
 #: 条件 → 对检定的修正。``check`` 作用于所有 GURPS 检定（DX/IQ 系），
 #  ``defense`` 额外作用于主动防御，``attack`` 作用于攻击命中检定，``skip`` 表示无法行动。
-#: 来源：Basic Set 公开的状态效果（震慑 -4 DX、倒地 -3 攻击/防御、盲目 -10 攻击/-6 防御、
-#  束缚无法行动、眩晕 -2、失血持续掉血）。
+#: 来源：Basic Set 公开的状态效果（震慑 -4 DX、倒地 攻击-4/防御-3、盲目 -10 攻击/-6 防御、
+#  束缚无法行动、眩晕 -2、失血持续掉血）。倒地精确值 trow 未译第十二/十三章，
+#  以公开数值为准，⚠️ 待英文原书 B551 复核。
 CONDITION_MODIFIERS_GURPS: dict[str, dict] = {
     "震慑":   {"check": -4, "defense": -4, "attack": -4},
     "眩晕":   {"check": -2, "defense": -2, "attack": -2},
-    "倒地":   {"check": 0,  "defense": -3, "attack": -3},
+    "倒地":   {"check": 0,  "defense": -3, "attack": -4},
     "盲目":   {"check": -6, "defense": -6, "attack": -10},
     "失能":   {"check": -2, "defense": -2, "attack": -4},
     "束缚":   {"check": 0,  "defense": 0,  "attack": 0, "skip": True},

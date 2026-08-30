@@ -55,19 +55,21 @@ GURPS_SPELLS: dict[str, dict] = {
     "火球":  {"en": "Fireball", "college": "火", "attr": "IQ", "energy": 3,
               "time": 2, "prereqs": ["创造火"], "kind": "damage", "damage": (3, 6, 0),
               "dtype": "灼烧", "resist": None, "condition": None, "range": 100},
-    # ---- 风学院（官方 Air 系；官方前置 Magery 1 + 6 个风系法术，本仓未收录 6 风法术故简化为无前置）----
+    # ---- 风学院（官方 Air 系；官方前置 Magery 1 + 6 个风系法术、耗能可变 1d-1/点，
+    #      本仓未收录 6 风法术前置且简化为固定耗 2）----
     "闪电箭": {"en": "Lightning", "college": "风", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "闪电", "resist": None, "condition": None, "range": 100},
-    # ---- 冰/水学院 ----
+    # ---- 冰/水学院（官方 Water 系对应为 Icy Weapon/寒冰武器，本仓自拟名「寒冰箭」）----
     "寒冰箭": {"en": "Ice Dagger", "college": "水", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "寒冷", "resist": None, "condition": None, "range": 80},
-    # ---- 心智控制学院（官方 Mind Control 系，IQ 施法；2026-08-30 联网核对修正自「身体控制」）----
-    "眩晕":  {"en": "Daze", "college": "心智控制", "attr": "IQ", "energy": 2,
+    # ---- 心智控制学院（官方 Mind Control 系，IQ 施法；2026-08-30 联网核对修正自「身体控制」。
+    #      官方前置 Foolishness（愚钝术，本仓未收录故简化无前置）；官方耗能 3）----
+    "眩晕":  {"en": "Daze", "college": "心智控制", "attr": "IQ", "energy": 3,
               "time": 2, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "IQ", "condition": ["眩晕"], "range": 10},
-    "昏睡":  {"en": "Sleep", "college": "心智控制", "attr": "IQ", "energy": 3,
+    "昏睡":  {"en": "Sleep", "college": "心智控制", "attr": "IQ", "energy": 4,
               "time": 4, "prereqs": ["眩晕"], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "HT", "condition": ["倒地", "震慑"], "range": 10},
     # ---- 心智学院 ----
@@ -77,30 +79,35 @@ GURPS_SPELLS: dict[str, dict] = {
     "催眠":  {"en": "Hypnotism", "college": "心智控制", "attr": "IQ", "energy": 1,
               "time": 3, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "Will", "condition": ["眩晕"], "range": 10},
+    # 注：4e 中 Hypnotism 本身是技能而非 Basic Set 法术，本仓作为心智控制法术收录属自研扩展。
     # ---- 防护学院 ----
+    # ---- 防护学院（官方前置 Magery 2、耗 2×DB，本仓简化无前置固定耗 2）----
     "护盾术": {"en": "Shield", "college": "防护", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "buff", "damage": None,
                "dtype": "钝击", "resist": None, "condition": None, "range": 0},
-    "治愈术": {"en": "Cure", "college": "治疗", "attr": "HT", "energy": 3,
+    # 官方名 Minor Healing/Major Healing；4e 无 HT 基础法术（全部 IQ），2026-08-30 核对修正。
+    "治愈术": {"en": "Cure", "college": "治疗", "attr": "IQ", "energy": 3,
                "time": 4, "prereqs": [], "kind": "buff", "damage": None,
                "dtype": "钝击", "resist": None, "condition": None, "range": 0},
     # ---- 制造与破坏学院 ----
     "粉碎":  {"en": "Shatter", "college": "制造与破坏", "attr": "IQ", "energy": 3,
               "time": 3, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
               "dtype": "钝击", "resist": None, "condition": None, "range": 50},
-    # ---- 光与暗学院（官方 Light and Darkness 系；2026-08-30 联网核对修正自「幻术」）----
-    "隐形术": {"en": "Invisibility", "college": "光与暗", "attr": "IQ", "energy": 4,
+    # ---- 光与暗学院（官方 Light and Darkness 系；2026-08-30 联网核对修正自「幻术」。
+    #      官方耗能 5 维持 3/人）----
+    "隐形术": {"en": "Invisibility", "college": "光与暗", "attr": "IQ", "energy": 5,
                "time": 4, "prereqs": [], "kind": "buff", "damage": None,
                "dtype": "钝击", "resist": None, "condition": None, "range": 0},
     # ---- 光学院 ----
     "光亮术": {"en": "Light", "college": "光", "attr": "IQ", "energy": 1,
                "time": 1, "prereqs": [], "kind": "utility", "damage": None,
                "dtype": "光耀", "resist": None, "condition": None, "range": 10},
-    # ---- 知识学院（官方 Knowledge 系；en 由误标的 Seek Magic 修正为 Detect Magic）----
+    # ---- 知识学院（官方 Knowledge 系；en 由误标的 Seek Magic 修正为 Detect Magic；
+    #      官方前置 Magery 1，本仓简化无前置）----
     "侦测魔法": {"en": "Detect Magic", "college": "知识", "attr": "IQ", "energy": 2,
                  "time": 2, "prereqs": [], "kind": "utility", "damage": None,
                  "dtype": "钝击", "resist": None, "condition": None, "range": 0},
-    # ---- 死灵学院 ----
+    # ---- 死灵学院（官方 Necromantic 系无同名标准法术，本仓自拟条目）----
     "虚弱术": {"en": "Weakness", "college": "死灵", "attr": "IQ", "energy": 3,
                "time": 3, "prereqs": [], "kind": "resist", "damage": None,
                "dtype": "死灵", "resist": "HT", "condition": ["力竭"], "range": 50},

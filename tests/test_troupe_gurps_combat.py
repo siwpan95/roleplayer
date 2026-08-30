@@ -177,7 +177,9 @@ def test_condition_modifier_feeds_into_gurps_check():
 def test_condition_modifier_table_present():
     assert condition_modifier_of(["震慑"], "check") == -4
     assert condition_modifier_of(["震慑"], "defense") == -4
-    assert condition_modifier_of(["倒地"], "attack") == -3
+    # 倒地 Prone：攻击 -4 / 防御 -3（2026-08-30 联网核对修正）
+    assert condition_modifier_of(["倒地"], "attack") == -4
+    assert condition_modifier_of(["倒地"], "defense") == -3
 
 
 # --------------------------------------------------------------------------- #
