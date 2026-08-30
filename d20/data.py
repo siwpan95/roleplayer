@@ -253,9 +253,9 @@ TALENT_BONUS_GROUPS = {
 ADVANTAGES_LIBRARY = {
     # 战斗向
     "战斗反射":     15,   # GURPS Combat Reflexes：+1 防御、+2 恐惧检定、抗晕眩
-    "双手灵巧":     5,    # GURPS Ambidexterity：消除副手惩罚
+    "双巧手":       5,    # GURPS Ambidexterity：消除副手惩罚（官方译名「双巧手」）
     "高痛觉阈":     10,   # GURPS High Pain Threshold：抗疼痛惩罚
-    "顽强意志":     8,    # GURPS Strong Will：+意志
+    "顽强意志":     8,    # 自研（3e Strong Will 概念；4e 中 Will 为次要属性 5 点/级）
     "超感知":       15,   # GURPS Danger Sense：危险直觉
     "闪电反应":     10,   # 先攻优势
     # 感官向
@@ -263,9 +263,9 @@ ADVANTAGES_LIBRARY = {
     "黑暗视觉":     8,    # 完全黑暗视觉
     "锐利听觉":     4,    # +聆听
     "锐利视觉":     4,    # +侦察
-    # 施法向
-    "魔法天赋1级":  15,   # GURPS Magery 1：施法+1
-    "魔法天赋2级":  30,   # 施法+2
+    # 施法向（2026-08-30 联网核对：Magery 0=5 点，1 级起 10 点/级）
+    "魔法天赋1级":  10,   # GURPS Magery 1：施法+1
+    "魔法天赋2级":  20,   # 施法+2
     # 体质向
     "额外生命1":    2,    # +1 HP/级
     "快速回复":     5,    # 休整恢复加倍
@@ -277,12 +277,12 @@ ADVANTAGES_LIBRARY = {
 # =============================================================================
 #: 缺点：name -> 返还 CP
 DISADVANTAGES_LIBRARY = {
-    # 心理
+    # 心理（2026-08-30 联网核对：冲动 Impulsiveness=-10*、丑陋 Ugly=-8）
     "荣誉准则":     10,   # GURPS Code of Honor：行为受限
-    "粗心大意":     5,    # GURPS Impulsiveness：冲动
-    "过度自信":     5,    # GURPS Overconfidence：高估自己
-    "好奇心":       5,    # GURPS Curious：遇事必究
-    "贪婪":         15,   # GURPS Greed：见财起意
+    "冲动":         10,   # GURPS Impulsiveness：冲动（自控*，原价 -10）
+    "过度自信":     5,    # GURPS Overconfidence：高估自己（自控*）
+    "好奇心":       5,    # GURPS Curious：遇事必究（自控*）
+    "贪婪":         15,   # GURPS Greed：见财起意（自控*）
     "守密":         10,   # GURPS Secret：一旦泄露后果严重
     "责任感":       10,   # GURPS Sense of Duty：护卫他人
     "正义感":       10,   # 见不平必管
@@ -291,13 +291,13 @@ DISADVANTAGES_LIBRARY = {
     "恐惧症:高处":  5,
     "恐惧症:幽闭":  10,   # 中度
     # 生理
-    "坏视力":       25,   # GURPS Bad Sight
+    "坏视力":       25,   # GURPS Bad Sight（近视，无矫正器 -25）
     "色盲":         0,    # 轻微
     "嗜酒":         5,    # GURPS Addiction（轻度）
     # 社交
     "仇敌":         10,   # GURPS Enemy：有人追杀
-    "丑陋":         10,   # GURPS Ugly：社交劣势
-    "文盲":         5,    # GURPS Illiteracy
+    "丑陋":         8,    # GURPS Ugly：社交劣势（官方 -8）
+    "文盲":         5,    # 自研保留（4e 已无独立 Illiteracy 劣势，并入 Low TL/怪癖）
 }
 
 

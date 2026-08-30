@@ -20,7 +20,7 @@ def _gurps_sim():
     sim = Simulator.quick(seed=3, ruleset="gurps", level=5, count=1)
     mage, _ = build_gurps_character(
         {"力量": 10, "敏捷": 12, "智力": 14, "体质": 12},
-        advantages=["魔力"], seed=3, name="法师")
+        advantages=["魔法天赋1级"], seed=3, name="法师")
     sim.party = [mage]
     sim._bind_party(["法师"])
     sim.ctx.magic.set_mana("普通")
@@ -33,7 +33,7 @@ def test_gurps_spell_is_skill_and_learned():
     assert ok, msg
     # 法术作为技能写入 state.skills，复用规则判定
     assert "点火" in mage.state.skills
-    # 基础有效等级 = IQ(14) + 魔力(1) = 15
+    # 基础有效等级 = IQ(14) + 魔法天赋1级(1) = 15
     assert mage.state.skills["点火"] == 15
 
 

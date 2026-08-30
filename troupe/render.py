@@ -129,11 +129,11 @@ def render_magic(sim: Any) -> str:
     mana = getattr(magic, "mana", "普通") if magic else "普通"
     rid = sim.ctx.ruleset.id
     if rid == "gurps":
-        lines.append(f"  法力位阶：{mana}")
+        lines.append(f"  玛那浓度：{mana}")
     for i, char in enumerate(sim.party, 1):
         if rid == "gurps":
             known = [n for n in char.state.skills if n in GURPS_SPELLS]
-            label = f"魔力{magic.magery_of(char) if magic else 0} · FP{magic.fp_of(char)[0] if magic else '?'}/{magic.fp_of(char)[1] if magic else ''}"
+            label = f"魔法天赋{magic.magery_of(char) if magic else 0} · FP{magic.fp_of(char)[0] if magic else '?'}/{magic.fp_of(char)[1] if magic else ''}"
         else:
             known = list((getattr(char.state, "flags", {}) or {}).get("dnd_known", []))
             label = f"施法属性 {getattr(char.state,'flags',{}).get('dnd_spell_ability','智力')}"

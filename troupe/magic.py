@@ -8,7 +8,7 @@
 * **GURPS 4e**（Basic Set / Magic，结构性公开事实）
     - 每个法术是**一项独立技能**，基础有效等级 = 属性(IQ 或 HT) + 魔力(Magery)；
       再按相对基础等级 +n 购买（消耗点数，与 ``character_gurps`` 同套点经济）。
-    - 施法消耗**疲劳点(FP)**；法术能否施展取决于**法力位阶(mana level)**——
+    - 施法消耗**疲劳点(FP)**；法术能否施展取决于**玛那浓度(mana level)**——
       普通法力下只有「法师(mage, 即拥有 Magery 者)」能施法。
     - 24 个法术学院(college)；高阶法术有**前置法术**；大失败走临界法术失败表（此处简化为轻微反噬）。
     - 命中型法术（火球/闪电）目标可闪避；抗力型法术（催眠/恐惧）目标掷属性检定抵抗。
@@ -49,29 +49,32 @@ GURPS_SPELLS: dict[str, dict] = {
     "创造火": {"en": "Create Fire", "college": "火", "attr": "IQ", "energy": 2,
                 "time": 2, "prereqs": ["点火"], "kind": "utility", "damage": (1, 6, 0),
                 "dtype": "灼烧", "resist": None, "condition": None, "range": 10},
+    # 官方译名「火球术」；因与 D&D SRD 同名法术键冲突，本仓 GURPS 键保留「火球」。
+    # 官方前置：Magery 1 + 召火术(Create Fire) + 火焰塑形(Shape Fire)（trow 8778 中译；
+    # 注意俄译本 sp1r 把 Magery 前置系统性抬档为 2，不可信）——本仓自研简化只要求「创造火」。
     "火球":  {"en": "Fireball", "college": "火", "attr": "IQ", "energy": 3,
               "time": 2, "prereqs": ["创造火"], "kind": "damage", "damage": (3, 6, 0),
               "dtype": "灼烧", "resist": None, "condition": None, "range": 100},
-    # ---- 闪电学院 ----
-    "闪电箭": {"en": "Lightning", "college": "闪电", "attr": "IQ", "energy": 2,
+    # ---- 风学院（官方 Air 系；官方前置 Magery 1 + 6 个风系法术，本仓未收录 6 风法术故简化为无前置）----
+    "闪电箭": {"en": "Lightning", "college": "风", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "闪电", "resist": None, "condition": None, "range": 100},
     # ---- 冰/水学院 ----
     "寒冰箭": {"en": "Ice Dagger", "college": "水", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "寒冷", "resist": None, "condition": None, "range": 80},
-    # ---- 身体控制学院（基础属性 HT）----
-    "眩晕":  {"en": "Daze", "college": "身体控制", "attr": "HT", "energy": 2,
+    # ---- 心智控制学院（官方 Mind Control 系，IQ 施法；2026-08-30 联网核对修正自「身体控制」）----
+    "眩晕":  {"en": "Daze", "college": "心智控制", "attr": "IQ", "energy": 2,
               "time": 2, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "IQ", "condition": ["眩晕"], "range": 10},
-    "昏睡":  {"en": "Sleep", "college": "身体控制", "attr": "HT", "energy": 3,
+    "昏睡":  {"en": "Sleep", "college": "心智控制", "attr": "IQ", "energy": 3,
               "time": 4, "prereqs": ["眩晕"], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "HT", "condition": ["倒地", "震慑"], "range": 10},
     # ---- 心智学院 ----
-    "恐惧":  {"en": "Fear", "college": "心智", "attr": "IQ", "energy": 3,
+    "恐惧":  {"en": "Fear", "college": "心智控制", "attr": "IQ", "energy": 3,
               "time": 2, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "Will", "condition": ["震慑"], "range": 100},
-    "催眠":  {"en": "Hypnotism", "college": "心智", "attr": "IQ", "energy": 1,
+    "催眠":  {"en": "Hypnotism", "college": "心智控制", "attr": "IQ", "energy": 1,
               "time": 3, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "Will", "condition": ["眩晕"], "range": 10},
     # ---- 防护学院 ----
@@ -85,16 +88,16 @@ GURPS_SPELLS: dict[str, dict] = {
     "粉碎":  {"en": "Shatter", "college": "制造与破坏", "attr": "IQ", "energy": 3,
               "time": 3, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
               "dtype": "钝击", "resist": None, "condition": None, "range": 50},
-    # ---- 幻术学院 ----
-    "隐形术": {"en": "Invisibility", "college": "幻术", "attr": "IQ", "energy": 4,
+    # ---- 光与暗学院（官方 Light and Darkness 系；2026-08-30 联网核对修正自「幻术」）----
+    "隐形术": {"en": "Invisibility", "college": "光与暗", "attr": "IQ", "energy": 4,
                "time": 4, "prereqs": [], "kind": "buff", "damage": None,
                "dtype": "钝击", "resist": None, "condition": None, "range": 0},
     # ---- 光学院 ----
     "光亮术": {"en": "Light", "college": "光", "attr": "IQ", "energy": 1,
                "time": 1, "prereqs": [], "kind": "utility", "damage": None,
                "dtype": "光耀", "resist": None, "condition": None, "range": 10},
-    # ---- 通讯学院 ----
-    "侦测魔法": {"en": "Seek Magic", "college": "通讯", "attr": "IQ", "energy": 2,
+    # ---- 知识学院（官方 Knowledge 系；en 由误标的 Seek Magic 修正为 Detect Magic）----
+    "侦测魔法": {"en": "Detect Magic", "college": "知识", "attr": "IQ", "energy": 2,
                  "time": 2, "prereqs": [], "kind": "utility", "damage": None,
                  "dtype": "钝击", "resist": None, "condition": None, "range": 0},
     # ---- 死灵学院 ----
@@ -103,8 +106,10 @@ GURPS_SPELLS: dict[str, dict] = {
                "dtype": "死灵", "resist": "HT", "condition": ["力竭"], "range": 50},
 }
 
-#: 法力位阶（GURPS 结构性事实）：普通法力下只有 mage(拥有 Magery)能施法
-MANA_LEVELS = ("无", "极低", "低", "普通", "高", "极高")
+#: 玛那浓度（GURPS 结构性事实，2026-08-30 联网核对修正）：官方 5 档，
+#: 无玛那（无人可施）/ 低玛那（仅法师，全法术 -5 减值）/ 普通玛那（仅法师）/
+#: 高玛那（人人可施）/ 极高玛那（人人可施 + FP 轮后回满 + 失败皆大失败）。
+MANA_LEVELS = ("无", "低", "普通", "高", "极高")
 
 #: GURPS 属性键（IQ/HT/DX/Will/Per）↔ 本项目六维中文键 的映射
 _GURPS_ATTR_ALIAS = {"IQ": "智力", "HT": "体质", "DX": "敏捷",
@@ -143,7 +148,7 @@ class MagicService(Service):
 
     def __init__(self, ctx, config=None) -> None:  # noqa: D107
         super().__init__(ctx, config)
-        # 法力位阶为会话级（不进存档，载入时按默认「普通」重建）
+        # 玛那浓度为会话级（不进存档，载入时按默认「普通」重建）
         self.mana = (config or {}).get("mana", "普通")
 
     # ------------------------------------------------------------------ #
@@ -151,7 +156,7 @@ class MagicService(Service):
     # ------------------------------------------------------------------ #
     def set_mana(self, level: str) -> str:
         if level not in MANA_LEVELS:
-            raise ValueError(f"未知法力位阶: {level}（应为 {MANA_LEVELS}）")
+            raise ValueError(f"未知玛那浓度: {level}（应为 {MANA_LEVELS}）")
         self.mana = level
         return level
 
@@ -214,14 +219,14 @@ class MagicService(Service):
         spell = GURPS_SPELLS.get(name)
         if spell is None:
             return False, f"未知 GURPS 法术: {name}"
-        # GURPS 法力位阶（结构性事实）：
-        # - 无 mana：任何人（含 Magery）都无法习/施
-        # - 极低/普通/高/极高：只有 mage（拥有 Magery>0）能施法
+        # GURPS 玛那浓度（结构性事实，2026-08-30 核对修正）：
+        # - 无玛那：任何人（含 Magery）都无法习/施
+        # - 低/普通/高/极高：只有 mage（拥有 Magery>0）能施法（低玛那另 -5 减值，见核对报告）
         magery = self.magery_of(char)
         if self.mana == "无":
-            return False, "法力位阶「无」：无 mana 环境中法术不可用（即使有魔力 Magery 亦无法习/施）"
-        if self.mana in ("极低", "普通", "高", "极高") and magery <= 0:
-            return False, f"法力位阶「{self.mana}」且无私魔力(Magery)，无法习得/施展法术"
+            return False, "玛那浓度「无」：无 mana 环境中法术不可用（即使有魔法天赋 Magery 亦无法习/施）"
+        if self.mana in ("低", "普通", "高", "极高") and magery <= 0:
+            return False, f"玛那浓度「{self.mana}」且无魔法天赋(Magery)，无法习得/施展法术"
         # 前置校验
         known = self.known_gurps_spells(char)
         missing = [p for p in spell["prereqs"] if p not in known]
@@ -238,7 +243,7 @@ class MagicService(Service):
         spell = GURPS_SPELLS[name]
         key = _GURPS_ATTR_ALIAS.get(spell["attr"], spell["attr"])
         attr_val = int(char.state.attributes.get(key, 10))
-        base = attr_val + self.magery_of(char)        # 基础有效等级 = 属性 + 魔力
+        base = attr_val + self.magery_of(char)        # 基础有效等级 = 属性 + 魔法天赋
         effective = base + int(relative)
         char.state.skills[name] = effective           # 法术即技能
         flags = getattr(char.state, "flags", {}) or {}
@@ -251,7 +256,7 @@ class MagicService(Service):
 
     def cast_gurps(self, actor: Any, spell: str, target: Any = None,
                    modifier: int = 0) -> dict:
-        """GURPS 施法：3d6 ≤ 有效技能等级（属性+魔力+相对等级）→ 成功；消耗 FP；按效果落地。"""
+        """GURPS 施法：3d6 ≤ 有效技能等级（属性+魔法天赋+相对等级）→ 成功；消耗 FP；按效果落地。"""
         if actor is None:
             return {"ok": False, "reason": "no_actor"}
         if spell not in self.known_gurps_spells(actor):

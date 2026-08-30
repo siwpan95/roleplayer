@@ -10,9 +10,9 @@ class TestAdvantages:
         assert char.cp == 150 - 15
 
     def test_add_advantage_by_name(self, char):
-        ok, msg = char.add_advantage_by_name("双手灵巧")
+        ok, msg = char.add_advantage_by_name("双巧手")
         assert ok
-        assert "双手灵巧" in char.advantages
+        assert "双巧手" in char.advantages
         assert char.cp == 150 - 5  # 库内价格 5
 
     def test_add_unknown_advantage(self, char):

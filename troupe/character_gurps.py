@@ -23,12 +23,15 @@ from .data_world import gurps_skill_cost, basic_speed, basic_move, dodge as gurp
 #: 每点属性成本（ST/DX/IQ/HT 同价）
 ATTRIBUTE_COST_PER = 10
 
-#: 代表性优点表（名 → 点数）
+#: 代表性优点表（名 → 点数）。2026-08-30 联网核对：Magery 拆分三档
+#: （官方：Magery 0 = 5 点无加值；Magery 1 起 10 点/级）；语言天才按官方 10 点修正。
 ADVANTAGES: dict[str, int] = {
     "警觉": 5, "夜视": 1, "绝对方向感": 5, "快速治疗": 5,
     "天生攻击（爪）": 0, "战斗反射": 15, "高阶武艺": 25,
-    "强韧": 10, "意志坚定": 5, "语言天赋": 5, "财富（小康）": 10,
-    "魔力": 5,            # Magery：GURPS 法师核心优点（每级 +5 点，普通法力下施法资格）
+    "强韧": 10, "意志坚定": 5, "语言天才": 10, "财富（小康）": 10,
+    "魔法天赋0级": 5,   # Magery 0：可感知魔力/无施法加值（官方 5 点）
+    "魔法天赋1级": 10,  # Magery 1：施法 +1（官方 10 点/级）
+    "魔法天赋2级": 20,  # Magery 2：施法 +2
 }
 
 #: 代表性缺点表（名 → 点数，负值；购买后返还点数）
@@ -118,8 +121,9 @@ def build_gurps_character(attrs: dict, *, advantages: Optional[list] = None,
         char.state.cls = name
     st = int(attrs.get("力量", 10)); dx = int(attrs.get("敏捷", 10))
     iq = int(attrs.get("智力", 10)); ht = int(attrs.get("体质", 10))
-    # 魔力(Magery)等级来自优点列表；疲劳点 FP 默认 = HT（GURPS 结构性事实），供法术系统消耗
-    magery = sum(1 for a in (advantages or []) if a == "魔力")
+    # 魔法天赋(Magery)等级来自优点列表（0/1/2 级取最高）；疲劳点 FP 默认 = HT（GURPS 结构性事实），供法术系统消耗
+    _magery_levels = {"魔法天赋0级": 0, "魔法天赋1级": 1, "魔法天赋2级": 2}
+    magery = max([_magery_levels.get(a, 0) for a in (advantages or [])] or [0])
     char.state.flags["gurps_magery"] = magery
     char.state.flags["gurps_fp"] = ht
     char.state.flags["gurps_fp_max"] = ht
