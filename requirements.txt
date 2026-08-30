@@ -1,2 +1,8 @@
-# D20 dependencies (auto-generated 2026-08-20)
+# Role Player (D20) 运行依赖（2026-08-20 自动生成）
+
+# 运行时零第三方依赖（loader 内置 YAML 回退解析）
+# 可选：安装 PyYAML 使用完整 YAML 解析（无 PyYAML 时自动降级为内置最小解析器）
+# pyyaml
+
+# 测试依赖
 pytest

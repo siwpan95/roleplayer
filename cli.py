@@ -1,9 +1,16 @@
-"""cli.py - D&D-GURPS 变体角色构建器命令行界面
+"""cli.py - Role Player 跑团模拟器命令行界面
 
 基于新的 d20 包，提供交互式角色构建、掷骰测试与战斗宏演示。
 运行：python cli.py
 """
+import d20
 from d20 import Character
+
+
+def _say(result) -> str:
+    """把服务返回值 (bool, msg) 转成可打印字符串；msg 可为 str 或 str 可迭代。"""
+    msg = result[1]
+    return msg if isinstance(msg, str) else " / ".join(msg)
 
 
 def _set_attributes(char: Character):
@@ -33,9 +40,9 @@ def _perks(char: Character):
     if choice == "0" or not choice:
         return
     if choice in char.ADVANTAGES_LIBRARY:
-        print("  " + " ".join(char.add_advantage_by_name(choice)))
+        print("  " + _say(char.add_advantage_by_name(choice)))
     elif choice in char.DISADVANTAGES_LIBRARY:
-        print("  " + " ".join(char.add_disadvantage_by_name(choice)))
+        print("  " + _say(char.add_disadvantage_by_name(choice)))
     else:
         print("  未知项")
 
@@ -50,7 +57,7 @@ def _talents(char: Character):
         return
     level = input("  等级(1-3, 默认1): ").strip()
     level = int(level) if level else 1
-    print("  " + " ".join(char.add_talent(tname, level)))
+    print("  " + _say(char.add_talent(tname, level)))
 
 
 def _skills(char: Character):
@@ -63,7 +70,7 @@ def _skills(char: Character):
         idx = int(input("  选择技能编号: ")) - 1
         sk_name = items[idx][0]
         target = int(input(f"  目标绝对等级: "))
-        print("  " + " ".join(char.purchase_skill(sk_name, target)))
+        print("  " + _say(char.purchase_skill(sk_name, target)))
     except (ValueError, IndexError):
         print("  无效输入")
 
@@ -77,7 +84,7 @@ def _techniques(char: Character):
     try:
         idx = int(input("  选择技术编号: ")) - 1
         tech_name = items[idx][0]
-        print("  " + " ".join(char.purchase_technique(tech_name)))
+        print("  " + _say(char.purchase_technique(tech_name)))
     except (ValueError, IndexError):
         print("  无效输入")
 
@@ -92,7 +99,7 @@ def _equipment(char: Character):
     if sub == "e":
         try:
             idx = int(input("  装备编号: ")) - 1
-            print("  " + " ".join(char.equip_item(items[idx][0])))
+            print("  " + _say(char.equip_item(items[idx][0])))
         except (ValueError, IndexError):
             print("  无效输入")
     elif sub == "u":
@@ -103,7 +110,7 @@ def _equipment(char: Character):
             print(f"    {i}. {name}")
         try:
             idx = int(input("  卸下编号: ")) - 1
-            print("  " + " ".join(char.unequip_item(char.equipment[idx])))
+            print("  " + _say(char.unequip_item(char.equipment[idx])))
         except (ValueError, IndexError):
             print("  无效输入")
 
@@ -164,13 +171,13 @@ def _classes(char: Character):
             print(f"  可选熟练技能: {', '.join(pool)}")
             picks = input(f"  自选 {items[idx][1]['skill_choice_count']} 项（逗号分隔，回车自动取前几项）: ").strip()
             choices = [p.strip() for p in picks.split(",") if p.strip()] or None
-            print("  " + " / ".join(char.set_class(name, choices)))
+            print("  " + _say(char.set_class(name, choices)))
         elif sub == "u":
-            print("  " + " / ".join(char.level_up()))
+            print("  " + _say(char.level_up()))
         elif sub == "t":
-            print("  " + " / ".join(char.level_to(int(input("  目标等级: ")))))
+            print("  " + _say(char.level_to(int(input("  目标等级: ")))))
         elif sub == "b":
-            print("  " + " / ".join(char.set_subclass(input("  子职业名: ").strip())))
+            print("  " + _say(char.set_subclass(input("  子职业名: ").strip())))
         elif sub == "f":
             for f in char.class_features():
                 d = char.class_feature_detail(f)
@@ -217,9 +224,74 @@ def _reference(char: Character):
               + ("…" if len(names) > 40 else ""))
 
 
-def _battle_cli(char: Character):
-    """模拟对战：遭遇评估 / 构建 / 单场 / 蒙特卡洛。"""
-    print("  [1]遭遇难度评估  [2]按难度构建遭遇  [3]单场模拟对战  [4]蒙特卡洛  [0]返回")
+def _prompt_foes() -> list:
+    """解析怪物列表输入，返回 foes（元素为 str 或 (名, 数量)）。"""
+    raw = input("  怪物（逗号分隔，可用 名x数量，如 哥布林x3,兽人）: ").strip()
+    foes = []
+    for n in [x.strip() for x in raw.split(",") if x.strip()]:
+        if "x" in n:
+            nm, cnt = n.rsplit("x", 1)
+            foes.append((nm.strip(), int(cnt)))
+        else:
+            foes.append(n)
+    return foes
+
+
+def _save_character(char: Character):
+    """导出角色卡到 JSON 文件。"""
+    path = input("  保存路径（如 my_hero，自动补 .json）: ").strip()
+    if not path:
+        print("  未保存")
+        return
+    try:
+        print(f"  ✓ 已导出到 {char.save(path)}")
+    except Exception as e:
+        print(f"  导出失败: {e}")
+
+
+def _character_sheet_menu(char: Character):
+    """角色卡：显示 / 导出到文件。"""
+    print("  [1]显示角色卡  [2]导出到文件  [0]返回")
+    t = input("  选: ").strip()
+    if t == "1":
+        print(char.show_sheet())
+    elif t == "2":
+        _save_character(char)
+
+
+def _load_or_random(char: Character) -> Character:
+    """加载角色卡文件或随机生成，返回新角色（取消则返回原角色）。"""
+    print("  [1]从文件加载角色卡  [2]随机生成角色卡  [0]返回")
+    t = input("  选: ").strip()
+    if t == "1":
+        path = input("  文件路径（如 my_hero.json）: ").strip()
+        if not path:
+            return char
+        try:
+            loaded = Character.load(path)
+            print(f"  ✓ 已加载: {loaded.class_summary()} | HP {loaded.hp()} | AC {loaded.ac}")
+            return loaded
+        except Exception as e:
+            print(f"  加载失败: {e}")
+            return char
+    if t == "2":
+        try:
+            lvl = int(input("  等级（默认 3）: ").strip() or "3")
+        except ValueError:
+            lvl = 3
+        c = Character.random(lvl)
+        print(f"  ✓ 随机生成: {c.class_summary()} | HP {c.hp()} | AC {c.ac}")
+        return c
+    return char
+
+
+def _battle_cli(char: Character) -> Character:
+    """模拟对战：遭遇评估 / 构建 / 单场 / 蒙特卡洛 / 加载角色卡 / 随机角色卡。
+
+    返回（可能被替换的）角色卡。
+    """
+    print("  [1]遭遇难度评估  [2]按难度构建遭遇  [3]单场模拟对战  [4]蒙特卡洛")
+    print("  [5]加载角色卡对战  [6]随机角色卡对战  [0]返回")
     t = input("  选: ").strip()
     try:
         if t == "1":
@@ -237,27 +309,28 @@ def _battle_cli(char: Character):
             ev = char.battle_build(lvs, diff)
             print(f"    编组: {' + '.join(ev['monsters'])}")
             print(f"    难度: {ev['difficulty_cn']}（调整 XP {ev['adjusted_xp']}）")
-        elif t == "3":
-            names = [n.strip() for n in input("  怪物（逗号分隔，可用 名x数量，如 哥布林x3,兽人）: ").split(",")]
-            foes = []
-            for n in names:
-                if "x" in n:
-                    nm, cnt = n.rsplit("x", 1)
-                    foes.append((nm.strip(), int(cnt)))
-                else:
-                    foes.append(n)
+        elif t in ("3", "5", "6"):
+            if t == "5":
+                path = input("  角色卡文件路径（如 my_hero.json）: ").strip()
+                try:
+                    char = Character.load(path)
+                    print(f"  ✓ 已加载: {char.class_summary()} | HP {char.hp()} | AC {char.ac}")
+                except Exception as e:
+                    print(f"  加载失败: {e}")
+                    return char
+            elif t == "6":
+                try:
+                    lvl = int(input("  角色等级（默认 3）: ").strip() or "3")
+                except ValueError:
+                    lvl = 3
+                char = Character.random(lvl)
+                print(f"  ✓ 随机生成: {char.class_summary()} | HP {char.hp()} | AC {char.ac}")
+            foes = _prompt_foes()
             char.battle_create([char], foes)
             r = char.battle_run()
             print(char.battle_report())
         elif t == "4":
-            names = [n.strip() for n in input("  怪物（逗号分隔，可用 名x数量）: ").split(",")]
-            foes = []
-            for n in names:
-                if "x" in n:
-                    nm, cnt = n.rsplit("x", 1)
-                    foes.append((nm.strip(), int(cnt)))
-                else:
-                    foes.append(n)
+            foes = _prompt_foes()
             trials = int(input("  次数（默认 200）: ") or 200)
             r = char.battle_simulate([char], foes, trials=trials)
             print(f"    胜率 {r['win_rate'] * 100:.1f}% | 败率 {r['loss_rate'] * 100:.1f}% | "
@@ -265,18 +338,19 @@ def _battle_cli(char: Character):
             print(f"    平均 {r['avg_rounds']} 回合 | 平均剩余 HP {r['avg_remaining_hp']}")
     except (ValueError, IndexError):
         print("  无效输入")
+    return char
 
 
 def main():
     char = Character()
     print("=" * 50)
-    print(" D&D-GURPS 变体角色构建器 v2.2")
+    print(f" Role Player 跑团模拟器 v{d20.__version__}")
     print(" 融合 D&D 三宝书 + GURPS Basic Set 规则")
     print("=" * 50)
     while True:
         print(f"\n当前 CP: {char.cp} | HP: {char.hp()} | AC: {char.ac}")
         print("1.属性  2.优缺点  3.天赋  4.技能  5.技术  6.装备  "
-              "7.角色卡  8.掷骰  9.战斗宏  10.职业  11.规则速查  12.模拟对战  0.完成退出")
+              "7.角色卡  8.掷骰  9.战斗宏  10.职业  11.规则速查  12.模拟对战  13.载入/随机  0.完成退出")
         cmd = input("选择: ").strip()
         if cmd == "1":
             _set_attributes(char)
@@ -291,7 +365,7 @@ def main():
         elif cmd == "6":
             _equipment(char)
         elif cmd == "7":
-            print(char.show_sheet())
+            _character_sheet_menu(char)
         elif cmd == "8":
             _roll_test(char)
         elif cmd == "9":
@@ -301,7 +375,9 @@ def main():
         elif cmd == "11":
             _reference(char)
         elif cmd == "12":
-            _battle_cli(char)
+            char = _battle_cli(char)
+        elif cmd == "13":
+            char = _load_or_random(char)
         elif cmd == "0":
             missing = char.check_foundations()
             if missing:

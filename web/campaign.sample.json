@@ -1,0 +1,580 @@
+{
+  "meta": {
+    "name": "冒险",
+    "seed": 8,
+    "ruleset": "dnd5e",
+    "module_id": "generated",
+    "total_xp": 25,
+    "gold": 19
+  },
+  "party": [
+    {
+      "name": "德鲁伊 Lv3 HP 20/20 AC 12",
+      "cls": "德鲁伊",
+      "level": 3,
+      "hp": 20,
+      "max_hp": 20,
+      "alive": true
+    },
+    {
+      "name": "游侠 Lv2 HP 20/20 AC 14",
+      "cls": "游侠",
+      "level": 2,
+      "hp": 20,
+      "max_hp": 20,
+      "alive": true
+    }
+  ],
+  "world": {
+    "current": "古径",
+    "places": [
+      {
+        "id": "p1",
+        "name": "古径",
+        "kind": "建筑",
+        "danger": 1,
+        "discovered": true
+      },
+      {
+        "id": "p2",
+        "name": "白渡",
+        "kind": "荒野",
+        "danger": 4,
+        "discovered": false
+      },
+      {
+        "id": "p3",
+        "name": "石岩",
+        "kind": "城镇",
+        "danger": 1,
+        "discovered": false
+      },
+      {
+        "id": "p4",
+        "name": "星墟",
+        "kind": "地牢",
+        "danger": 5,
+        "discovered": false
+      },
+      {
+        "id": "p5",
+        "name": "星渊",
+        "kind": "遗迹",
+        "danger": 5,
+        "discovered": false
+      }
+    ]
+  },
+  "quests": [
+    {
+      "id": "q1",
+      "title": "护送失踪的孩子",
+      "status": "active",
+      "progress": 0.0,
+      "depends_on": [],
+      "deadline_minutes": 0,
+      "fail_condition": ""
+    },
+    {
+      "id": "q2",
+      "title": "寻回失踪的孩子",
+      "status": "locked",
+      "progress": 0.0,
+      "depends_on": [
+        "q1"
+      ],
+      "deadline_minutes": 1200,
+      "fail_condition": ""
+    },
+    {
+      "id": "q3",
+      "title": "查明腐化的水源",
+      "status": "locked",
+      "progress": 0.0,
+      "depends_on": [
+        "q2"
+      ],
+      "deadline_minutes": 960,
+      "fail_condition": "clock:cl_doom"
+    }
+  ],
+  "clocks": [
+    {
+      "id": "cl_danger",
+      "name": "暴露行踪",
+      "filled": 0,
+      "segments": 4,
+      "kind": "danger",
+      "consumed": false
+    },
+    {
+      "id": "cl_doom",
+      "name": "阴谋推进",
+      "filled": 0,
+      "segments": 6,
+      "kind": "campaign",
+      "consumed": false
+    },
+    {
+      "id": "faction_f1",
+      "name": "银誓约的计划",
+      "filled": 6,
+      "segments": 8,
+      "kind": "faction",
+      "consumed": false
+    },
+    {
+      "id": "faction_f2",
+      "name": "圣遗族的计划",
+      "filled": 6,
+      "segments": 8,
+      "kind": "faction",
+      "consumed": false
+    }
+  ],
+  "factions": [
+    {
+      "id": "f1",
+      "name": "银誓约",
+      "standing": -4,
+      "power": 4
+    },
+    {
+      "id": "f2",
+      "name": "圣遗族",
+      "standing": 7,
+      "power": 5
+    }
+  ],
+  "timeline": [
+    {
+      "seq": 1,
+      "ts": "第1日 08:00（白天）",
+      "type": "session.start",
+      "text": "战役开始 · 规则 dnd5e · 种子 8",
+      "tags": [
+        "session"
+      ]
+    },
+    {
+      "seq": 2,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.check",
+      "text": "场景检查：掷 2 vs 混沌 5 → 被打断",
+      "tags": [
+        "oracle",
+        "scene"
+      ]
+    },
+    {
+      "seq": 3,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.start",
+      "text": "【S001】交涉：与人交涉（场景检查：掷 2 vs 混沌 5 → 被打断）",
+      "tags": [
+        "scene",
+        "social"
+      ]
+    },
+    {
+      "seq": 4,
+      "ts": "第1日 08:00（白天）",
+      "type": "oracle.event",
+      "text": "随机事件【队伍获益】 —— 一个孩子锈蚀的游说的把柄",
+      "tags": [
+        "oracle",
+        "event"
+      ]
+    },
+    {
+      "seq": 5,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.note",
+      "text": "队伍时来运转：锈蚀的游说的把柄。",
+      "tags": [
+        "event",
+        "pc_positive"
+      ]
+    },
+    {
+      "seq": 6,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.note",
+      "text": "场景被打断：随机事件【队伍获益】 —— 一个孩子锈蚀的游说的把柄",
+      "tags": [
+        "scene",
+        "interrupt"
+      ]
+    },
+    {
+      "seq": 7,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.note",
+      "text": "此处没有可交谈的对象。",
+      "tags": []
+    },
+    {
+      "seq": 8,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.end",
+      "text": "【S001】落幕（掌控，混沌 → 3）",
+      "tags": [
+        "scene"
+      ]
+    },
+    {
+      "seq": 9,
+      "ts": "第1日 08:00（白天）",
+      "type": "combat.end",
+      "text": "==============================================",
+      "tags": [
+        "combat"
+      ]
+    },
+    {
+      "seq": 10,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.check",
+      "text": "场景检查：掷 2 vs 混沌 2 → 有变故",
+      "tags": [
+        "oracle",
+        "scene"
+      ]
+    },
+    {
+      "seq": 11,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.start",
+      "text": "【S002】休整：短暂休整（场景检查：掷 2 vs 混沌 2 → 有变故）",
+      "tags": [
+        "scene",
+        "downtime"
+      ]
+    },
+    {
+      "seq": 12,
+      "ts": "第1日 08:00（白天）",
+      "type": "scene.note",
+      "text": "场景与预期有出入 —— 细节已经变了。",
+      "tags": [
+        "scene"
+      ]
+    },
+    {
+      "seq": 13,
+      "ts": "第1日 16:00（白天）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟（行动耗时）",
+      "tags": []
+    },
+    {
+      "seq": 14,
+      "ts": "第1日 16:00（白天）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 15,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟，进入第 2 日（行动耗时）",
+      "tags": [
+        "day_boundary"
+      ]
+    },
+    {
+      "seq": 16,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】1/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 17,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】1/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 18,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】2/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 19,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】2/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 20,
+      "ts": "第2日 00:00（夜晚）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 21,
+      "ts": "第2日 08:00（白天）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟（行动耗时）",
+      "tags": []
+    },
+    {
+      "seq": 22,
+      "ts": "第2日 08:00（白天）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 23,
+      "ts": "第2日 16:00（白天）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟（行动耗时）",
+      "tags": []
+    },
+    {
+      "seq": 24,
+      "ts": "第2日 16:00（白天）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 25,
+      "ts": "第2日 16:00（白天）",
+      "type": "scene.end",
+      "text": "【S002】落幕（掌控，混沌 → 1）",
+      "tags": [
+        "scene"
+      ]
+    },
+    {
+      "seq": 26,
+      "ts": "第2日 16:00（白天）",
+      "type": "scene.check",
+      "text": "场景检查：掷 3 vs 混沌 1 → 如预期",
+      "tags": [
+        "oracle",
+        "scene"
+      ]
+    },
+    {
+      "seq": 27,
+      "ts": "第2日 16:00（白天）",
+      "type": "scene.start",
+      "text": "【S003】休整：短暂休整（场景检查：掷 3 vs 混沌 1 → 如预期）",
+      "tags": [
+        "scene",
+        "downtime"
+      ]
+    },
+    {
+      "seq": 28,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟，进入第 3 日（行动耗时）",
+      "tags": [
+        "day_boundary"
+      ]
+    },
+    {
+      "seq": 29,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】3/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 30,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】3/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 31,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】4/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 32,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】4/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 33,
+      "ts": "第3日 00:00（夜晚）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 34,
+      "ts": "第3日 08:00（白天）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟（行动耗时）",
+      "tags": []
+    },
+    {
+      "seq": 35,
+      "ts": "第3日 08:00（白天）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 36,
+      "ts": "第3日 16:00（白天）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟（行动耗时）",
+      "tags": []
+    },
+    {
+      "seq": 37,
+      "ts": "第3日 16:00（白天）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 38,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "time.advance",
+      "text": "时间推进 480 分钟，进入第 4 日（行动耗时）",
+      "tags": [
+        "day_boundary"
+      ]
+    },
+    {
+      "seq": 39,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】5/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 40,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】5/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 41,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【银誓约的计划】6/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 42,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "clock.tick",
+      "text": "【圣遗族的计划】6/8",
+      "tags": [
+        "clock",
+        "faction"
+      ]
+    },
+    {
+      "seq": 43,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "scene.note",
+      "text": "德鲁伊1 安排全队就地休整与补给。",
+      "tags": [
+        "downtime"
+      ]
+    },
+    {
+      "seq": 44,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "scene.end",
+      "text": "【S003】落幕（掌控，混沌 → 1）",
+      "tags": [
+        "scene"
+      ]
+    },
+    {
+      "seq": 45,
+      "ts": "第4日 00:00（夜晚）",
+      "type": "session.end",
+      "text": "战役落幕 · 共 4 场 · 结局：达到场景上限",
+      "tags": [
+        "session"
+      ]
+    }
+  ],
+  "stats": {
+    "events": 45,
+    "by_type": {
+      "scene.note": 12,
+      "clock.tick": 12,
+      "time.advance": 8,
+      "scene.check": 3,
+      "scene.start": 3,
+      "scene.end": 3,
+      "session.start": 1,
+      "oracle.event": 1,
+      "combat.end": 1,
+      "session.end": 1
+    }
+  }
+}

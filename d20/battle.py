@@ -40,6 +40,7 @@ from .data_battle import (
 )
 from .data_monsters import MONSTERS, CR_XP
 from .monster import parse_dice
+from . import narration
 
 # 数字英文（解析 Multiattack 文本）
 _NUM_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
@@ -122,10 +123,13 @@ class Battle:
     round: int = 1
     turn_index: int = 0
     log: list = field(default_factory=list)
+    story: list = field(default_factory=list)   # 叙事文本 (round, text)，供战报可视化
     over: bool = False
     winner: str = ""
     total_xp: int = 0
     party_levels: list = field(default_factory=list)
+    #: True 时命中部位伤口倍率实际结算（GURPS B552 部位 × B379 类型），默认关闭保持 5e 平衡
+    gurps_wounds: bool = False
 
     def party(self) -> list:
         return [c for c in self.combatants if c.side == "party"]
@@ -249,9 +253,15 @@ def normalize_action(a: dict, monster: dict) -> dict:
 #  BattleService
 # =============================================================================
 class BattleService(Service):
-    """模拟对战引擎。"""
+    """模拟对战引擎。
 
-    inject = ["dice", "monster", "condition"]
+    对**自身 ctx 零依赖**：怪物数据走模块级 ``MONSTERS``（data_monsters，
+    非 MonsterService）；角色的装备/技能/环位/攻击经 **char.ctx**（角色级
+    全量装配）访问。旧的 ``["dice", "monster", "condition"]`` 是装饰性
+    错误声明，已清空。
+    """
+
+    inject = []
 
     MONSTERS = MONSTERS
     CR_XP = CR_XP
@@ -262,9 +272,10 @@ class BattleService(Service):
     _battle: Battle | None = None
 
     # ---------------- 当前对战（门面糖） ----------------
-    def create(self, party: list, foes: list, distance: float = DEFAULT_START_DISTANCE) -> Battle:
+    def create(self, party: list, foes: list, distance: float = DEFAULT_START_DISTANCE,
+               gurps_wounds: bool = False) -> Battle:
         """创建一场对战并置为当前对战（供 step/run/report 免传参使用）。"""
-        self._battle = self.new_battle(party, foes, distance)
+        self._battle = self.new_battle(party, foes, distance, gurps_wounds)
         return self._battle
 
     def current(self) -> Battle | None:
@@ -345,9 +356,15 @@ class BattleService(Service):
         return int(m.group(1)) if m else 30
 
     def new_battle(self, party: list, foes: list[str | tuple[str, int]],
-                   distance: float = DEFAULT_START_DISTANCE) -> Battle:
-        """party: Character 列表；foes: 怪物名或 (怪物名, 数量)。"""
-        b = Battle(party_levels=[max(c.state.level, 1) for c in party])
+                   distance: float = DEFAULT_START_DISTANCE,
+                   gurps_wounds: bool = False) -> Battle:
+        """party: Character 列表；foes: 怪物名或 (怪物名, 数量)。
+
+        :param gurps_wounds: 是否启用 GURPS 部位伤口倍率结算（B552 部位 × B379 类型）。
+            开启后穿刺/挥砍/钝击命中头骨、颈部等要害会成倍放大伤害，战斗更写实也更致命。
+        """
+        b = Battle(party_levels=[max(c.state.level, 1) for c in party],
+                   gurps_wounds=gurps_wounds)
         for i, ch in enumerate(party):
             b.combatants.append(self.make_pc(ch, x=0.0))
         n = 1
@@ -363,6 +380,8 @@ class BattleService(Service):
         self._roll_initiative(b)
         b.log.append(f"战斗开始：{len(b.party())} 名冒险者 vs {len(b.foes())} 个敌人，"
                      f"起始距离 {int(distance)} 尺")
+        b.story.append((1, narration.battle_start(
+            [p.name for p in b.party()], [f.name for f in b.foes()], int(distance))))
         return b
 
     def _roll_initiative(self, b: Battle) -> None:
@@ -469,6 +488,7 @@ class BattleService(Service):
         tgt = down[0]
         tgt.hp = min(tgt.hp + healed, tgt.max_hp)
         b.log.append(f"[{b.round}] {c.name} 治疗言灵 → {tgt.name} 恢复 {healed} HP（{tgt.hp}/{tgt.max_hp}）")
+        b.story.append((b.round, narration.heal(c.name, tgt.name, healed)))
         return True
 
     def _pc_cast(self, c: Combatant, tgt: Combatant, b: Battle) -> bool:
@@ -481,6 +501,7 @@ class BattleService(Service):
             ok, _ = ch.ctx.slots.spend_slot(1)
             if ok:
                 dmg = sum(random.randint(1, 4) for _ in range(3)) + 3
+                b.story.append((b.round, narration.cast(c.name, tgt.name, "魔法飞弹", dmg, "力场")))
                 applied = self._apply_damage(tgt, dmg, "力场", b)
                 c.damage_dealt += applied
                 b.log.append(f"[{b.round}] {c.name} 魔法飞弹（1环）→ {tgt.name} "
@@ -494,6 +515,8 @@ class BattleService(Service):
             crit = roll == CRIT_ROLL
             if total >= tgt.ac or crit:
                 dmg = sum(random.randint(1, 10) for _ in range(2 if crit else 1))
+                b.story.append((b.round, narration.attack_hit(
+                    c.name, tgt.name, "火焰箭", "火焰", dmg, crit=crit, ranged=True)))
                 applied = self._apply_damage(tgt, dmg, "火焰", b)
                 c.damage_dealt += applied
                 b.log.append(f"[{b.round}] {c.name} 火焰箭(戏法) → {tgt.name}: "
@@ -501,6 +524,7 @@ class BattleService(Service):
             else:
                 b.log.append(f"[{b.round}] {c.name} 火焰箭(戏法) → {tgt.name}: "
                              f"d20+{atk} = {total} vs AC {tgt.ac} ✗ 未命中")
+                b.story.append((b.round, narration.attack_miss(c.name, tgt.name, "火焰箭", melee=False)))
             return True
         return False
 
@@ -515,8 +539,15 @@ class BattleService(Service):
         if not r["hit"]:
             b.log.append(f"[{b.round}] {c.name} {label}攻击 {tgt.name}: "
                          f"d20+{r['atk_bonus']}{pfx} = {r['total']} vs AC {tgt.ac} ✗ 未命中")
+            b.story.append((b.round, narration.attack_miss(
+                c.name, tgt.name, c.weapon, melee=not ranged)))
             return True
-        applied = self._apply_damage(tgt, r["damage"], "", b)
+        wdt = narration.weapon_dtype(c.weapon)
+        loc = narration.hit_location()
+        b.story.append((b.round, narration.attack_hit(
+            c.name, tgt.name, c.weapon, wdt, r["damage"],
+            crit=r.get("crit", False), ranged=ranged, location=loc)))
+        applied = self._apply_damage(tgt, r["damage"], wdt, b, location=loc)
         c.damage_dealt += applied
         b.log.append(f"[{b.round}] {c.name} {label}攻击 {tgt.name}: "
                      f"d20+{r['atk_bonus']}{pfx} = {r['total']} vs AC {tgt.ac} ✓ 命中 "
@@ -542,6 +573,7 @@ class BattleService(Service):
             if random.random() < 0.5:
                 c.conditions.remove(cond)
                 b.log.append(f"[{b.round}] {c.name} 摆脱了 {cond}")
+                b.story.append((b.round, narration.condition_recover(c.name, cond)))
                 return True
         return False
 
@@ -632,6 +664,7 @@ class BattleService(Service):
             c.x += step if tgt.x > c.x else -step
             c.move_left -= step
             b.log.append(f"[{b.round}] {c.name} 移动 {int(step)} 尺（距离 {int(_dist(c, tgt))} 尺）")
+            b.story.append((b.round, narration.move(c.name, int(step))))
         if dash and c.move_left <= 0 and not c.action_used:
             c.move_left = c.speed
             c.action_used = True
@@ -640,6 +673,7 @@ class BattleService(Service):
                 c.x += step if tgt.x > c.x else -step
                 c.move_left -= step
                 b.log.append(f"[{b.round}] {c.name} 疾行 {int(step)} 尺（距离 {int(_dist(c, tgt))} 尺）")
+                b.story.append((b.round, narration.move(c.name, int(step), dash=True)))
 
     # ---------------- 攻击结算 ----------------
     def _resolve_monster_attack(self, c: Combatant, tgt: Combatant, a: dict, b: Battle) -> None:
@@ -660,6 +694,8 @@ class BattleService(Service):
         if total < tgt.ac and not crit:
             b.log.append(f"[{b.round}] {c.name}·{a['name']} → {tgt.name}: "
                          f"d20+{a.get('atk') or 0} = {total} vs AC {tgt.ac} ✗ 未命中")
+            b.story.append((b.round, narration.attack_miss(
+                c.name, tgt.name, a.get("name", ""), melee=a["kind"] == "melee")))
             return
         cnt, die, bonus = parse_dice(a.get("dmg_expr", ""))
         if cnt:
@@ -669,7 +705,11 @@ class BattleService(Service):
         else:
             dmg = 0
             dmg_desc = "无伤害"
-        applied = self._apply_damage(tgt, dmg, a["dmg_type"], b)
+        loc = narration.hit_location()
+        b.story.append((b.round, narration.attack_hit(
+            c.name, tgt.name, a.get("name", ""), a.get("dmg_type", ""), dmg,
+            crit=crit, ranged=a["kind"] != "melee", location=loc)))
+        applied = self._apply_damage(tgt, dmg, a["dmg_type"], b, location=loc)
         c.damage_dealt += applied
         note = "（暴击）" if crit else ""
         b.log.append(f"[{b.round}] {c.name}·{a['name']} → {tgt.name}: "
@@ -697,6 +737,9 @@ class BattleService(Service):
         b.log.append(f"[{b.round}] {c.name}·{a['name']} → {tgt.name}: DC {save['dc']} "
                      f"{save['axis']} 豁免 d20+{tgt_bonus} = {roll + tgt_bonus} {verdict}"
                      + (f"，{dmg} {a['dmg_type']} 伤害（剩余 {tgt.hp}）" if cnt else ""))
+        b.story.append((b.round,
+                        narration.save_success(tgt.name, save["axis"]) if passed else
+                        narration.save_fail(tgt.name, save["axis"], applied, a.get("dmg_type", ""))))
         if not passed and save["condition"] and save["condition"] not in tgt.cond_immune:
             self._apply_condition(tgt, save["condition"], b)
 
@@ -736,25 +779,41 @@ class BattleService(Service):
         return max(r1, r2) if adv > 0 else min(r1, r2)
 
     # ---------------- 伤害与状态 ----------------
-    def _apply_damage(self, tgt: Combatant, amount: int, dtype: str, b: Battle) -> int:
+    def _apply_damage(self, tgt: Combatant, amount: int, dtype: str, b: Battle,
+                      location: str = "") -> int:
         dt = normalize_damage_type(dtype)
         if dt and dt in tgt.immune:
             if amount:
                 b.log.append(f"  {tgt.name} 免疫 {dt}")
+                b.story.append((b.round, narration.immune(tgt.name, dt)))
             return 0
+        # GURPS 部位伤口倍率（写实模式）：部位加成 × 类型倍率（免疫之后、抗性之前）。
+        # 仅物理三类有类型倍率；元素/能量类 wound_multiplier 返回 1.0，不参与。
+        if b.gurps_wounds and location:
+            mult = narration.wound_multiplier(location, dt)
+            if mult != 1.0:
+                new_amount = max(round(amount * mult), 0)
+                if new_amount != amount:
+                    b.log.append(f"  {tgt.name} 命中{location}：伤口倍率 ×{mult:g}"
+                                 f"（{amount} → {new_amount}）")
+                    amount = new_amount
         if dt and dt in tgt.resist:
             amount = max(amount // 2, 0)
             if amount:
                 b.log.append(f"  {tgt.name} 抵抗 {dt}（减半）")
+                b.story.append((b.round, narration.resist(tgt.name, dt)))
         if dt and dt in tgt.vuln:
             amount *= 2
             if amount:
                 b.log.append(f"  {tgt.name} 易伤 {dt}（加倍）")
+                b.story.append((b.round, narration.vuln(tgt.name, dt)))
         tgt.hp = max(tgt.hp - amount, 0)
         if tgt.hp == 0 and tgt.kind == "pc":
             b.log.append(f"  {tgt.name} 倒地濒死！")
+            b.story.append((b.round, narration.down(tgt.name)))
         elif tgt.hp == 0:
             b.log.append(f"  {tgt.name} 被击杀！")
+            b.story.append((b.round, narration.kill(tgt.name)))
         return amount
 
     def _apply_condition(self, tgt: Combatant, cond: str, b: Battle) -> None:
@@ -762,6 +821,7 @@ class BattleService(Service):
             return
         tgt.conditions.append(cond)
         b.log.append(f"  {tgt.name} 陷入 {cond}")
+        b.story.append((b.round, narration.condition_apply(tgt.name, cond)))
 
     def _maybe_apply_condition(self, attacker: Combatant, tgt: Combatant,
                                action: dict | None, b: Battle) -> None:
@@ -781,23 +841,29 @@ class BattleService(Service):
         """濒死 PC 的死亡豁免；已稳定（3 成功）者不再掷。"""
         if c.death_success >= DEATH_SAVE_SUCCESSES:
             b.log.append(f"[{b.round}] {c.name} 伤势已稳定（0 HP）")
+            b.story.append((b.round, narration.death_save(c.name, "stable")))
             return
         roll = random.randint(1, 20)
         if roll == 20:
             c.hp = 1
             c.death_failure = 0
             b.log.append(f"[{b.round}] {c.name} 死亡豁免掷出 20！恢复 1 HP 重回战斗")
+            b.story.append((b.round, narration.death_save(c.name, "crit")))
         elif roll == 1:
             c.death_failure += 2
             b.log.append(f"[{b.round}] {c.name} 死亡豁免掷出 1（计 2 次失败，{c.death_failure}/{DEATH_SAVE_FAILURES}）")
+            b.story.append((b.round, narration.death_save(c.name, "fumble")))
         elif roll >= DEATH_SAVE_TARGET:
             c.death_success += 1
             b.log.append(f"[{b.round}] {c.name} 死亡豁免成功（{c.death_success}/{DEATH_SAVE_SUCCESSES}）")
+            b.story.append((b.round, narration.death_save(c.name, "success")))
         else:
             c.death_failure += 1
             b.log.append(f"[{b.round}] {c.name} 死亡豁免失败（{c.death_failure}/{DEATH_SAVE_FAILURES}）")
+            b.story.append((b.round, narration.death_save(c.name, "fail")))
         if c.death_failure >= DEATH_SAVE_FAILURES:
             b.log.append(f"☠ {c.name} 死亡！")
+            b.story.append((b.round, narration.death_save(c.name, "dead")))
 
     # ---------------- 传奇动作 ----------------
     def _legendary_phase(self, b: Battle, just_acted: int) -> None:
@@ -819,10 +885,12 @@ class BattleService(Service):
         if not party_alive:
             b.over, b.winner = True, "foe"
             b.log.append(f"战斗结束：冒险者全军覆没（{b.round} 回合）")
+            b.story.append((b.round, narration.battle_end("foe", b.round)))
             return True
         if not foes_alive:
             b.over, b.winner = True, "party"
             b.log.append(f"战斗结束：冒险者获胜（{b.round} 回合，获得 {b.total_xp} XP）")
+            b.story.append((b.round, narration.battle_end("party", b.round)))
             return True
         return False
 
@@ -837,6 +905,7 @@ class BattleService(Service):
             "party_down": sum(1 for p in b.party() if p.kind == "pc" and p.hp <= 0),
             "foes_left": sum(1 for f in b.foes() if f.alive),
             "log": list(b.log),
+            "story": list(b.story),
         }
 
     # ---------------- 报告与状态 ----------------
@@ -858,9 +927,26 @@ class BattleService(Service):
             lines.append(f"  {c.side == 'party' and '🛡' or '👹'} {c.name:<12s} "
                          f"HP {c.hp:>3d}/{c.max_hp:<3d} {hpbar}{status}")
         lines.append("")
+        lines.append("— 对战过程（叙事战报）—")
+        lines += self._narrate_report(b)
+        lines.append("")
         lines.append("— 战斗日志（最近 30 条）—")
         lines += b.log[-30:]
         return "\n".join(lines)
+
+    @staticmethod
+    def _narrate_report(b: Battle) -> list[str]:
+        """把 story（(round, text) 列表）组织成分轮次的叙事战报。"""
+        if not b.story:
+            return ["  （无记录）"]
+        out = []
+        cur = None
+        for rnd, text in b.story:
+            if rnd != cur:
+                out.append(f"  ▸ 第 {rnd} 回合")
+                cur = rnd
+            out.append(f"    {text}")
+        return out
 
     def state(self, b: Battle) -> dict:
         return {

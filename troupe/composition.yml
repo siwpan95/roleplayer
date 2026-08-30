@@ -1,0 +1,125 @@
+# troupe/composition.yml - 跑团模拟器服务注册表（数据驱动，troupe 作用域内）
+#
+# 与 d20 基类的 composition.yml 同构（id / service / inject），但只登记 troupe 自有服务，
+# 不反向耦合 d20。d20 loader 在 mount_defaults 时「存在才合并」地软挂载本文件，但本清单
+# 绝不写进 d20/loader.DEFAULT_SERVICE_ENTRIES——以此保持「troupe 依赖 d20，而非 d20 依赖
+# troupe」的单向分层。
+#
+# 这是 troupe 服务注册的**权威来源**：troupe/composition.py 的 mount_troupe 与 d20 loader 的
+# 软挂载都读它（tests/test_troupe_composition.py 锁定二者一致）。
+#
+# 注意：rng 的种子、ruleset 的规则 id 是运行时参数，由 Simulator.mount_troupe 注入，
+# 此处不写静态 config。
+#
+# 重要：本文件必须能被 d20.loader 的「极简 YAML 兜底解析器」解析（PyYAML 缺失时回退），
+# 因此一律用块风格（block style）书写，不要写成行内流风格 {id: ..., service: ...}。
+#
+# 顺序即挂载顺序（mount_troupe 逐条挂载，不做拓扑重排）：依赖者必须排在依赖之后。
+# 2026-08-30 按「声明=实现」审计重排：
+#   director 依赖 world/quest → 移到 quest 之后；
+#   provisions 依赖 director（饥饿作用于队伍）→ 移到 director 之后；
+#   agent 依赖 npc/world → encounter 依赖 agent → agent 前移、encounter 殿后。
+services:
+  - id: rng
+    service: troupe.rng.RngService
+    inject: []
+  - id: calendar
+    service: troupe.calendar.CalendarService
+    inject: []
+  - id: log
+    service: troupe.log.LogService
+    inject:
+      - calendar
+  - id: tables
+    service: troupe.random_tables.RandomTableService
+    inject:
+      - rng
+  - id: lore
+    service: troupe.lore.LoreService
+    inject:
+      - calendar
+  - id: oracle
+    service: troupe.oracle.OracleService
+    inject:
+      - rng
+  - id: ruleset
+    service: troupe.ruleset_service.RulesService
+    inject:
+      - rng
+  - id: world
+    service: troupe.world.WorldService
+    inject:
+      - calendar
+      - log
+      - rng
+  - id: npc
+    service: troupe.npc.NpcService
+    inject:
+      - rng
+  - id: clock
+    service: troupe.clock.ClockService
+    inject: []
+  - id: faction
+    service: troupe.faction.FactionService
+    inject:
+      - log
+      - clock
+  - id: quest
+    service: troupe.quest.QuestService
+    inject:
+      - calendar
+      - clock
+      - log
+  - id: director
+    service: troupe.director.DirectorService
+    inject:
+      - rng
+      - calendar
+      - log
+      - oracle
+      - tables
+      - ruleset
+      - world
+      - quest
+  - id: agency
+    service: troupe.npc_agency.NpcAgencyService
+    inject:
+      - rng
+      - npc
+      - world
+      - log
+      - oracle
+      - faction
+  - id: magic
+    service: troupe.magic.MagicService
+    inject:
+      - ruleset
+      - rng
+      - log
+  - id: provisions
+    service: troupe.provisions.ProvisionService
+    inject:
+      - rng
+      - ruleset
+      - log
+      - calendar
+      - director
+  - id: agent
+    service: troupe.agent.AgentService
+    inject:
+      - rng
+      - npc
+      - world
+      - tables
+      - director
+  - id: encounter
+    service: troupe.encounter.EncounterService
+    inject:
+      - ruleset
+      - world
+      - rng
+      - log
+      - director
+      - agent
+      - oracle
+      - provisions

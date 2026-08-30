@@ -190,7 +190,11 @@ export const DIFFICULTIES = [
   "deadly"
 ];
 
-export const DIFFICULTY_CN = {
+// judgeDifficulty() 以 "trivial" 作为初始档：当调整后 XP 未越过任何阈值时返回它。
+// 因此 DIFFICULTY_CN **必须**覆盖 trivial，否则 evaluate() 面对弱遭遇会抛
+// KeyError 直接崩溃（与 Python 端 d20/data_battle.py 保持同步）。
+export const DIFFICULTY_CN: Record<string, string> = {
+  "trivial": "轻松",
   "easy": "简单",
   "medium": "中等",
   "hard": "困难",

@@ -47,15 +47,19 @@ export const COMPOSITION: CompositionEntry[] = [
   { id: "dice", service: DiceService, inject: ["skills", "feats"] },
   { id: "derived", service: DerivedService, inject: ["skills", "equipment", "feats", "race"] },
   { id: "slots", service: SpellSlotsService, inject: ["skills"] },
-  { id: "rest", service: RestService, inject: ["derived", "dice", "slots", "feats", "race"] },
-  { id: "combat", service: CombatService, inject: ["derived", "equipment", "dice", "techniques", "skills", "slots", "feats", "rest"] },
-  { id: "sheet", service: SheetService, inject: ["perks", "skills", "equipment", "derived", "slots", "race", "background", "feats", "rest", "condition"] },
+  // race：龙息宏直接调 ctx.race.elemental()，必须声明（此前漏声明，卸载 race 后崩溃）
+  { id: "rest", service: RestService, inject: ["derived", "slots", "feats", "race"] },
+  { id: "combat", service: CombatService, inject: ["derived", "equipment", "dice", "techniques", "skills", "race", "slots", "feats", "rest"] },
+  // feats/race 为历史冗余声明（sheet 直接读 state），已移除
+  { id: "sheet", service: SheetService, inject: ["perks", "skills", "equipment", "derived", "slots", "background", "rest", "condition"] },
   { id: "condition", service: ConditionService, inject: [] },
-  { id: "monster", service: MonsterService, inject: ["dice"] },
+  { id: "monster", service: MonsterService, inject: [] },
   // ---- v2.1：职业与规则速查（可选增强，无人 inject 它们；
   //      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
   { id: "classes", service: ClassService, inject: [] },
   { id: "reference", service: ReferenceService, inject: [] },
   // ---- v2.2：模拟对战（回合制完整对战 + 遭遇构建 + 蒙特卡洛）----
-  { id: "battle", service: BattleService, inject: ["dice", "monster", "condition"] },
+  // battle 对自身 ctx 零依赖：怪物数据走 data_monsters，装备/技能/环位/攻击经
+  // char.ctx（角色级全量装配）访问；旧的 [dice, monster, condition] 是错误声明。
+  { id: "battle", service: BattleService, inject: [] },
 ];

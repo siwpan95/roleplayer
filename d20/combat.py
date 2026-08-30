@@ -14,7 +14,9 @@ import random
 class CombatService(Service):
     """战斗宏能力。"""
 
-    inject = ["derived", "equipment", "dice", "techniques", "skills", "slots", "feats", "rest"]
+    # race：龙息宏（_macro_dragon_breath）直接调 ctx.race.elemental()
+    inject = ["derived", "equipment", "dice", "techniques", "skills", "race",
+              "slots", "feats", "rest"]
 
     TECHNIQUES = TECHNIQUES
 
@@ -119,43 +121,52 @@ class CombatService(Service):
     # ====================================================================
     #  D&D 风格战技 / 法术
     # ====================================================================
-    def _macro_melee_attack(self, dc: int = 10, target_ac: int = 10, gwm: bool = False) -> str:
+    def _macro_melee_attack(self, target_ac: int = 10, gwm: bool = False) -> str:
         r = self.resolve_attack("melee", target_ac, gwm=gwm)
         tag = " [巨武宗师]" if r["penalty"] else ""
         pfx = f"{r['penalty']:+d}" if r["penalty"] else ""
         lines = [f"⚔ 近战攻击: d20+{r['atk_bonus']}{pfx}{tag} = "
                  f"{r['roll']}+{r['atk_bonus'] + r['penalty']} = {r['total']} vs AC {target_ac}"]
         if r["hit"]:
-            lines.append(f"  ✓ 命中！伤害: {r['dmg_desc']}+{r['str_mod']}(力量)" +
-                         (f"+{r['bonus_dmg']}(巨武)" if r["bonus_dmg"] else "") +
-                         f" = {r['damage']}")
+            parts = [r["dmg_desc"]]
+            if r["str_mod"]:
+                parts.append(f"{r['str_mod']:+d}(力量)")
+            if r["bonus_dmg"]:
+                parts.append(f"{r['bonus_dmg']:+d}(巨武)")
+            lines.append("  ✓ 命中！伤害: " + " + ".join(parts) + f" = {r['damage']}")
         else:
             lines.append("  ✗ 未命中")
         return "\n".join(lines)
 
-    def _macro_ranged_attack(self, dc: int = 10, target_ac: int = 10, sharpshooter: bool = False) -> str:
+    def _macro_ranged_attack(self, target_ac: int = 10, sharpshooter: bool = False) -> str:
         r = self.resolve_attack("ranged", target_ac, sharpshooter=sharpshooter)
         tag = " [神射手]" if r["penalty"] else ""
         pfx = f"{r['penalty']:+d}" if r["penalty"] else ""
         lines = [f"🏹 远程攻击: d20+{r['atk_bonus']}{pfx}{tag} = "
                  f"{r['roll']}+{r['atk_bonus'] + r['penalty']} = {r['total']} vs AC {target_ac}"]
         if r["hit"]:
-            lines.append(f"  ✓ 命中！伤害: {r['dmg_desc']}" +
-                         (f"+{r['bonus_dmg']}(神射)" if r["bonus_dmg"] else "") +
-                         f" = {r['damage']}")
+            parts = [r["dmg_desc"]]
+            if r["bonus_dmg"]:
+                parts.append(f"{r['bonus_dmg']:+d}(神射)")
+            lines.append("  ✓ 命中！伤害: " + " + ".join(parts) + f" = {r['damage']}")
         else:
             lines.append("  ✗ 未命中")
         return "\n".join(lines)
 
     def _sneak_attack_dice(self) -> int:
-        """偷袭精准伤害骰数（D&D 风格：随近战攻击等级成长）。需装备灵巧武器。"""
+        """偷袭精准伤害骰数：取游荡者职业等级对应的权威骰数（D&D 5e SRD）。
+
+        前提：装备灵巧武器；且当前职业提供 sneak_attack 专属数值（游荡者）。
+        未选游荡者 / 职业系统未挂载时无偷袭骰（返回 0）。
+        """
         if not self.ctx.equipment.has_finesse_weapon():
             return 0
-        rank = self.ctx.derived.attack_bonus(melee=True)
-        dice = max(0, (rank - 4) // 2 + 1)
-        return min(dice, 10)
+        if not self.ctx.has("classes"):
+            return 0
+        spec = (self.ctx.classes.class_specific() or {}).get("sneak_attack") or {}
+        return int(spec.get("dice_count", 0))
 
-    def _macro_sneak_attack(self, dc: int = 10, target_ac: int = 10,
+    def _macro_sneak_attack(self, target_ac: int = 10,
                             flat_footed: bool = True) -> str:
         atk_bonus = self.ctx.derived.attack_bonus(melee=True)
         roll = self.ctx.dice.d20_roll()

@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang='zh-CN'><head><meta charset='utf-8'>
+<title>冒险 — 战役档案</title>
+<style>
+:root{color-scheme:light dark}
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+     max-width:920px;margin:2rem auto;padding:0 1.2rem;line-height:1.65}
+h1{border-bottom:2px solid #8884;padding-bottom:.3rem}
+h2{margin-top:2rem;border-left:4px solid #8884;padding-left:.6rem}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #8884;padding:.4rem .6rem;text-align:left}
+code{background:#8882;padding:.1rem .35rem;border-radius:3px}
+.timeline{list-style:none;padding:0}
+.timeline li{border-left:3px solid #8884;margin:.35rem 0;padding:.25rem .7rem}
+.timeline .seq{color:#888;font-size:.85em}
+.muted{color:#888;font-size:.9em}
+.badge{display:inline-block;background:#8882;border-radius:3px;
+       padding:0 .4rem;font-size:.85em;margin-left:.3rem}
+</style></head><body>
+<h1>冒险</h1>
+<p class='muted'>规则集 <b>dnd5e</b> · 种子 <code>8</code> · 模组 <code>generated</code></p>
+<p>累计经验 <b>25</b> · 金币 <b>19</b> · 事件 <b>45</b></p>
+<h2>队伍</h2><table><tr><th>成员</th><th>职业</th><th>等级</th><th>生命</th><th>状态</th></tr>
+<tr><td>德鲁伊 Lv3 HP 20/20 AC 12</td><td>德鲁伊</td><td>3</td><td>20/20</td><td>存活</td></tr>
+<tr><td>游侠 Lv2 HP 20/20 AC 14</td><td>游侠</td><td>2</td><td>20/20</td><td>存活</td></tr>
+</table>
+<h2>任务</h2><ul>
+<li><b>护送失踪的孩子</b> — 进行中<span class='badge'>0%</span></li>
+<li><b>寻回失踪的孩子</b> — 未解锁<span class='badge'>0%</span><span class='badge'>前置 q1</span><span class='badge'>期限 1200 分钟</span></li>
+<li><b>查明腐化的水源</b> — 未解锁<span class='badge'>0%</span><span class='badge'>前置 q2</span><span class='badge'>期限 960 分钟</span></li>
+</ul>
+<h2>时钟</h2><ul>
+<li>暴露行踪：<code>0/4</code><span class='badge'>danger</span></li>
+<li>阴谋推进：<code>0/6</code><span class='badge'>campaign</span></li>
+<li>银誓约的计划：<code>6/8</code><span class='badge'>faction</span></li>
+<li>圣遗族的计划：<code>6/8</code><span class='badge'>faction</span></li>
+</ul>
+<h2>世界</h2><p>当前位置：<b>古径</b></p><ul>
+<li>[✔] 古径<span class='badge'>建筑</span><span class='badge'>危险 1</span></li>
+<li>[·] 白渡<span class='badge'>荒野</span><span class='badge'>危险 4</span></li>
+<li>[·] 石岩<span class='badge'>城镇</span><span class='badge'>危险 1</span></li>
+<li>[·] 星墟<span class='badge'>地牢</span><span class='badge'>危险 5</span></li>
+<li>[·] 星渊<span class='badge'>遗迹</span><span class='badge'>危险 5</span></li>
+</ul>
+<h2>事件时间轴</h2><ul class='timeline'>
+<li><span class='seq'>#1 [第1日 08:00（白天）] session.start</span><br>战役开始 · 规则 dnd5e · 种子 8</li>
+<li><span class='seq'>#2 [第1日 08:00（白天）] scene.check</span><br>场景检查：掷 2 vs 混沌 5 → 被打断</li>
+<li><span class='seq'>#3 [第1日 08:00（白天）] scene.start</span><br>【S001】交涉：与人交涉（场景检查：掷 2 vs 混沌 5 → 被打断）</li>
+<li><span class='seq'>#4 [第1日 08:00（白天）] oracle.event</span><br>随机事件【队伍获益】 —— 一个孩子锈蚀的游说的把柄</li>
+<li><span class='seq'>#5 [第1日 08:00（白天）] scene.note</span><br>队伍时来运转：锈蚀的游说的把柄。</li>
+<li><span class='seq'>#6 [第1日 08:00（白天）] scene.note</span><br>场景被打断：随机事件【队伍获益】 —— 一个孩子锈蚀的游说的把柄</li>
+<li><span class='seq'>#7 [第1日 08:00（白天）] scene.note</span><br>此处没有可交谈的对象。</li>
+<li><span class='seq'>#8 [第1日 08:00（白天）] scene.end</span><br>【S001】落幕（掌控，混沌 → 3）</li>
+<li><span class='seq'>#9 [第1日 08:00（白天）] combat.end</span><br>==============================================</li>
+<li><span class='seq'>#10 [第1日 08:00（白天）] scene.check</span><br>场景检查：掷 2 vs 混沌 2 → 有变故</li>
+<li><span class='seq'>#11 [第1日 08:00（白天）] scene.start</span><br>【S002】休整：短暂休整（场景检查：掷 2 vs 混沌 2 → 有变故）</li>
+<li><span class='seq'>#12 [第1日 08:00（白天）] scene.note</span><br>场景与预期有出入 —— 细节已经变了。</li>
+<li><span class='seq'>#13 [第1日 16:00（白天）] time.advance</span><br>时间推进 480 分钟（行动耗时）</li>
+<li><span class='seq'>#14 [第1日 16:00（白天）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#15 [第2日 00:00（夜晚）] time.advance</span><br>时间推进 480 分钟，进入第 2 日（行动耗时）</li>
+<li><span class='seq'>#16 [第2日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】1/8</li>
+<li><span class='seq'>#17 [第2日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】1/8</li>
+<li><span class='seq'>#18 [第2日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】2/8</li>
+<li><span class='seq'>#19 [第2日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】2/8</li>
+<li><span class='seq'>#20 [第2日 00:00（夜晚）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#21 [第2日 08:00（白天）] time.advance</span><br>时间推进 480 分钟（行动耗时）</li>
+<li><span class='seq'>#22 [第2日 08:00（白天）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#23 [第2日 16:00（白天）] time.advance</span><br>时间推进 480 分钟（行动耗时）</li>
+<li><span class='seq'>#24 [第2日 16:00（白天）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#25 [第2日 16:00（白天）] scene.end</span><br>【S002】落幕（掌控，混沌 → 1）</li>
+<li><span class='seq'>#26 [第2日 16:00（白天）] scene.check</span><br>场景检查：掷 3 vs 混沌 1 → 如预期</li>
+<li><span class='seq'>#27 [第2日 16:00（白天）] scene.start</span><br>【S003】休整：短暂休整（场景检查：掷 3 vs 混沌 1 → 如预期）</li>
+<li><span class='seq'>#28 [第3日 00:00（夜晚）] time.advance</span><br>时间推进 480 分钟，进入第 3 日（行动耗时）</li>
+<li><span class='seq'>#29 [第3日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】3/8</li>
+<li><span class='seq'>#30 [第3日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】3/8</li>
+<li><span class='seq'>#31 [第3日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】4/8</li>
+<li><span class='seq'>#32 [第3日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】4/8</li>
+<li><span class='seq'>#33 [第3日 00:00（夜晚）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#34 [第3日 08:00（白天）] time.advance</span><br>时间推进 480 分钟（行动耗时）</li>
+<li><span class='seq'>#35 [第3日 08:00（白天）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#36 [第3日 16:00（白天）] time.advance</span><br>时间推进 480 分钟（行动耗时）</li>
+<li><span class='seq'>#37 [第3日 16:00（白天）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#38 [第4日 00:00（夜晚）] time.advance</span><br>时间推进 480 分钟，进入第 4 日（行动耗时）</li>
+<li><span class='seq'>#39 [第4日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】5/8</li>
+<li><span class='seq'>#40 [第4日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】5/8</li>
+<li><span class='seq'>#41 [第4日 00:00（夜晚）] clock.tick</span><br>【银誓约的计划】6/8</li>
+<li><span class='seq'>#42 [第4日 00:00（夜晚）] clock.tick</span><br>【圣遗族的计划】6/8</li>
+<li><span class='seq'>#43 [第4日 00:00（夜晚）] scene.note</span><br>德鲁伊1 安排全队就地休整与补给。</li>
+<li><span class='seq'>#44 [第4日 00:00（夜晚）] scene.end</span><br>【S003】落幕（掌控，混沌 → 1）</li>
+<li><span class='seq'>#45 [第4日 00:00（夜晚）] session.end</span><br>战役落幕 · 共 4 场 · 结局：达到场景上限</li>
+</ul>
+</body></html>

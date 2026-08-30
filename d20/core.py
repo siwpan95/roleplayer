@@ -177,7 +177,11 @@ class Context:
             d()
 
     def dispose(self) -> None:
-        """卸载所有服务：逆序运行全部 effect disposer。"""
+        """卸载所有服务：先逆序调用各服务的 ``dispose()``（若有），再逆序运行 effect disposer。"""
+        for svc in reversed(list(self._services.values())):
+            dispose_fn = getattr(svc, "dispose", None)
+            if callable(dispose_fn):
+                dispose_fn()
         for lst in reversed(self._disposers):
             self._dispose_list(lst)
         self._disposers.clear()

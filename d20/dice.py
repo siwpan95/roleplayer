@@ -80,11 +80,14 @@ class DiceService(Service):
     inject = ["skills", "feats"]
 
     def d20_roll(self) -> int:
-        """掷 d20 并应用钩子：半身人幸运（掷 1 重掷）、专长幸运（每日 3 次重掷取高）。"""
+        """掷 d20 并应用钩子：半身人幸运（掷 1 重掷）、专长幸运（每日 3 次重掷取新值）。
+
+        幸运专长忠于 D&D 5e：重掷**取新值**（可能更低），而非取两骰较高值。
+        """
         roll = self.ctx.waterfall("dice/d20_roll", roll_d20())
         st = self.ctx.state
         if self.ctx.feats.has_feat("幸运") and st.lucky_used < 3:
-            roll = max(roll, roll_d20())
+            roll = roll_d20()
             st.lucky_used += 1
         return roll
 
@@ -115,8 +118,11 @@ class DiceService(Service):
         rolls, total = roll_3d6()
         if total <= 4 or (total == 5 and target >= 15) or (total == 6 and target >= 16):
             outcome = "大成功！"
-        elif total >= 17 or (total == 17 and target <= 15):
-            outcome = "大失败！" if total == 18 or (total == 17 and target <= 15) else "失败"
+        elif total == 18:
+            outcome = "大失败！"
+        elif total == 17 and target >= 16:
+            # GURPS：有效技能 ≥16 时掷 17 视为成功
+            outcome = "成功"
         else:
             outcome = "成功" if total <= target else "失败"
         mod_str = f"{'+' if modifier >= 0 else ''}{modifier}" if modifier else "0"

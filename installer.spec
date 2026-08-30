@@ -5,11 +5,30 @@
 入口：installer.py（windowed，纯标准库，不依赖 tkinter）
 内嵌：dist/D20（已用 runtime_hook_tk.py 验证可用的完整 tkinter 应用目录）
 
-输出：dist/D20-Setup-2.0.0.exe（单文件自包含安装包）
+输出：dist/RolePlayer-Setup-<版本>.exe（单文件自包含安装包）
+
+注意：输出文件名**不再硬编码**，而是从 d20/__init__.py 的 __version__ 解析。
+此前写死 "RolePlayer-Setup-2.0.0"，版本升到 2.2.0 后产出物名仍叫 2.0.0 —— 与
+installer.py:APP_VERSION 的版本漂移属同一病根（同一个数字散落三处）。
+现在唯一真相源是 d20.__version__，配合 tests/test_version_consistency.py 守住。
 """
 import os
+import re
 
-ROOT = os.path.abspath(r"E:/D20")
+ROOT = os.path.abspath(r"E:/RolePlayer")
+
+
+def _app_version() -> str:
+    """从 d20/__init__.py 解析 __version__，作为版本号的唯一真相源。"""
+    init = os.path.join(ROOT, "d20", "__init__.py")
+    with open(init, encoding="utf-8") as f:
+        m = re.search(r'^__version__\s*=\s*["\']([^"\']+)["\']', f.read(), re.M)
+    if not m:
+        raise RuntimeError(f"无法在 {init} 中解析 __version__")
+    return m.group(1)
+
+
+APP_VERSION = _app_version()
 
 a = Analysis(
     [os.path.join(ROOT, "installer.py")],
@@ -33,7 +52,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="D20-Setup-2.0.0",
+    name=f"RolePlayer-Setup-{APP_VERSION}",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

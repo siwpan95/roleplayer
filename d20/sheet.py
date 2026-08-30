@@ -10,7 +10,9 @@ from .data import ability_mod
 class SheetService(Service):
     """角色卡显示。"""
 
-    inject = ["perks", "skills", "equipment", "derived", "slots", "race", "background", "feats", "rest", "condition"]
+    # feats/race 为历史冗余声明（sheet 直接读 state，不调 ctx.feats / ctx.race）
+    inject = ["perks", "skills", "equipment", "derived", "slots",
+              "background", "rest", "condition"]
 
     def show_sheet(self) -> str:
         """渲染完整角色卡。"""
