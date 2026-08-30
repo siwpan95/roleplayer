@@ -29,12 +29,12 @@ def _gurps_sim():
 
 def test_gurps_spell_is_skill_and_learned():
     sim, mage = _gurps_sim()
-    ok, msg = sim.ctx.magic.learn_gurps_spell(mage, "点火")
+    ok, msg = sim.ctx.magic.learn_gurps_spell(mage, "燃烧之焰")
     assert ok, msg
     # 法术作为技能写入 state.skills，复用规则判定
-    assert "点火" in mage.state.skills
+    assert "燃烧之焰" in mage.state.skills
     # 基础有效等级 = IQ(14) + 魔法天赋1级(1) = 15
-    assert mage.state.skills["点火"] == 15
+    assert mage.state.skills["燃烧之焰"] == 15
 
 
 def test_gurps_prereq_enforced():
@@ -47,7 +47,7 @@ def test_gurps_prereq_enforced():
 def test_gurps_no_magery_blocks_under_no_mana():
     sim, mage = _gurps_sim()
     sim.ctx.magic.set_mana("无")
-    ok, msg = sim.ctx.magic.learn_gurps_spell(mage, "点火")
+    ok, msg = sim.ctx.magic.learn_gurps_spell(mage, "燃烧之焰")
     assert not ok
     assert "魔力" in msg or "Magery" in msg
 
@@ -72,14 +72,14 @@ def test_gurps_cast_spends_fp_and_resist_applies_condition():
 
 def test_gurps_critical_failure_backfires():
     sim, mage = _gurps_sim()
-    sim.ctx.magic.learn_gurps_spell(mage, "点火")
+    sim.ctx.magic.learn_gurps_spell(mage, "燃烧之焰")
     # 强制大失败：把技能等级压到极低，使 3d6 几乎必败且掷 18 概率存在
-    mage.state.skills["点火"] = 3
+    mage.state.skills["燃烧之焰"] = 3
     # 多次施放直至命中一次大失败（或直接验证失败路径不崩溃 + FP 仍消耗）
     fp0, _ = sim.ctx.magic.fp_of(mage)
-    res = sim.ctx.magic.cast_gurps(mage, "点火")
+    res = sim.ctx.magic.cast_gurps(mage, "燃烧之焰")
     assert res["ok"] is False
-    assert sim.ctx.magic.fp_of(mage)[0] == fp0 - GURPS_SPELLS["点火"]["energy"]
+    assert sim.ctx.magic.fp_of(mage)[0] == fp0 - GURPS_SPELLS["燃烧之焰"]["energy"]
 
 
 # =============================================================================
@@ -230,7 +230,7 @@ def test_gurps_low_mana_penalizes_casting():
     """批次1 A1：低玛那下全法术检定 -5（官方结构性事实）。"""
     sim, mage = _gurps_sim()
     sim.ctx.magic.set_mana("低")
-    assert sim.ctx.magic.learn_gurps_spell(mage, "点火")[0]  # 低玛那仅法师可学，mage 有魔法天赋1级
+    assert sim.ctx.magic.learn_gurps_spell(mage, "燃烧之焰")[0]  # 低玛那仅法师可学，mage 有魔法天赋1级
     captured = {}
     orig = sim.ctx.ruleset.check
 
@@ -239,19 +239,19 @@ def test_gurps_low_mana_penalizes_casting():
         return orig(actor, req)
 
     sim.ctx.ruleset.check = spy
-    sim.ctx.magic.cast_gurps(mage, "点火")
+    sim.ctx.magic.cast_gurps(mage, "燃烧之焰")
     assert captured.get("modifier") == -5
 
 
 def test_gurps_concentration_broken_when_stunned():
     """批次1 A2：震慑状态下施法先做 -3 意志检定，失败则专注被打断且不耗 FP。"""
     sim, mage = _gurps_sim()
-    assert sim.ctx.magic.learn_gurps_spell(mage, "点火")[0]
+    assert sim.ctx.magic.learn_gurps_spell(mage, "燃烧之焰")[0]
     # 确定性必败：智力 1 → 意志目标 = 1 - 3(打断) - 4(震慑状态) < 0
     mage.state.attributes["智力"] = 1
     mage.state.conditions = ["震慑"]
     fp0, mx = sim.ctx.magic.fp_of(mage)
-    res = sim.ctx.magic.cast_gurps(mage, "点火")
+    res = sim.ctx.magic.cast_gurps(mage, "燃烧之焰")
     assert res.get("reason") == "concentration_broken"
     assert "专注被打断" in res.get("text", "")
     assert sim.ctx.magic.fp_of(mage)[0] == fp0          # 未耗 FP

@@ -43,21 +43,21 @@ from .contracts import CheckRequest
 #:       condition 命中后施加的状态(list) / range 射程(尺)
 GURPS_SPELLS: dict[str, dict] = {
     # ---- 火学院 ----
-    "点火":  {"en": "Ignite Fire", "college": "火", "attr": "IQ", "energy": 1,
+    "燃烧之焰": {"en": "Ignite Fire", "college": "火", "attr": "IQ", "energy": 1,
               "time": 1, "prereqs": [], "kind": "utility", "damage": None,
               "dtype": "灼烧", "resist": None, "condition": None, "range": 10},
-    "创造火": {"en": "Create Fire", "college": "火", "attr": "IQ", "energy": 2,
-                "time": 2, "prereqs": ["点火"], "kind": "utility", "damage": (1, 6, 0),
+    "召火术": {"en": "Create Fire", "college": "火", "attr": "IQ", "energy": 2,
+                "time": 2, "prereqs": ["燃烧之焰"], "kind": "utility", "damage": (1, 6, 0),
                 "dtype": "灼烧", "resist": None, "condition": None, "range": 10},
     # 官方译名「火球术」；因与 D&D SRD 同名法术键冲突，本仓 GURPS 键保留「火球」。
     # 官方前置：Magery 1 + 召火术(Create Fire) + 火焰塑形(Shape Fire)（trow 8778 中译；
-    # 注意俄译本 sp1r 把 Magery 前置系统性抬档为 2，不可信）——本仓自研简化只要求「创造火」。
+    # 注意俄译本 sp1r 把 Magery 前置系统性抬档为 2，不可信）——本仓自研简化只要求「召火术」。
     "火球":  {"en": "Fireball", "college": "火", "attr": "IQ", "energy": 3,
-              "time": 2, "prereqs": ["创造火"], "kind": "damage", "damage": (3, 6, 0),
+              "time": 2, "prereqs": ["召火术"], "kind": "damage", "damage": (3, 6, 0),
               "dtype": "灼烧", "resist": None, "condition": None, "range": 100},
     # ---- 风学院（官方 Air 系；官方前置 Magery 1 + 6 个风系法术、耗能可变 1d-1/点，
     #      本仓未收录 6 风法术前置且简化为固定耗 2）----
-    "闪电箭": {"en": "Lightning", "college": "风", "attr": "IQ", "energy": 2,
+    "闪电术": {"en": "Lightning", "college": "风", "attr": "IQ", "energy": 2,
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "闪电", "resist": None, "condition": None, "range": 100},
     # ---- 冰/水学院（官方 Water 系对应为 Icy Weapon/寒冰武器，本仓自拟名「寒冰箭」）----
@@ -65,12 +65,12 @@ GURPS_SPELLS: dict[str, dict] = {
                "time": 2, "prereqs": [], "kind": "damage", "damage": (2, 6, 0),
                "dtype": "寒冷", "resist": None, "condition": None, "range": 80},
     # ---- 心智控制学院（官方 Mind Control 系，IQ 施法；2026-08-30 联网核对修正自「身体控制」。
-    #      官方前置 Foolishness（愚钝术，本仓未收录故简化无前置）；官方耗能 3）----
-    "眩晕":  {"en": "Daze", "college": "心智控制", "attr": "IQ", "energy": 3,
+    #      官方译名「晕眩术」；官方前置 Foolishness（愚钝术，本仓未收录故简化无前置）；官方耗能 3）----
+    "晕眩术": {"en": "Daze", "college": "心智控制", "attr": "IQ", "energy": 3,
               "time": 2, "prereqs": [], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "IQ", "condition": ["眩晕"], "range": 10},
     "昏睡":  {"en": "Sleep", "college": "心智控制", "attr": "IQ", "energy": 4,
-              "time": 4, "prereqs": ["眩晕"], "kind": "resist", "damage": None,
+              "time": 4, "prereqs": ["晕眩术"], "kind": "resist", "damage": None,
               "dtype": "钝击", "resist": "HT", "condition": ["倒地", "震慑"], "range": 10},
     # ---- 心智学院 ----
     "恐惧":  {"en": "Fear", "college": "心智控制", "attr": "IQ", "energy": 3,
