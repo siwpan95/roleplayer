@@ -16,6 +16,7 @@
 | Ironsworn: Delve | Shawn Tomkin | CC BY 4.0 | 域/主题卡结构 → 地牢房间类型/危险/发现表 | 同上 |
 | Dungeon World SRD | Sage LaTorra & Adam Koebel | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | fronts（威胁→危机→坏结局）结构 | 需署名作者与许可（见下） |
 | Blades in the Dark SRD | John Harper | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | 派系/时钟结构概念 | 需署名作者与许可（见下） |
+| D&D System Reference Document 5.2（2024 版） | Wizards of the Coast LLC | CC BY 4.0 | 法术/怪物增量数据（经 open5e `srd-2024` 数据集机器转换，官方出处 https://dnd.wizards.com/resources/systems-reference-document） | 需署名 WotC 与许可（见下） |
 
 ## 署名（Attribution）
 
@@ -26,6 +27,9 @@
   [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)。
 - Blades in the Dark 由 John Harper（One Seven Design）创作，许可为
   [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)。
+- D&D System Reference Document 5.2（2024 版）由 Wizards of the Coast LLC 发布，
+  许可为 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)；本仓 2024 增量
+  数据经 [open5e](https://open5e.com) 的 `srd-2024` 数据集机器转换。
 
 > 本仓相应内容（troupe/data_oracle.py 扩充词表、troupe/data_tables.py 传闻/事件表、
 > troupe/data_dungeon.py、troupe/data_fronts.py 等）为上述来源的**结构借鉴 + 中文原创

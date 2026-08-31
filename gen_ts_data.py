@@ -9,7 +9,8 @@ import json
 import os
 import sys
 
-D20 = r"E:/D20"
+# 仓库根 = 本脚本所在目录（2026-08-31 修复：原硬编码 E:/D20 已随项目更名/迁仓失效）
+D20 = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, D20)
 from d20 import (  # noqa: E402
     data_spells, data_magicitems, data_monsters, data_conditions,
