@@ -34,7 +34,7 @@ a = Analysis(
     [os.path.join(ROOT, "installer.py")],
     pathex=[ROOT],
     binaries=[],
-    datas=[(os.path.join(ROOT, "dist", "D20"), "D20")],
+    datas=[(os.path.join(ROOT, "dist", "RolePlayer"), "RolePlayer")],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

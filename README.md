@@ -498,14 +498,14 @@ python mvp_gui.py        # 或 python -m gui.app
 加载/随机会整体替换当前角色并刷新全部面板，对战随即使用新角色。
 
 ### Windows 安装包
-项目提供自包含安装包 `dist/D20-Setup-2.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
+项目提供自包含安装包 `dist/RolePlayer-Setup-3.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
 
 - **打包 GUI 应用**：`F:/Python314/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean`
   入口 `gui/app.py`，已注入 Tcl/Tk 9.0 运行时（`runtime_hook_tk.py` + `_tcllib/`）以修复 PyInstaller 对 Tk 9.0 的收集盲点。
   重新打包前需先解压 `F:/Python314/tcl/libtcl9.0.4.zip`、`libtk9.0.4.zip` 到
   `_tcllib/tcl/tcl_library`、`_tcllib/tk/tk_library`（`_tcllib/` 已被 .gitignore 排除）。
 - **构建安装包**：`F:/Python314/python.exe -m PyInstaller installer.spec --noconfirm --clean`
-  产出 `dist/D20-Setup-2.0.0.exe`，内嵌完整 D20 程序目录，双击即装。
+  产出 `dist/RolePlayer-Setup-3.0.0.exe`，内嵌完整 RolePlayer 程序目录，双击即装。
 - **安装行为**：默认安装到 `%LOCALAPPDATA%\Programs\D20`（免 UAC），并在桌面与开始菜单创建快捷方式，
   同时写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\D20` 卸载项。
 - **卸载**：开始菜单「卸载 Role Player」，或 `RolePlayer-Setup-3.0.0.exe --uninstall`。
