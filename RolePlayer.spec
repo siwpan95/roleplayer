@@ -11,7 +11,7 @@ PyInstaller 不会自动收集其初始化脚本（init.tcl/tk.tcl），必须�
 """
 import os
 
-ROOT = os.path.abspath(r"E:/RolePlayer")
+ROOT = os.path.abspath(SPECPATH)  # 2026-08-31：原硬编码 E:/RolePlayer 改为 spec 所在目录
 TCLLIB = os.path.join(ROOT, "_tcllib")
 
 a = Analysis(

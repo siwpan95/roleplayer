@@ -24,9 +24,10 @@ import pprint
 import re
 from collections import OrderedDict
 
-PULL = r"E:/D20/_srd_pull"
-CN = r"E:/D20/_cn_src"
-OUT = r"E:/D20/d20"
+_HERE = os.path.dirname(os.path.abspath(__file__))
+PULL = os.path.join(_HERE, "_srd_pull")   # 2026-08-31：原 E:/D20 硬编码改相对
+CN = os.path.join(_HERE, "_cn_src")
+OUT = os.path.join(_HERE, "d20")
 
 
 # =============================================================================

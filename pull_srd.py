@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE = "https://www.dnd5eapi.co"
 API = f"{BASE}/api/2014"
-PULL = r"E:/D20/_srd_pull"
+PULL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_srd_pull")  # 2026-08-31：原 E:/D20 硬编码改相对
 
 # 本地目录名 -> API 类别路径
 CATS = {

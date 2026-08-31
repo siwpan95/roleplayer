@@ -15,7 +15,7 @@ installer.py:APP_VERSION 的版本漂移属同一病根（同一个数字散落�
 import os
 import re
 
-ROOT = os.path.abspath(r"E:/RolePlayer")
+ROOT = os.path.abspath(SPECPATH)  # 2026-08-31：原硬编码 E:/RolePlayer 改为 spec 所在目录
 
 
 def _app_version() -> str:
