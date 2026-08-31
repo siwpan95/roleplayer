@@ -162,13 +162,17 @@ def generate_module(seed: int = 0, *, module_id: str = "generated",
                 wants=[rnd.choice(NPC_WANTS)],
             ))
 
-    # ---- 时钟：危险 + 主线倒计时 ----
+    # ---- 时钟：危险 + 主线倒计时（P0：阴谋模板注入坏结局时钟与派系目标）----
+    from ..data_fronts import pick_front
+    front = pick_front(rnd)
     clocks = [
         Clock(id="cl_danger", name="暴露行踪", segments=4, kind="danger",
               consequence="巡逻队围了上来"),
-        Clock(id="cl_doom", name="阴谋推进", segments=6, kind="campaign",
-              consequence="仪式完成，局面不可挽回"),
+        Clock(id="cl_doom", name=front["clock"], segments=6, kind="campaign",
+              consequence=front["grim"]),
     ]
+    if factions:
+        factions[0].goals = [front["threat"]]
 
     # ---- 任务链：q1 → q2 → …（后置任务依赖前置）----
     quests: list[Quest] = []
@@ -202,7 +206,8 @@ def generate_module(seed: int = 0, *, module_id: str = "generated",
             fail_condition=("clock:cl_doom" if q == n_quests - 1 and n_quests > 1 else ""),
         ))
 
-    threads = [Thread(id="t1", text=f"{places[0].name}的传闻", weight=2)]
+    threads = [Thread(id="t1", text=f"{places[0].name}的传闻", weight=2),
+               Thread(id="t2", text=f"阴谋：{front['threat']}", weight=2)]
 
     return CampaignModule(
         id=module_id,

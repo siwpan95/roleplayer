@@ -48,8 +48,12 @@ def test_save_persists_event_stream_and_actions(tmp_path):
 
 
 def test_log_service_records_actions_from_director_resolves():
-    """导演裁定过的动作提议应进入 ``log.actions``（供 replay 看「当时想做什么」）。"""
-    sim = _run_sim(32, 3)
+    """导演裁定过的动作提议应进入 ``log.actions``（供 replay 看「当时想做什么」）。
+
+    seed=34：P0 词表扩充（2026-08-30）后 seed=32 的确定性走向不再触发动作记录，
+    按项目先例（内容扩充 → 测试换 seed）改用仍能覆盖断言的相邻种子。
+    """
+    sim = _run_sim(34, 3)
     assert len(sim.ctx.log.actions) > 0, "跑过场景应有动作提议被记录"
     row = sim.ctx.log.actions[0]
     assert "kind" in row or "actor" in row

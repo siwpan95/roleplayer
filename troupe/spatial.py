@@ -25,12 +25,18 @@ _PASSABLE = (_FLOOR, _ENTRY, _EXIT, _TREASURE)
 
 
 class DungeonMap:
-    """一张地牢网格：``grid[y][x]`` 取字符，另有房间清单与种子。"""
+    """一张地牢网格：``grid[y][x]`` 取字符，另有房间清单与种子。
 
-    def __init__(self, grid: list[list[str]], rooms: list, seed: int = 0) -> None:
+    ``contents``：房间内容表（P0，2026-08-30）——``{房间索引: {type/desc/danger/discovery}}``，
+    由生成器经独立 RNG 逐房间抽取；旧存档无此键时缺省为空。
+    """
+
+    def __init__(self, grid: list[list[str]], rooms: list, seed: int = 0,
+                 contents: Optional[dict] = None) -> None:
         self.grid = grid
         self.rooms = rooms            # [(x, y, w, h), ...]
         self.seed = int(seed)
+        self.contents = dict(contents or {})
 
     # ------------------------------------------------------------------ #
     #  查询
@@ -88,14 +94,25 @@ class DungeonMap:
         return "\n".join("".join(row) for row in self.grid)
 
     def render_html(self) -> str:
-        """自包含 HTML 片段（``<pre>`` 等宽网格，含图例）。"""
+        """自包含 HTML 片段（``<pre>`` 等宽网格，含图例与房间内容）。"""
         import html as _html
 
         text = _html.escape(self.render())
         legend = ("#=墙 .=地板 S=入口 X=出口 T=宝藏")
-        return (f"<pre class='dungeon-map'>{text}</pre>"
-                f"<p class='muted'>{legend} · 房间 {len(self.rooms)} 个 · "
-                f"种子 {self.seed}</p>")
+        parts = [f"<pre class='dungeon-map'>{text}</pre>",
+                 f"<p class='muted'>{legend} · 房间 {len(self.rooms)} 个 · "
+                 f"种子 {self.seed}</p>"]
+        if self.contents:
+            lines = []
+            for idx in sorted(self.contents):
+                c = self.contents[idx] or {}
+                item = (f"房间 {idx + 1}（{_html.escape(str(c.get('type', '')))}）："
+                        f"{_html.escape(str(c.get('desc', '')))} "
+                        f"危险：{_html.escape(str(c.get('danger', '')))} "
+                        f"发现：{_html.escape(str(c.get('discovery', '')))}")
+                lines.append(f"<li>{item}</li>")
+            parts.append(f"<ul class='dungeon-rooms'>{''.join(lines)}</ul>")
+        return "".join(parts)
 
     # ------------------------------------------------------------------ #
     #  存档
@@ -103,13 +120,16 @@ class DungeonMap:
     def to_dict(self) -> dict:
         return {"seed": self.seed,
                 "grid": ["".join(r) for r in self.grid],
-                "rooms": [list(r) for r in self.rooms]}
+                "rooms": [list(r) for r in self.rooms],
+                "contents": {str(k): v for k, v in self.contents.items()}}
 
     @classmethod
     def from_dict(cls, data: dict) -> "DungeonMap":
+        contents = {int(k): v for k, v in (data.get("contents") or {}).items()}
         return cls(grid=[list(r) for r in (data.get("grid") or [])],
                    rooms=[tuple(r) for r in (data.get("rooms") or [])],
-                   seed=int(data.get("seed", 0) or 0))
+                   seed=int(data.get("seed", 0) or 0),
+                   contents=contents)
 
 
 # --------------------------------------------------------------------------- #
@@ -157,13 +177,22 @@ def generate_dungeon(seed: int = 0, width: int = 44, height: int = 18,
     grid[sy][sx] = _ENTRY
     grid[ey][ex] = _EXIT
     # 宝藏：除首尾外挑 1–2 个房间中心放 T
+    treasure_rooms = set()
     for room in rooms[1:-1]:
         if rnd.random() < 0.4:
             tx, ty = _center(room)
             if grid[ty][tx] == _FLOOR:
                 grid[ty][tx] = _TREASURE
+                treasure_rooms.add(rooms.index(room))
 
-    return DungeonMap(grid=grid, rooms=rooms, seed=seed)
+    # 房间内容（P0，2026-08-30）：同一 rnd 派生流逐房间抽取，同种子内容确定
+    from .data_dungeon import roll_room_content
+    contents: dict[int, dict] = {}
+    for i, room in enumerate(rooms):
+        cx, cy = _center(room)
+        contents[i] = roll_room_content(rnd, treasure=(grid[cy][cx] == _TREASURE))
+
+    return DungeonMap(grid=grid, rooms=rooms, seed=seed, contents=contents)
 
 
 def _center(room: tuple[int, int, int, int]) -> tuple[int, int]:
