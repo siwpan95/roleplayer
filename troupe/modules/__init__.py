@@ -9,6 +9,9 @@ from __future__ import annotations
 
 from ..contracts import CampaignModule
 from .generator import build_generated_module, generate_module
+from .handwritten import (  # P3 手写模组（2026-08-31）
+    build_bone_mill_module, build_mirror_inn_module, build_salt_road_module,
+)
 from .sample import build_sample_module
 
 #: 模组注册表（id → 构造器）
@@ -22,6 +25,9 @@ def register_module(builder) -> None:
 
 register_module(build_sample_module)
 register_module(build_generated_module)   # 程序化生成（同种子同图，见 generator.generate_module）
+register_module(build_mirror_inn_module)
+register_module(build_salt_road_module)
+register_module(build_bone_mill_module)
 
 
 def available_modules() -> list[str]:
