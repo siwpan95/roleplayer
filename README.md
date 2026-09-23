@@ -1,5 +1,8 @@
 # Role Player 跑团模拟器 v3.0（原 D20 项目更名；包名沿用 d20）
 
+> 仓库：<https://gitee.com/siwpan/roleplayer> ｜ 许可：MIT（见 [LICENSE](LICENSE)）
+> 注：文中 <PATH> 为路径占位符，请替换为你本机实际的目录 / 可执行文件路径。
+
 融合 **D&D 三宝书**（PHB / DMG / MM）、**GURPS Basic Set** 与 **CoC** 规则的跑团模拟器：
 角色构建（点数制）+ GM 模拟（Oracle）+ 三规则集判定 + 战斗/法术/补给 + 任务/时钟 + 存档/replay。支持属性购买、优缺点、天赋、
 技能、技术（战技/法术）、装备、战斗宏与多种掷骰检定。
@@ -114,7 +117,7 @@ troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.
 >   （`troupe/server.py` 零依赖 HTTP API + `web` 端「实时跑团」面板，浏览器里开一局逐步推进）；
 >   ③ 地牢空间地图（`troupe/spatial.py`，种子生成房间/走廊、BFS 连通、ASCII/HTML 渲染、
 >   随存档序列化，`sim.explore_dungeon(seed)` 一键生成）。
-> - **三层决策抽取（2026-08-30，借鉴 G:////repos 三仓后重写）**：随机不等于无脑——
+> - **三层决策抽取（2026-08-30，借鉴 <PATH> 三仓后重写）**：随机不等于无脑——
 >   ① 条件层（该不该出现）：`roll_smart(condition=…)` 硬过滤、NPC 行为树 `_BTREE`
 >   按状态筛候选行动；② 随机层（出现哪个）：候选集内加权抽取 + `seen/cooldown`
 >   防重复；③ 降级层（永不为空）：筛空逐级放宽，职业表兜底。另：导演兜底叙事改
@@ -500,11 +503,11 @@ python mvp_gui.py        # 或 python -m gui.app
 ### Windows 安装包
 项目提供自包含安装包 `dist/RolePlayer-Setup-3.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
 
-- **打包 GUI 应用**：`F:/Python314/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean`
+- **打包 GUI 应用**：`python -m PyInstaller RolePlayer.spec --noconfirm --clean`
   入口 `gui/app.py`，已注入 Tcl/Tk 9.0 运行时（`runtime_hook_tk.py` + `_tcllib/`）以修复 PyInstaller 对 Tk 9.0 的收集盲点。
-  重新打包前需先解压 `F:/Python314/tcl/libtcl9.0.4.zip`、`libtk9.0.4.zip` 到
+  重新打包前需先解压 `<PATH>`、`libtk9.0.4.zip` 到
   `_tcllib/tcl/tcl_library`、`_tcllib/tk/tk_library`（`_tcllib/` 已被 .gitignore 排除）。
-- **构建安装包**：`F:/Python314/python.exe -m PyInstaller installer.spec --noconfirm --clean`
+- **构建安装包**：`python -m PyInstaller installer.spec --noconfirm --clean`
   产出 `dist/RolePlayer-Setup-3.0.0.exe`，内嵌完整 RolePlayer 程序目录，双击即装。
 - **安装行为**：默认安装到 `%LOCALAPPDATA%\Programs\D20`（免 UAC），并在桌面与开始菜单创建快捷方式，
   同时写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\D20` 卸载项。
