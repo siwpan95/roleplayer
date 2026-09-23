@@ -79,5 +79,5 @@ node smoke.cjs                   # 25 项行为检查 + 11 项与 Python 基准�
 ## 安装为浏览器扩展
 
 1. `npm run build` 生成 `dist/`（含 `manifest.json`、`index.html`、`composition.yml`、`assets/`）。
-2. Chrome/Edge 打开 `chrome://extensions`，开启「开发者模式」→「加载已解压的扩展程序」→ 选择 `E:/D20/web/dist`。
+2. Chrome/Edge 打开 `chrome://extensions`，开启「开发者模式」→「加载已解压的扩展程序」→ 选择本仓 `web/dist/`。
 3. 点击工具栏图标打开 popup 即可使用。
