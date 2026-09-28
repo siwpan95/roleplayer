@@ -1,0 +1,988 @@
+{
+  "schema": "1.0",
+  "state": {
+    "seed": 7,
+    "ruleset": "dnd5e",
+    "module_id": "border_shrine",
+    "now": {
+      "day": 1,
+      "hour": 8,
+      "minute": 0,
+      "MINUTES_PER_DAY": 1440
+    },
+    "current_place": "",
+    "scene_counter": 8,
+    "chaos": 1,
+    "round_xp": 0,
+    "total_xp": 50,
+    "gold": 47,
+    "flags": {},
+    "finished": true,
+    "ending": "达到场景上限"
+  },
+  "rng": {
+    "seed": 7,
+    "rules": "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",
+    "world": "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",
+    "oracle": "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",
+    "ai": "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",
+    "narrative": "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"
+  },
+  "grng": "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",
+  "services": {
+    "calendar": {
+      "now": {
+        "day": 4,
+        "hour": 0,
+        "minute": 0,
+        "MINUTES_PER_DAY": 1440
+      },
+      "days_elapsed": 3
+    },
+    "world": {
+      "places": {
+        "border_town": {
+          "id": "border_town",
+          "name": "边陲镇",
+          "region": "灰岭",
+          "kind": "城镇",
+          "danger": 1,
+          "tags": [
+            "补给",
+            "安全"
+          ],
+          "description": "商路上的最后一处补给点，镇民对神社的异象噤若寒蝉。",
+          "discovered": true,
+          "visited": 0
+        },
+        "old_road": {
+          "id": "old_road",
+          "name": "旧商道",
+          "region": "灰岭",
+          "kind": "道路",
+          "danger": 2,
+          "tags": [
+            "野外"
+          ],
+          "description": "荒废多年，入夜后常闻怪声。",
+          "discovered": false,
+          "visited": 0
+        },
+        "ruined_shrine": {
+          "id": "ruined_shrine",
+          "name": "荒神社",
+          "region": "灰岭",
+          "kind": "遗迹",
+          "danger": 4,
+          "tags": [
+            "邪教",
+            "异象"
+          ],
+          "description": "塌了半边的石祠，夜半有听不懂的吟诵。",
+          "discovered": false,
+          "visited": 0
+        },
+        "forest_camp": {
+          "id": "forest_camp",
+          "name": "林间营地",
+          "region": "灰岭",
+          "kind": "荒野",
+          "danger": 2,
+          "tags": [
+            "旅人"
+          ],
+          "description": "失踪旅人最后露营之处。",
+          "discovered": false,
+          "visited": 0
+        },
+        "lord_manor": {
+          "id": "lord_manor",
+          "name": "领主宅",
+          "region": "灰岭",
+          "kind": "建筑",
+          "danger": 1,
+          "tags": [
+            "权贵"
+          ],
+          "description": "灰岭领主沈氏的宅邸，门禁森严。",
+          "discovered": false,
+          "visited": 0
+        }
+      },
+      "routes": [
+        {
+          "id": "r1",
+          "a": "border_town",
+          "b": "old_road",
+          "distance_km": 12,
+          "terrain": "道路",
+          "danger": 1,
+          "hidden": false
+        },
+        {
+          "id": "r2",
+          "a": "old_road",
+          "b": "ruined_shrine",
+          "distance_km": 8,
+          "terrain": "森林",
+          "danger": 3,
+          "hidden": false
+        },
+        {
+          "id": "r3",
+          "a": "old_road",
+          "b": "forest_camp",
+          "distance_km": 5,
+          "terrain": "森林",
+          "danger": 2,
+          "hidden": false
+        },
+        {
+          "id": "r4",
+          "a": "border_town",
+          "b": "lord_manor",
+          "distance_km": 2,
+          "terrain": "道路",
+          "danger": 1,
+          "hidden": true
+        }
+      ],
+      "current": "border_town",
+      "weather": "晴朗"
+    },
+    "npc": {
+      "npcs": {
+        "npc_mayor": {
+          "id": "npc_mayor",
+          "name": "沈碌",
+          "role": "镇长",
+          "faction": "town_guild",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "谨慎",
+            "守旧"
+          ],
+          "wants": "维持镇子表面的平静",
+          "secret": "他明知神社邪教却不敢上报。",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_innkeeper": {
+          "id": "npc_innkeeper",
+          "name": "柯三娘",
+          "role": "酒馆老板",
+          "faction": "town_guild",
+          "place": "border_town",
+          "disposition": 1,
+          "traits": [
+            "八卦",
+            "好客"
+          ],
+          "wants": "多卖几杯酒",
+          "secret": "她见过失踪旅人进了神社。",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_priest": {
+          "id": "npc_priest",
+          "name": "枯眼",
+          "role": "邪教祭司",
+          "faction": "old_cult",
+          "place": "ruined_shrine",
+          "disposition": -2,
+          "traits": [
+            "狂热",
+            "阴鸷"
+          ],
+          "wants": "完成唤醒古神的仪式",
+          "secret": "仪式还差最后一名活祭。",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_lost": {
+          "id": "npc_lost",
+          "name": "云游客",
+          "role": "失踪旅人",
+          "faction": "",
+          "place": "forest_camp",
+          "disposition": 0,
+          "traits": [
+            "警觉"
+          ],
+          "wants": "活着离开灰岭",
+          "secret": "他偷听到了仪式的日期。",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_1": {
+          "id": "npc_1",
+          "name": "崔微",
+          "role": "农夫",
+          "faction": "",
+          "place": "border_town",
+          "disposition": -2,
+          "traits": [
+            "热忱"
+          ],
+          "wants": "还清一笔旧债",
+          "secret": "",
+          "met": true,
+          "alive": true,
+          "notes": []
+        },
+        "npc_2": {
+          "id": "npc_2",
+          "name": "npc_1",
+          "role": "学者",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "野心勃勃"
+          ],
+          "wants": "找到失踪的亲人",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_3": {
+          "id": "npc_3",
+          "name": "npc_1",
+          "role": "盗贼",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "冷漠"
+          ],
+          "wants": "守护一件东西",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_4": {
+          "id": "npc_4",
+          "name": "npc_1",
+          "role": "学者",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "鲁莽"
+          ],
+          "wants": "还清一笔旧债",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_5": {
+          "id": "npc_5",
+          "name": "npc_1",
+          "role": "卫兵",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "冷漠"
+          ],
+          "wants": "还清一笔旧债",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_6": {
+          "id": "npc_6",
+          "name": "npc_1",
+          "role": "佣兵",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "狡黠"
+          ],
+          "wants": "报复某个仇人",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_7": {
+          "id": "npc_7",
+          "name": "npc_1",
+          "role": "学者",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "悲观"
+          ],
+          "wants": "保住自己的位置",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        },
+        "npc_8": {
+          "id": "npc_8",
+          "name": "npc_1",
+          "role": "走私犯",
+          "faction": "",
+          "place": "border_town",
+          "disposition": 0,
+          "traits": [
+            "记仇"
+          ],
+          "wants": "获得上位的机会",
+          "secret": "",
+          "met": false,
+          "alive": true,
+          "notes": []
+        }
+      },
+      "counter": 8
+    },
+    "faction": {
+      "town_guild": {
+        "id": "town_guild",
+        "name": "镇民公会",
+        "goals": [
+          "保境安民",
+          "维持商贸"
+        ],
+        "standing": 0,
+        "power": 3,
+        "allies": [],
+        "rivals": [
+          "old_cult"
+        ]
+      },
+      "old_cult": {
+        "id": "old_cult",
+        "name": "古神教团",
+        "goals": [
+          "唤醒古神",
+          "献祭活人"
+        ],
+        "standing": -30,
+        "power": 6,
+        "allies": [],
+        "rivals": [
+          "town_guild"
+        ]
+      }
+    },
+    "quest": {
+      "q_shrine": {
+        "id": "q_shrine",
+        "title": "查明荒神社异象",
+        "summary": "边陲镇夜半的吟诵来自荒神社，镇民噤声，须查明真相。",
+        "objectives": [
+          {
+            "id": "o1",
+            "text": "进入荒神社勘察",
+            "done": false,
+            "optional": false
+          },
+          {
+            "id": "o2",
+            "text": "揭露古神教团的仪式",
+            "done": false,
+            "optional": false
+          },
+          {
+            "id": "o3",
+            "text": "解救失踪旅人云游客",
+            "done": false,
+            "optional": true
+          }
+        ],
+        "clues": [
+          {
+            "id": "c1",
+            "text": "酒馆老板柯三娘见过旅人进神社",
+            "target": "npc_innkeeper",
+            "revealed": false
+          },
+          {
+            "id": "c2",
+            "text": "神社地窖有血迹与符文",
+            "target": "ruined_shrine",
+            "revealed": false
+          }
+        ],
+        "giver": "npc_mayor",
+        "reward_xp": 200,
+        "reward_gold": 150,
+        "status": "active",
+        "clock_id": "cl_cult"
+      }
+    },
+    "clock": {
+      "cl_cult": {
+        "id": "cl_cult",
+        "name": "古神教团的仪式",
+        "segments": 8,
+        "filled": 0,
+        "kind": "campaign",
+        "consequence": "仪式完成，古神苏醒，灰岭沦陷。"
+      },
+      "cl_danger": {
+        "id": "cl_danger",
+        "name": "追猎者逼近",
+        "segments": 4,
+        "filled": 0,
+        "kind": "danger",
+        "consequence": "邪教猎手找上门来。"
+      },
+      "faction_town_guild": {
+        "id": "faction_town_guild",
+        "name": "镇民公会的计划",
+        "segments": 8,
+        "filled": 6,
+        "kind": "faction",
+        "consequence": "「镇民公会」完成了它的计划。"
+      },
+      "faction_old_cult": {
+        "id": "faction_old_cult",
+        "name": "古神教团的计划",
+        "segments": 8,
+        "filled": 6,
+        "kind": "faction",
+        "consequence": "「古神教团」完成了它的计划。"
+      }
+    },
+    "oracle": {
+      "threads": [
+        {
+          "id": "thread_1",
+          "text": "神社夜半的吟诵究竟在召唤什么？",
+          "weight": 2,
+          "status": "open"
+        },
+        {
+          "id": "thread_2",
+          "text": "失踪旅人云游客的下落",
+          "weight": 2,
+          "status": "open"
+        },
+        {
+          "id": "thread_3",
+          "text": "领主沈碌为何不敢上报？",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_4",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_5",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_6",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_7",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_8",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_9",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        },
+        {
+          "id": "thread_10",
+          "text": "崔微提供的情报",
+          "weight": 1,
+          "status": "open"
+        }
+      ],
+      "counter": 10
+    },
+    "lore": [],
+    "director": {
+      "counter": 6,
+      "leniency": 1.0,
+      "scenes": [
+        {
+          "id": "S001",
+          "spec": {
+            "title": "短暂休整",
+            "kind": "downtime",
+            "place": "border_town",
+            "goal": "在边陲镇恢复体力与补给",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "downtime"
+            ]
+          },
+          "started_at": {
+            "day": 1,
+            "hour": 8,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 5,
+          "check": "normal",
+          "beats": [
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。"
+          ],
+          "ended_at": {
+            "day": 2,
+            "hour": 16,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        },
+        {
+          "id": "S002",
+          "spec": {
+            "title": "短暂休整",
+            "kind": "downtime",
+            "place": "border_town",
+            "goal": "在边陲镇恢复体力与补给",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "downtime"
+            ]
+          },
+          "started_at": {
+            "day": 2,
+            "hour": 16,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 3,
+          "check": "normal",
+          "beats": [
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。",
+            "牧师1 安排全队就地休整与补给。"
+          ],
+          "ended_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        },
+        {
+          "id": "S003",
+          "spec": {
+            "title": "与人交涉",
+            "kind": "social",
+            "place": "border_town",
+            "goal": "从边陲镇的居民口中套出情报",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "social"
+            ]
+          },
+          "started_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 2,
+          "check": "altered",
+          "beats": [
+            "场景与预期有出入 —— 细节已经变了。",
+            "向崔微交涉：d20 = 12 = 12 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 20 = 20 vs DC 15 → 成功（大成功）",
+            "向崔微交涉：d20 = 13 = 13 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 9 = 9 vs DC 15 → 失败"
+          ],
+          "ended_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        },
+        {
+          "id": "S004",
+          "spec": {
+            "title": "与人交涉",
+            "kind": "social",
+            "place": "border_town",
+            "goal": "从边陲镇的居民口中套出情报",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "social"
+            ]
+          },
+          "started_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 1,
+          "check": "normal",
+          "beats": [
+            "向崔微交涉：d20 = 16 = 16 vs DC 15 → 成功",
+            "向崔微交涉：d20 = 16 = 16 vs DC 15 → 成功",
+            "向崔微交涉：d20 = 3 = 3 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 17 = 17 vs DC 15 → 成功"
+          ],
+          "ended_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        },
+        {
+          "id": "S005",
+          "spec": {
+            "title": "与人交涉",
+            "kind": "social",
+            "place": "border_town",
+            "goal": "从边陲镇的居民口中套出情报",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "social"
+            ]
+          },
+          "started_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 1,
+          "check": "normal",
+          "beats": [
+            "向崔微交涉：d20 = 6 = 6 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 15 = 15 vs DC 15 → 成功",
+            "向崔微交涉：d20 = 4 = 4 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 15 = 15 vs DC 15 → 成功"
+          ],
+          "ended_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        },
+        {
+          "id": "S006",
+          "spec": {
+            "title": "与人交涉",
+            "kind": "social",
+            "place": "border_town",
+            "goal": "从边陲镇的居民口中套出情报",
+            "actors": [
+              "牧师1",
+              "法师2",
+              "吟游诗人3"
+            ],
+            "tags": [
+              "social"
+            ]
+          },
+          "started_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "chaos": 1,
+          "check": "altered",
+          "beats": [
+            "场景与预期有出入 —— 细节已经变了。",
+            "向崔微交涉：d20 = 10 = 10 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 16 = 16 vs DC 15 → 成功",
+            "向崔微交涉：d20 = 11 = 11 vs DC 15 → 失败",
+            "向崔微交涉：d20 = 13 = 13 vs DC 15 → 失败"
+          ],
+          "ended_at": {
+            "day": 4,
+            "hour": 0,
+            "minute": 0,
+            "MINUTES_PER_DAY": 1440
+          },
+          "outcome": "in_control"
+        }
+      ],
+      "current_id": ""
+    },
+    "encounter": {},
+    "ruleset": {
+      "id": "dnd5e",
+      "config": {
+        "id": "dnd5e"
+      }
+    }
+  },
+  "actors": [
+    {
+      "__format__": "d20-character",
+      "version": 1,
+      "saved_at": "2026-08-29T10:22:47",
+      "cp": 30,
+      "base_cp": 150,
+      "purchases": 14,
+      "max_disadvantage_cp": 75,
+      "armor_bonus": 1,
+      "race": "",
+      "race_element": "火",
+      "background": "",
+      "current_hp": 20,
+      "hit_dice_used": 0,
+      "lucky_used": 0,
+      "breath_used": false,
+      "relentless_used": false,
+      "cls": "牧师",
+      "level": 3,
+      "subclass": "",
+      "attributes": {
+        "力量": 10,
+        "敏捷": 10,
+        "体质": 12,
+        "智力": 10,
+        "感知": 14,
+        "魅力": 10
+      },
+      "advantages": [],
+      "disadvantages": [],
+      "talents": [],
+      "skills": {
+        "奥术施法": 12,
+        "施法攻击": 12,
+        "活力": 4,
+        "闪避防御": 2,
+        "强韧豁免": 1,
+        "反射豁免": 1,
+        "意志豁免": 1
+      },
+      "techniques": [
+        "火焰箭",
+        "魔法飞弹"
+      ],
+      "equipment": [
+        "匕首",
+        "皮甲"
+      ],
+      "feats": [],
+      "proficiencies": [
+        "历史",
+        "洞察"
+      ],
+      "slots": {},
+      "slots_used": {},
+      "conditions": [],
+      "gear_proficiencies": [
+        "轻甲",
+        "中甲",
+        "盾牌",
+        "简易武器"
+      ],
+      "save_proficiencies": [
+        "意志豁免"
+      ],
+      "armor_max_dex": 99
+    },
+    {
+      "__format__": "d20-character",
+      "version": 1,
+      "saved_at": "2026-08-29T10:22:47",
+      "cp": 33,
+      "base_cp": 150,
+      "purchases": 14,
+      "max_disadvantage_cp": 75,
+      "armor_bonus": 1,
+      "race": "",
+      "race_element": "火",
+      "background": "",
+      "current_hp": 20,
+      "hit_dice_used": 0,
+      "lucky_used": 0,
+      "breath_used": false,
+      "relentless_used": false,
+      "cls": "法师",
+      "level": 3,
+      "subclass": "",
+      "attributes": {
+        "力量": 10,
+        "敏捷": 10,
+        "体质": 12,
+        "智力": 14,
+        "感知": 10,
+        "魅力": 10
+      },
+      "advantages": [],
+      "disadvantages": [],
+      "talents": [],
+      "skills": {
+        "奥术施法": 12,
+        "施法攻击": 12,
+        "活力": 4,
+        "闪避防御": 2,
+        "强韧豁免": 1,
+        "反射豁免": 1,
+        "意志豁免": 1
+      },
+      "techniques": [
+        "火焰箭",
+        "魔法飞弹"
+      ],
+      "equipment": [
+        "棍棒",
+        "皮甲"
+      ],
+      "feats": [],
+      "proficiencies": [
+        "奥术知识",
+        "历史"
+      ],
+      "slots": {},
+      "slots_used": {},
+      "conditions": [],
+      "gear_proficiencies": [
+        "匕首",
+        "飞镖",
+        "投石索",
+        "长棍",
+        "轻弩"
+      ],
+      "save_proficiencies": [
+        "意志豁免"
+      ],
+      "armor_max_dex": 99
+    },
+    {
+      "__format__": "d20-character",
+      "version": 1,
+      "saved_at": "2026-08-29T10:22:47",
+      "cp": 31,
+      "base_cp": 150,
+      "purchases": 14,
+      "max_disadvantage_cp": 75,
+      "armor_bonus": 1,
+      "race": "",
+      "race_element": "火",
+      "background": "",
+      "current_hp": 20,
+      "hit_dice_used": 0,
+      "lucky_used": 0,
+      "breath_used": false,
+      "relentless_used": false,
+      "cls": "吟游诗人",
+      "level": 3,
+      "subclass": "",
+      "attributes": {
+        "力量": 10,
+        "敏捷": 10,
+        "体质": 12,
+        "智力": 10,
+        "感知": 10,
+        "魅力": 14
+      },
+      "advantages": [],
+      "disadvantages": [],
+      "talents": [],
+      "skills": {
+        "奥术施法": 12,
+        "施法攻击": 12,
+        "活力": 4,
+        "闪避防御": 2,
+        "强韧豁免": 1,
+        "反射豁免": 1,
+        "意志豁免": 1
+      },
+      "techniques": [
+        "火焰箭",
+        "魔法飞弹"
+      ],
+      "equipment": [
+        "匕首",
+        "布甲"
+      ],
+      "feats": [],
+      "proficiencies": [
+        "杂技",
+        "驯兽",
+        "奥术知识"
+      ],
+      "slots": {},
+      "slots_used": {},
+      "conditions": [],
+      "gear_proficiencies": [
+        "轻甲",
+        "简易武器",
+        "长剑",
+        "刺剑",
+        "短剑",
+        "手弩"
+      ],
+      "save_proficiencies": [
+        "反射豁免",
+        "意志豁免"
+      ],
+      "armor_max_dex": 99
+    }
+  ],
+  "actor_names": [
+    "牧师1",
+    "法师2",
+    "吟游诗人3"
+  ],
+  "module_id": "border_shrine"
+}

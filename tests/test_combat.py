@@ -22,18 +22,27 @@ class TestSneakAttack:
         result = seeded_char.combat_macro("sneak_attack", target_ac=5, flat_footed=True)
         assert "偷袭攻击" in result
 
-    def test_sneak_dice_scaling(self, fighter):
-        # 学了偷袭 + 装备灵巧武器(匕首)，近战 12 → 骰数 (12-4)//2+1 = 5
-        fighter.purchase_technique("偷袭要害打击")
-        random.seed(1)
-        result = fighter.combat_macro("sneak_attack", target_ac=2, flat_footed=True)
-        assert "精准伤害" in result or "未命中" in result
-
-    def test_no_sneak_without_finesse(self, char):
+    def test_rogue_sneak_has_precision_damage(self, char):
+        # 游荡者 + 偷袭技术 + 灵巧武器 → 命中时按职业等级给精准伤害
+        char.set_class("游荡者")
+        char.level_to(3)                 # 3 级游荡者 → 2d6
         char.set_attribute("力量", 16)
         char.purchase_skill("近战攻击", 12)
         char.purchase_technique("偷袭要害打击")
-        char.equip_item("长剑")  # 非灵巧武器
+        char.equip_item("匕首")          # 灵巧武器
+        random.seed(1)
+        result = char.combat_macro("sneak_attack", target_ac=2, flat_footed=True)
+        assert "精准伤害" in result
+        assert "2d6" in result
+
+    def test_no_sneak_without_finesse(self, char):
+        # 游荡者 + 偷袭技术，但装备非灵巧武器 → 无精准伤害
+        char.set_class("游荡者")
+        char.level_to(3)
+        char.set_attribute("力量", 16)
+        char.purchase_skill("近战攻击", 12)
+        char.purchase_technique("偷袭要害打击")
+        char.equip_item("长剑")          # 非灵巧武器
         random.seed(1)
         result = char.combat_macro("sneak_attack", target_ac=2, flat_footed=True)
         # 无灵巧武器不应有精准伤害
@@ -144,22 +153,30 @@ class TestGurpsTechniques:
 
 
 class TestSneakDiceLogic:
-    def test_dice_scale_with_rank(self, fighter):
-        fighter.purchase_technique("偷袭要害打击")
-        # 近战攻击 12 → (12-4)//2+1 = 5d6
-        assert fighter._sneak_attack_dice() == 5
+    def test_dice_follows_rogue_level(self, char):
+        # 游荡者偷袭骰随职业等级成长（SRD：1→1d6, 3→2d6, 5→3d6, 9→5d6, 19/20→10d6）
+        cases = {1: 1, 3: 2, 5: 3, 9: 5, 19: 10, 20: 10}
+        for level, expected in cases.items():
+            c = type(char)(starting_cp=5000)
+            c.set_class("游荡者")
+            if level > 1:
+                c.level_to(level)
+            c.equip_item("匕首")
+            assert c._sneak_attack_dice() == expected, f"游荡者 {level} 级应 {expected}d6"
 
-    def test_dice_capped_at_10(self, char):
-        # 用充足 CP 构建高等级角色
-        god = type(char)(starting_cp=5000)
-        god.set_attribute("力量", 20)
-        god.purchase_skill("近战攻击", 30)
-        god.equip_item("匕首")
-        assert god._sneak_attack_dice() == 10
+    def test_zero_without_rogue_class(self, char):
+        # 非游荡者职业（战士）→ 无偷袭骰
+        char.set_class("战士")
+        char.equip_item("匕首")
+        assert char._sneak_attack_dice() == 0
 
-    def test_zero_without_finesse(self, fighter):
-        fighter.equip_item("长剑")  # 替换为非灵巧
-        # fighter 装备了匕首，先卸载
-        fighter.unequip_item("匕首")
-        fighter.equip_item("长剑")
-        assert fighter._sneak_attack_dice() == 0
+    def test_zero_without_class(self, char):
+        # 未选职业 → 无偷袭骰
+        char.equip_item("匕首")
+        assert char._sneak_attack_dice() == 0
+
+    def test_zero_without_finesse(self, char):
+        # 游荡者但无灵巧武器 → 无偷袭骰
+        char.set_class("游荡者")
+        char.equip_item("长剑")
+        assert char._sneak_attack_dice() == 0

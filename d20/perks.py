@@ -16,6 +16,8 @@ class PerksService(Service):
 
     # ---------- 优点 ----------
     def add_advantage(self, name: str, cost: int) -> tuple[bool, str]:
+        if name not in self.ADVANTAGES_LIBRARY:
+            return False, f"未知优点: {name}"
         st = self.ctx.state
         if st.cp < cost:
             return False, "CP不足"
@@ -31,6 +33,8 @@ class PerksService(Service):
 
     # ---------- 缺点 ----------
     def add_disadvantage(self, name: str, cp_return: int) -> tuple[bool, str]:
+        if name not in self.DISADVANTAGES_LIBRARY:
+            return False, f"未知缺点: {name}"
         st = self.ctx.state
         total_returned = sum(ret for _, ret in st.disadvantages)
         if total_returned + cp_return > st.max_disadvantage_cp:

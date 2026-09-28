@@ -1,7 +1,7 @@
-# D&D-GURPS 变体角色构建器 v2.2
+# Role Player 跑团模拟器 v3.0（原 D20 项目更名；包名沿用 d20）
 
-融合 **D&D 三宝书**（玩家手册 PHB / 地下城主指南 DMG / 怪物图鉴 MM）与
-**GURPS Basic Set** 规则的点数制角色构建器。支持属性购买、优缺点、天赋、
+融合 **D&D 三宝书**（PHB / DMG / MM）、**GURPS Basic Set** 与 **CoC** 规则的跑团模拟器：
+角色构建（点数制）+ GM 模拟（Oracle）+ 三规则集判定 + 战斗/法术/补给 + 任务/时钟 + 存档/replay。支持属性购买、优缺点、天赋、
 技能、技术（战技/法术）、装备、战斗宏与多种掷骰检定。
 
 ## 架构（Cordis 化：Context / Service / 依赖注入 / 组合装配）
@@ -37,6 +37,8 @@ d20/
 ├── classes.py         # ★ ClassService      职业系统（12 职业 + 等级 + 子职业，v2.1）
 ├── reference.py       # ★ ReferenceService  规则速查与 SRD 检索（v2.1）
 ├── battle.py          # ★ BattleService      模拟对战与遭遇构建（v2.2）
+├── character_io.py    # ★ 角色卡导出/加载/随机生成（JSON 往返，v2.2，自由函数 API）
+├── narration.py       # ★ 战斗叙事文本生成（v2.2，battle 调用）
 ├── data_spells.py     # SRD 全谱法术名册（0–9 环，319 款，权威 API 转换）
 ├── data_magicitems.py # DMG 魔法物品（按 rarity 分级，361 件，权威 API 转换）
 ├── data_monsters.py   # SRD 怪物图鉴数据（334 种 + CR→XP 表，权威 API 转换）
@@ -49,7 +51,78 @@ d20/
 
 gui/app.py             # tkinter 图形界面
 cli.py                 # 命令行界面
-tests/                 # pytest 单元测试（255 项，含 Cordis 装配不变性 + v2.1 SRD + v2.2 模拟对战）
+tests/                 # pytest 单元测试（665 项，含 Cordis 装配不变性 + v1.0 SRD + v2.1 SRD + v2.2 模拟对战 + troupe 全链路 + GURPS 战斗/条件/点经济/社交 + 法术/补给/任务依赖/存档迁移/重演/程序化生成/富文本导出 + 组合装配「声明=实现」一致性 + NPC 自主行动/HTTP API/地牢空间地图）
+                       #   + 版本一致性 + 安装器/卸载器回归 + troupe 跑团模拟器集成/确定性/管线/规则集/策略/注册表/去重
+                       #   + Round6：composition.yml 权威注册源 ↔ 注册表一致性 / d20 软挂载零污染）
+
+troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.3 新增）
+  ├── contracts.py     # ★ 契约层（DictMixin / Event / Action / Consequence / SceneSpec / CampaignModule / SessionState）
+  ├── rng.py           # ★ 分域随机源（rules/world/oracle/ai/narrative 五流，可播种可快照）
+  ├── ruleset*.py      # ★ L1 规则适配（D&D 5e 掷高 / GURPS 4e 掷低 / CoC d100 掷低 统一门面 + 注册表）
+  ├── npc.py faction.py quest.py clock.py calendar.py lore.py  # L2 世界模型
+  ├── npc_agency.py    # ★ NPC 自主行动（按职业分派行动：交易/巡逻/研究/暗行/政治/远行，产生真实世界变化；挂场景节拍 + 每日推进）
+  ├── spatial.py       # ★ 地牢空间地图（种子驱动房间+走廊生成，BFS 连通，ASCII/HTML 渲染，随存档）
+  ├── oracle.py director.py        # L3 GM 模拟（混沌/命运/场景/事件）+ 裁定落地
+  ├── random_tables.py data_*.py   # L3 随机表与数据（事件焦点 / 意义词 / 遭遇 / 战利品；roll_smart 三层决策抽取；data_narrative 叙事锚点池）
+  ├── encounter.py     # L4 遭遇模式（探索/交涉/旅行/休整/战斗调度；combat 按规则集分派引擎）
+  ├── combat_gurps.py   # ★ GURPS 4e 战斗引擎（GurpsCombatant + 回合循环；3d6 掷低 / 主动防御三选一 / 部位 / 伤口倍率 / 休克 / 击倒）
+  ├── character_gurps.py# ★ GURPS 点数经济（属性 10/级、优缺点表、技能成本、build_gurps_character、points_of 回算）
+  ├── magic.py         # ★ 神秘学法术系统（GURPS 技能型法术：属性+魔力+FP+前置+大失败反噬；D&D 环位/专注/升环/豁免；双规则集 cast 门面，挂 ctx.magic）
+  ├── provisions.py    # ★ 补给/粮草/旅行结算（口粮/饮水/负重/行军；断粮→D&D 力竭或 GURPS 损 FP；存 SessionState.provisions，挂 ctx.provisions）
+  ├── agent.py         # L5 智能体（PC 行动提议策略，只提议不落地）
+  ├── save.py          # L6 持久化（存档 / 确定性续跑；事件流+动作序列一并落盘；schema 版本迁移链真实生效）
+  ├── server.py        # ★ HTTP API（零依赖 http.server：/new /step /state /export，Web 实时跑团后端）
+  ├── replay.py        # ★ 战役重演（Replay 档案浏览/战报导出 + 同种子确定性自检；兑现 log.py 的引用）
+  ├── export.py        # ★ 战役档案富文本导出（Markdown / 自包含 HTML / JSON，Web 面板消费）
+  ├── render.py        # L7 文本渲染（战役档案 / 队伍面板 / 战报）
+  ├── simulator.py     # 组合根 + Simulator 门面
+  ├── composition.py    # ★ 服务注册表（DEFAULT_TROUPE_ENTRIES / mount_troupe / resolve_service，troupe 作用域内装配，不污染 d20 基类）
+  ├── composition.yml   # ★ 服务注册权威来源（块风格，d20 loader 软挂载也读它；tests 锁定与注册表逐条一致）
+  └── modules/         # 战役模组注册表（手写示例：border_shrine + 程序化生成：generator.generate_module(seed)）
+
+> **GURPS 4e 已是完整规则集（非占位）**：`encounter.combat` 在 `ruleset.id=="gurps"` 时
+> 走 `combat_gurps.run_gurps_combat`（GURPS 自有回合制结算：3d6 掷低命中 → 闪避/招架/格挡
+> 三选一 → 命中部位 → Thrust/Swing × 伤口倍率 → 休克/击倒），**不再静默退回 d20.battle**；
+> `character_gurps` 提供属性(10/级)/优缺点/技能的点数经济，`points_of` 可随时回算；
+> `data_social` 的反应检定已接入 `encounter.social`（态度位移 + 话术风险）。D&D 路径仍复用
+> `d20.battle`。两套规则在 `L0–L7` 全链路贯通，同一张角色卡可整局切换。
+
+> **P2/P3 已落地（跑团模拟器全量架构收口）**：
+> - **法术/补给细节**：旅行遭遇真正开戏（约七成战斗三成路遇）；D&D 戏法永久已知 + 每日备法
+>   （上限=等级+施法属性调整）；GURPS 休整恢复 FP；施法大失败走后果表（反噬/哑火/反冲/闪光/
+>   涌动/遗忘，非一律掉血）。
+> - **任务会卡住/过期/失败**：`Quest.depends_on` 依赖链（完成自动解锁、失败级联）、
+>   `deadline_minutes` 期限、`fail_condition`（`clock:<id>` / `quest_failed:<id>`）；
+>   时钟填满的后果由导演真实兑现（danger→开战 / campaign→混沌+2 / faction→派系-1），
+>   不再只是日志里的一行文本。
+> - **存档迁移 + 重演**：存档落盘事件流与动作序列；`migrate` 执行真实迁移链
+>   （SCHEMA_VERSION=1.1，旧存档自动补齐）；新增 `troupe/replay.py`
+>   （档案浏览 / 战报导出 / 同种子确定性自检）。
+> - **程序化战役生成**：`troupe.modules.generator.generate_module(seed)` 按种子生成
+>   整张地图（地点/路线/派系/NPC/任务链/时钟），与手写模组同注册表共存。
+> - **富文本/Web 渲染**：`troupe/export.py` 导出 Markdown/自包含 HTML/JSON 三种战役档案；
+>   `web` 端新增「跑团战役档案」面板（粘贴 JSON 或选 .json 文件即渲染）。
+> - **依赖声明修正（2026-08-30）**：按「声明 = 实现」AST 审计全部 19(d20)+17(troupe) 个服务，
+>   修复 10 处漂移——combat 欠声明 race（龙息宏真用）；rest/sheet/monster 的 dice·feats·race
+>   冗余声明；battle 的 `[dice, monster, condition]` 为装饰性错误声明（实际经 char.ctx 访问
+>   角色级服务，自身零依赖）；troupe 侧 director/encounter/provisions/world/quest/faction/
+>   lore/agent 的欠声明与冗余一并修正。因 `mount_troupe` 按清单顺序挂载（无拓扑重排），
+>   同步重排 clock/director/provisions/agent 条目顺序并破除 agent↔encounter 潜在环。
+>   不变量由 `tests/test_composition_consistency.py` 锁死（AST 静态核对 + d20 四处清单一致）。
+> - **外围缺口补完（2026-08-30）**：① NPC 自主行动（`troupe/npc_agency.py`，挂 `ctx.agency`，
+>   场景节拍 + 每日过夜驱动，行动真实改变世界并全程事件溯源）；② Web 实时跑团
+>   （`troupe/server.py` 零依赖 HTTP API + `web` 端「实时跑团」面板，浏览器里开一局逐步推进）；
+>   ③ 地牢空间地图（`troupe/spatial.py`，种子生成房间/走廊、BFS 连通、ASCII/HTML 渲染、
+>   随存档序列化，`sim.explore_dungeon(seed)` 一键生成）。
+> - **三层决策抽取（2026-08-30，借鉴 G:////repos 三仓后重写）**：随机不等于无脑——
+>   ① 条件层（该不该出现）：`roll_smart(condition=…)` 硬过滤、NPC 行为树 `_BTREE`
+>   按状态筛候选行动；② 随机层（出现哪个）：候选集内加权抽取 + `seen/cooldown`
+>   防重复；③ 降级层（永不为空）：筛空逐级放宽，职业表兜底。另：导演兜底叙事改
+>   锚点查表（`data_narrative`，结果类型→模板池）；天气作为环境标签进检定修正
+>   （环境即第一个 NPC）。
+
+sim_cli.py             # ★ 跑团模拟器 CLI（--demo 直接跑示例 / 交互 REPL）
+docs/troupe-architecture.md  # ★ 跑团模拟器架构手册（L0–L7 分层 / 数据流 / 规则适配 / 模组 / 确定性）
 mvp_builder.py         # 向后兼容 shim → d20
 mvp_gui.py             # 向后兼容 shim → gui.app
 ```
@@ -61,6 +134,13 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 - `Service`：能力单位，声明 `inject` 依赖；`mount` 前校验依赖已就绪（缺失即报错）。
 - `composition.yml`：声明 19 个服务的 `id` / `service`（点分路径）/ `inject` 依赖。
   加载器按依赖拓扑排序后挂载，真正「显式装配、可插拔、无静态 MRO」。
+
+- **troupe 软挂载（可选，单向分层）**：troupe 在 `troupe/composition.yml` 自持一份服务注册
+  权威来源（与 d20 同构，但只登记 troupe 自有服务，**绝不写进** `loader.DEFAULT_SERVICE_ENTRIES`）。
+  d20 loader 提供「存在才合并」的软挂载通道——置环境变量 `D20_MERGE_TROUPE=1` 后，`Character`
+  装配完自身 19 个服务会再合并 troupe 的 17 个服务；或显式调用 `mount_defaults_with_troupe(ctx)`
+  绕过环境变量。默认关闭，零影响既有 d20 装配，且 troupe 缺失/损坏时静默跳过，绝不拖累 d20。
+  类解析对 `troupe.*` 路径优先复用 `troupe.composition.resolve_service` 的显式注册表，规避循环导入陷阱。
 
 `Character` 是**兼容门面**：公共方法委托给 `ctx.<service>.<method>`，实例状态字段
 （`cp` / `attributes` / `skills` / …）通过 `__getattr__` / `__setattr__` 透明代理到
@@ -203,7 +283,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 - **CLI**：新增 `12.模拟对战`（遭遇评估 / 按难度构建 / 单场对战 / 蒙特卡洛）。
 - 测试：`tests/test_battle.py`（30 项）覆盖遭遇构建常量与 DMG 一致、动作文本解析、
   对战流程/多攻击/传奇、伤害抗免与状态、死亡豁免、蒙特卡洛状态恢复；
-  全量 **255 项 pytest 通过、盗贼基准零回归**。
+  全量 **481 项 pytest 通过、盗贼基准零回归**。
 - 方案与决策记录见 `docs/srd-v22-battle.md`。
 
 ## 浏览器扩展（TypeScript 移植，web/）
@@ -339,20 +419,80 @@ c.battle_build([3, 3, 3, 3], "medium")            # 按难度编组怪物
 c.battle_simulate([c], ["哥布林", "哥布林"], trials=200)  # 蒙特卡洛胜率
 ```
 
+**角色卡导出 / 加载 / 随机（v2.2）**：把车好的卡存成 JSON，随时读回或随机开卡。
+
+```python
+from d20 import Character
+
+c = Character()
+c.set_class("战士")                    # 创建期先选职业（1 级免费）
+c.set_attribute("力量", 16)            # 再购买属性
+c.save("my_fighter")                # → 导出到 my_fighter.json
+
+fighter = Character.load("my_fighter.json")   # 读回完整角色卡
+npc = Character.random(3)           # 3 级随机角色
+print(npc.show_sheet())
+```
+
+### 跑团模拟器（troupe，v2.3）
+
+无真人 DM 也能跑的战役引擎：模组给骨架，模拟器（导演 + 智能体 + 随机表）填血肉。
+D&D 5e 与 GURPS 4e 双规则集复用同一张角色卡，切换规则不需重建。
+
+```python
+from troupe import Simulator
+from troupe.modules import get_module
+
+# 一行开一局：D&D 5e + 示例模组「边陲镇古神祭」，3 名 3 级随机队员
+sim = Simulator.quick(seed=7, ruleset="dnd5e",
+                      module=get_module("border_shrine"), level=3, count=3)
+sim.run(max_scenes=8, verbose=True)     # 自动跑完 8 场戏（探索/交涉/旅行/休整/战斗）
+print(sim.render())                       # 渲染战役档案（时间/混沌/XP/世界/队伍/任务/战报）
+
+# GURPS 规则集同样跑（掷低 3d6 语义由规则适配层翻译，世界层一行不动）
+g = Simulator.quick(seed=3, ruleset="gurps", level=3, count=2)
+g.run(max_scenes=4)
+
+# 存档与确定性续跑
+sim.save("campaign.json")
+sim2 = Simulator.load("campaign.json")   # 同一存档精确还原（含战斗，全局 random 已定点播种）
+```
+
+CLI：`python sim_cli.py --demo` 直接跑示例；`python sim_cli.py` 进入交互 REPL（新建/载入/
+自动跑/单步/世界/队伍/任务/日志/存档）。`sim_cli.py` 已运行时验证（PYTHONSAFEPATH=1 下
+`--demo` 与 REPL 单步均零报错），且自带 `sys.path` 兜底，从任意目录均可启动。
+
+可插拔 PC 策略（L5，只提议不改世界）：`AgentService(ctx, {"policy": ...})` 或运行时
+`ctx.agent.set_policy("cautious"|"aggressive"|"default")` 即可换行为，世界落地代码一行不动。
+
+* `default`（Policy）：探索失败仅推进 `danger` 时钟 +1。
+* `cautious`（CautiousPolicy）：探索成功主动把 `danger` 时钟 -1；旅行把检定降到「容易」（更难失败）。
+* `aggressive`（AggressivePolicy）：探索失败直接挂出 `combat` 后果——主动接战。
+
+行为契约由 `tests/test_troupe_policies.py` 锁定（三档策略产出可区分的提议，同种子下轨迹不同）。
+架构与扩展方式见 `docs/troupe-architecture.md`。
+
 ### 命令行
 ```bash
 python cli.py
 ```
+
+交互菜单含 13 项：属性 / 优缺点 / 天赋 / 技能 / 技术 / 装备 / 角色卡（显示·导出）/
+掷骰 / 战斗宏 / 职业 / 规则速查 / 模拟对战（含加载·随机角色卡对战）/ 载入·随机生成。
 
 ### 图形界面
 ```bash
 python mvp_gui.py        # 或 python -m gui.app
 ```
 
+「角色卡」页提供 **导出到文件 / 加载角色卡 / 随机生成** 三个按钮；「模拟对战」页顶部也有
+**加载角色卡 / 随机角色卡** 按钮并显示当前角色卡——导出后可在别的机器或 CLI 中读回，
+加载/随机会整体替换当前角色并刷新全部面板，对战随即使用新角色。
+
 ### Windows 安装包
 项目提供自包含安装包 `dist/D20-Setup-2.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
 
-- **打包 GUI 应用**：`F:/Python314/python.exe -m PyInstaller D20.spec --noconfirm --clean`
+- **打包 GUI 应用**：`F:/Python314/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean`
   入口 `gui/app.py`，已注入 Tcl/Tk 9.0 运行时（`runtime_hook_tk.py` + `_tcllib/`）以修复 PyInstaller 对 Tk 9.0 的收集盲点。
   重新打包前需先解压 `F:/Python314/tcl/libtcl9.0.4.zip`、`libtk9.0.4.zip` 到
   `_tcllib/tcl/tcl_library`、`_tcllib/tk/tk_library`（`_tcllib/` 已被 .gitignore 排除）。
@@ -360,7 +500,7 @@ python mvp_gui.py        # 或 python -m gui.app
   产出 `dist/D20-Setup-2.0.0.exe`，内嵌完整 D20 程序目录，双击即装。
 - **安装行为**：默认安装到 `%LOCALAPPDATA%\Programs\D20`（免 UAC），并在桌面与开始菜单创建快捷方式，
   同时写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\D20` 卸载项。
-- **卸载**：开始菜单「卸载 D20」，或 `D20-Setup-2.0.0.exe --uninstall`。
+- **卸载**：开始菜单「卸载 Role Player」，或 `RolePlayer-Setup-3.0.0.exe --uninstall`。
 - 注：本机网络无法访问 Inno Setup 官方源（GitHub 被墙），安装包改用纯标准库自写安装向导
   （`installer.py`，ctypes 直调 `IShellLink` 创建快捷方式），零第三方依赖。
 
@@ -391,7 +531,7 @@ python -m pytest tests/ -v
 1. **Cordis 化重构**：按职责拆为 9 个 Service + Context/事件生命周期 + data 数据中枢，
    由 `composition.yml` 装配；`Character` 退化为兼容门面（不再多重继承 mixin）
 2. **内容增强**：联网检索 D&D 三宝书与 GURPS Basic Set，扩充技能/技术/装备/优缺点
-3. **测试补齐**：pytest 单元测试覆盖全部模块（255 项全通过，含 Cordis 装配不变性测试 +
+3. **测试补齐**：pytest 单元测试覆盖全部模块（481 项全通过，含 Cordis 装配不变性测试 +
    SRD 内容测试 + v2.1 职业/装备/熟练/参考测试 + v2.2 模拟对战测试）
 4. **v2.1 SRD 全量扩充**：联网拉取 `dnd5eapi.co/api/2014` 剩余 20 个端点（1100+ JSON，零错误），
    新增职业/子职业/等级成长/特性/装备/熟练/规则速查，双端同步（详见 `docs/srd-v21-expansion.md`）

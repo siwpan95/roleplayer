@@ -32,7 +32,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .core import Context
-from .loader import load_composition, CordisError
+from .loader import load_composition, mount_defaults, merge_optional_troupe, CordisError
 from .data import (
     ATTRIBUTES, EQUIPMENT_LIBRARY, SKILL_LIBRARY, DIFFICULTY_COST,
     TECHNIQUES, TALENT_BONUS_GROUPS, SKILL_CATEGORIES, ARMOR_PROFICIENCY,
@@ -170,6 +170,9 @@ class Character:
             load_composition(self.ctx, str(COMPOSITION_PATH))
         except CordisError:
             self._mount_defaults()
+        # 可选：存在才合并 troupe 服务（受 D20_MERGE_TROUPE 控制，默认关闭；
+        # 不写进 DEFAULT_SERVICE_ENTRIES，保持 d20 基类不反向依赖 troupe）
+        merge_optional_troupe(self.ctx)
 
     # ------------------------------------------------------------------
     #  状态字段透明代理：char.cp / char.attributes / ... 读写都落到 ctx.state
@@ -186,34 +189,8 @@ class Character:
             object.__setattr__(self, name, value)
 
     def _mount_defaults(self) -> None:
-        """composition.yml 缺失时的兜底装配（与 composition.yml 拓扑一致，16 服务）。"""
-        from .attributes import AttributesService
-        from .equipment import EquipmentService
-        from .perks import PerksService
-        from .techniques import TechniquesService
-        from .race import RaceService
-        from .background import BackgroundService
-        from .feats import FeatsService
-        from .skills import SkillsService
-        from .dice import DiceService
-        from .derived import DerivedService
-        from .slots import SpellSlotsService
-        from .combat import CombatService
-        from .rest import RestService
-        from .sheet import SheetService
-        from .condition import ConditionService
-        from .monster import MonsterService
-        from .classes import ClassService
-        from .reference import ReferenceService
-        from .battle import BattleService
-
-        for svc in (AttributesService, EquipmentService, PerksService,
-                    TechniquesService, RaceService, BackgroundService,
-                    FeatsService, SkillsService, DiceService, DerivedService,
-                    SpellSlotsService, RestService, CombatService, SheetService,
-                    ConditionService, MonsterService, ClassService,
-                    ReferenceService, BattleService):
-            self.ctx.mount(svc)
+        """composition.yml 缺失时的兜底装配（服务清单镜像在 loader.DEFAULT_SERVICE_ENTRIES）。"""
+        mount_defaults(self.ctx)
 
     # ==================================================================
     #  公共 API：全部委托给 ctx.<service>
@@ -513,6 +490,30 @@ class Character:
 
     def to_dict(self) -> dict:
         return self.ctx.sheet.to_dict()
+
+    # ---- 持久化 / 随机生成（见 d20.character_io）----
+    def save(self, path: str) -> str:
+        """导出角色卡到 JSON 文件，返回保存的绝对路径。"""
+        from .character_io import save_character
+        return save_character(self, path)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Character":
+        """从字典恢复角色卡。"""
+        from .character_io import character_from_dict
+        return character_from_dict(data)
+
+    @classmethod
+    def load(cls, path: str) -> "Character":
+        """从 JSON 文件加载角色卡。"""
+        from .character_io import load_character
+        return load_character(path)
+
+    @classmethod
+    def random(cls, level: int = 3, seed=None) -> "Character":
+        """随机生成一张可直接进模拟对战的角色卡。"""
+        from .character_io import random_character
+        return random_character(level, seed)
 
     # ------------------------------------------------------------------
     def __repr__(self) -> str:

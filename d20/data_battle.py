@@ -58,7 +58,16 @@ DAILY_XP_BUDGET = {
 #: 难度档位（由低到高）
 DIFFICULTIES = ["easy", "medium", "hard", "deadly"]
 
-DIFFICULTY_CN = {"easy": "简单", "medium": "中等", "hard": "困难", "deadly": "致命"}
+# ``judge_difficulty()`` 以 "trivial" 作为初始档：当调整后 XP 未越过任何阈值时返回它。
+# 因此 DIFFICULTY_CN **必须**覆盖 trivial，否则 ``BattleService.evaluate()`` 在
+# 面对弱遭遇时会抛 ``KeyError: 'trivial'`` 直接崩溃（实测：4×L5 队伍 vs 1 只哥布林即触发）。
+DIFFICULTY_CN = {
+    "trivial": "轻松",
+    "easy": "简单",
+    "medium": "中等",
+    "hard": "困难",
+    "deadly": "致命",
+}
 
 
 def encounter_multiplier(count: int, party_size: int = 4) -> float:

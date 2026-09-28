@@ -1,6 +1,6 @@
 # D20 web — Cordis 式浏览器扩展（TypeScript 移植）
 
-D20 角色构筑器（D&D/GURPS 变体）的浏览器插件版。以 `G:/notpython/deepseek-harness-master`
+Role Player 跑团模拟器（包名 d20）的浏览器插件版。以 `G:/notpython/deepseek-harness-master`
 为架构参考（React 18 + Vite + Cordis「上下文/服务/依赖注入/组合装配」），把原纯 Python
 实现（`E:/D20/d20`，1920 行核心逻辑）**1:1 移植为 TypeScript**，并包装成 WebExtension
 （MV3，popup 入口）。子系统即 Cordis 服务，可在运行时**热挂载 / 卸载**（web-cordis 风格）。

@@ -6,6 +6,8 @@ import {
   RACE_TEMPLATES, BACKGROUNDS, FEATS_LIBRARY, ELEMENTS,
   DEFAULT_STARTING_CP, DEFAULT_MAX_DISADVANTAGE_CP,
 } from "../engine";
+import { CampaignPanel } from "./CampaignPanel";
+import { CampaignRunner } from "./CampaignRunner";
 
 const MACROS: Array<[string, string]> = [
   ["melee_attack", "近战攻击"], ["ranged_attack", "远程攻击"], ["sneak_attack", "偷袭攻击"],
@@ -93,7 +95,7 @@ export function App() {
 
   return (
     <div>
-      <h1>D20 角色构筑器 <span className="badge">Cordis 式浏览器插件</span></h1>
+      <h1>Role Player 跑团模拟器 <span className="badge">Cordis 式浏览器插件</span></h1>
       <div className="sub">
         纯 TypeScript 移植（参考 deepseek-harness 架构）。14 个子系统即 Cordis 服务，可在下方「插件」面板运行时热挂载 / 卸载。
       </div>
@@ -256,6 +258,18 @@ export function App() {
           );
         })}
         {pluginMsg && <div className="hint">{pluginMsg}</div>}
+      </Section>
+
+      <Section title="实时跑团（连本地 troupe 服务）">
+        <div className="sub" style={{ marginBottom: 8 }}>
+          需要先启动后端：<code>F:/Python314/python.exe troupe/server.py</code>（端口 8765）。
+          之后即可在浏览器里开一局、逐步推进。
+        </div>
+        <CampaignRunner />
+      </Section>
+
+      <Section title="跑团战役档案（troupe 导出）">
+        <CampaignPanel />
       </Section>
 
       <Section title="角色卡">

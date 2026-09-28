@@ -15,7 +15,8 @@ from .dice import roll_d20, roll_d6
 class RestService(Service):
     """先攻与休整能力。"""
 
-    inject = ["derived", "dice", "slots", "feats", "race"]
+    # dice 为历史冗余声明（rest 自身从不调 ctx.dice）
+    inject = ["derived", "slots", "feats", "race"]
 
     # ---------- 当前 HP ----------
     def current_hp(self) -> int:

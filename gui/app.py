@@ -1,18 +1,26 @@
-"""gui.app - D&D-GURPS 变体角色构建器 tkinter 图形界面
+"""gui.app - Role Player 跑团模拟器 tkinter 图形界面
 
 基于新的 d20 包。相比原 mvp_gui，新增：更多优缺点按钮、GURPS 战技宏、
 GURPS 3d6 检定、灵巧武器高亮等增强内容。
 """
-import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+import sys
+from pathlib import Path
 
+# 将项目根目录（d20 包所在目录）加入 sys.path，
+# 以便直接运行 gui/app.py 时也能导入上一级的 d20 包。
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+import tkinter as tk
+from tkinter import ttk, messagebox, scrolledtext, filedialog, simpledialog
+
+import d20
 from d20 import Character
 
 
 class CharacterBuilderApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("D&D-GURPS 变体角色构建器 v2.2")
+        self.root.title(f"Role Player 跑团模拟器 v{d20.__version__}")
         self.root.geometry("1040x760")
         self.root.minsize(860, 640)
 
@@ -533,6 +541,15 @@ class CharacterBuilderApp:
         frame = ttk.Frame(self.nb)
         self.nb.add(frame, text="模拟对战")
 
+        # 顶部：当前角色卡（可加载/随机替换）
+        self.battle_char_var = tk.StringVar()
+        char_bar = ttk.Frame(frame)
+        char_bar.pack(fill=tk.X, padx=6, pady=(6, 0))
+        ttk.Label(char_bar, textvariable=self.battle_char_var,
+                  font=("Microsoft YaHei", 10, "bold")).pack(side=tk.LEFT)
+        ttk.Button(char_bar, text="加载角色卡", command=self._load_character).pack(side=tk.RIGHT, padx=2)
+        ttk.Button(char_bar, text="随机角色卡", command=self._random_character).pack(side=tk.RIGHT, padx=2)
+
         # 上半：遭遇构建/评估
         top = ttk.LabelFrame(frame, text="遭遇构建 / 评估（DMG 2014）")
         top.pack(fill=tk.X, padx=6, pady=4)
@@ -659,8 +676,13 @@ class CharacterBuilderApp:
         self.sheet_text = scrolledtext.ScrolledText(frame, font=("Consolas", 11),
                                                      state=tk.DISABLED)
         self.sheet_text.pack(fill=tk.BOTH, expand=True, padx=6, pady=6)
-        ttk.Button(frame, text="刷新角色卡",
-                   command=self._refresh_sheet).pack(pady=4)
+
+        btn_row = ttk.Frame(frame)
+        btn_row.pack(fill=tk.X, padx=6, pady=4)
+        ttk.Button(btn_row, text="导出到文件", command=self._save_character).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_row, text="加载角色卡", command=self._load_character).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_row, text="随机生成", command=self._random_character).pack(side=tk.LEFT, padx=2)
+        ttk.Button(btn_row, text="刷新角色卡", command=self._refresh_sheet).pack(side=tk.LEFT, padx=2)
 
     def _refresh_sheet(self):
         self.sheet_text.config(state=tk.NORMAL)
@@ -669,10 +691,55 @@ class CharacterBuilderApp:
         self.sheet_text.config(state=tk.DISABLED)
 
     # ================================================================
+    #  角色卡：导出 / 加载 / 随机生成
+    # ================================================================
+    def _save_character(self):
+        path = filedialog.asksaveasfilename(
+            title="导出角色卡",
+            defaultextension=".json",
+            initialfile="character.json",
+            filetypes=[("JSON 文件", "*.json"), ("所有文件", "*.*")],
+        )
+        if not path:
+            return
+        try:
+            saved = self.char.save(path)
+            messagebox.showinfo("导出成功", f"角色卡已导出到：\n{saved}")
+        except Exception as e:
+            messagebox.showerror("导出失败", str(e))
+
+    def _load_character(self):
+        path = filedialog.askopenfilename(
+            title="加载角色卡",
+            filetypes=[("JSON 文件", "*.json"), ("所有文件", "*.*")],
+        )
+        if not path:
+            return
+        try:
+            self.char = Character.load(path)
+        except Exception as e:
+            messagebox.showerror("加载失败", str(e))
+            return
+        self._refresh_all()
+        messagebox.showinfo("加载成功", f"已加载：{self.char.class_summary()}")
+
+    def _random_character(self):
+        level = simpledialog.askinteger("随机生成", "角色等级（默认 3）:",
+                                        initialvalue=3, minvalue=1, maxvalue=20)
+        if level is None:
+            return
+        self.char = Character.random(level)
+        self._refresh_all()
+        messagebox.showinfo("随机生成", f"已生成：{self.char.class_summary()}")
+
+    # ================================================================
     #  全局刷新
     # ================================================================
     def _refresh_all(self):
         self.cp_var.set(f"CP: {self.char.cp}  |  HP: {self.char.hp()}  |  AC: {self.char.ac}")
+
+        if hasattr(self, "battle_char_var"):
+            self.battle_char_var.set(f"当前角色: {self.char.class_summary()}  |  HP {self.char.hp()}  |  AC {self.char.ac}")
 
         for attr, var in self.attr_vars.items():
             var.set(self.char.attributes[attr])

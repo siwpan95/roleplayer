@@ -14,14 +14,19 @@ class DerivedService(Service):
 
     @property
     def max_hp(self) -> float:
-        """最大生命值：体质调整 + 活力技能等级（+种族/专长 waterfall 钩子）。"""
+        """最大生命值：体质调整 + 活力技能等级（+种族/专长 waterfall 钩子）。
+
+        注意：未投资「活力」时按公式**外推**（vit_rank=0 → 2.5），而不是返回 0。
+        早期实现在此处提前 ``return 0.0``，导致一切未买活力的角色 max_hp 恒为 0
+        （新建角色、以及 CP 被职业等级吃光的高等级随机角色），
+        表现为"一击必倒的废卡"，且 CP 耗尽时无法自救（死锁）。
+        """
         st = self.ctx.state
         con_mod = ability_mod(st.attributes["体质"])
         vit_rank = st.skills.get("活力", 0)
-        if vit_rank == 0:
-            return 0.0
         base = 6 + con_mod + (vit_rank - 1) * (3.5 + con_mod)
-        return self.ctx.waterfall("derived/max_hp", base)
+        # 下限保护：极端体质劣势下也不允许非正生命值
+        return max(self.ctx.waterfall("derived/max_hp", base), 1.0)
 
     def hp(self) -> int:
         """当前最大 HP（整数化）。"""

@@ -53,15 +53,18 @@ services:
 
   - id: combat
     service: d20.combat.CombatService
-    inject: [derived, equipment, dice, techniques, skills, slots, feats, rest]
+    # race：龙息宏（_macro_dragon_breath）直接调 ctx.race.elemental()，必须声明
+    inject: [derived, equipment, dice, techniques, skills, race, slots, feats, rest]
 
   - id: rest
     service: d20.rest.RestService
-    inject: [derived, dice, slots, feats, race]
+    # dice 为历史冗余声明（rest 自身从不调 ctx.dice），已移除
+    inject: [derived, slots, feats, race]
 
   - id: sheet
     service: d20.sheet.SheetService
-    inject: [perks, skills, equipment, derived, slots, race, background, feats, rest, condition]
+    # feats/race 为历史冗余声明（sheet 直接读 state 而非 ctx.feats/ctx.race），已移除
+    inject: [perks, skills, equipment, derived, slots, background, rest, condition]
 
   - id: condition
     service: d20.condition.ConditionService
@@ -69,7 +72,8 @@ services:
 
   - id: monster
     service: d20.monster.MonsterService
-    inject: [dice]
+    # dice 为历史冗余声明（怪物图鉴是纯数据 + 数据级结算），已移除
+    inject: []
 
   # ---- v2.1：职业与规则速查（两者均为可选增强，无人 inject 它们；
   #      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
@@ -82,6 +86,9 @@ services:
     inject: []
 
   # ---- v2.2：模拟对战（回合制完整对战 + 遭遇构建 + 蒙特卡洛）----
+  # battle 对**自身 ctx 零依赖**：怪物数据走 d20.data_monsters（数据模块，
+  # 非 MonsterService），装备/技能/环位/攻击经 **char.ctx**（角色级全量装配）
+  # 访问。旧的 [dice, monster, condition] 是装饰性错误声明，已清空。
   - id: battle
     service: d20.battle.BattleService
-    inject: [dice, monster, condition]
+    inject: []

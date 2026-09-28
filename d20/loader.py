@@ -199,6 +199,23 @@ def _resolve_service(path: str) -> type:
     return cls
 
 
+def _resolve_service_for(path: str) -> type:
+    """解析服务路径字符串为类。
+
+    ``troupe.*`` 路径优先复用 troupe 自己的权威注册表（``troupe.composition.resolve_service``），
+    更稳、规避部分初始化模块缺类的陷阱；其余路径（d20 自有服务）走通用 ``importlib`` 解析。
+    仅在遇到 ``troupe.*`` 且 troupe 可导入时触发对 troupe 的导入——d20 不反向依赖 troupe。
+    """
+    if path.startswith("troupe."):
+        try:
+            from troupe.composition import resolve_service as _troupe_resolve
+
+            return _troupe_resolve(path)
+        except Exception:
+            pass
+    return _resolve_service(path)
+
+
 def _is_disabled(entry: dict) -> bool:
     """返回该服务是否应被禁用。
 
@@ -246,6 +263,15 @@ def _topo_sort(entries: list) -> list:
     return ordered
 
 
+def _mount_entries(ctx: Context, entries: list) -> None:
+    """按 inject 依赖拓扑排序后，把一组服务条目挂载到 ctx。"""
+    for entry in _topo_sort(entries):
+        if _is_disabled(entry):
+            continue
+        cls = _resolve_service_for(entry["service"])
+        ctx.mount(cls, entry.get("config") or {}, name=entry.get("id"))
+
+
 def load_composition(ctx: Context, path: str, extra_vars: Optional[dict] = None) -> None:
     """读取组合文件并把服务挂载到 ctx。"""
     if not os.path.exists(path):
@@ -253,9 +279,91 @@ def load_composition(ctx: Context, path: str, extra_vars: Optional[dict] = None)
     with open(path, "r", encoding="utf-8") as f:
         doc = load_yaml(f.read())
     entries = _collect_entries(doc, os.path.dirname(path), extra_vars or {})
-    ordered = _topo_sort(entries)
-    for entry in ordered:
-        if _is_disabled(entry):
-            continue
-        cls = _resolve_service(entry["service"])
-        ctx.mount(cls, entry.get("config") or {}, name=entry.get("id"))
+    _mount_entries(ctx, entries)
+
+
+# composition.yml 缺失/损坏时的兜底清单（与 composition.yml 的 services 保持镜像同步）。
+# 挂载时显式传 name，避免类名推导与 id 不一致（SpellSlotsService -> "slots"、
+# ClassService -> "classes"）。
+DEFAULT_SERVICE_ENTRIES: list[dict] = [
+    {"id": "attributes", "service": "d20.attributes.AttributesService", "inject": []},
+    {"id": "equipment", "service": "d20.equipment.EquipmentService", "inject": []},
+    {"id": "perks", "service": "d20.perks.PerksService", "inject": []},
+    {"id": "techniques", "service": "d20.techniques.TechniquesService", "inject": []},
+    {"id": "race", "service": "d20.race.RaceService", "inject": []},
+    {"id": "background", "service": "d20.background.BackgroundService", "inject": []},
+    {"id": "feats", "service": "d20.feats.FeatsService", "inject": []},
+    {"id": "skills", "service": "d20.skills.SkillsService", "inject": ["perks", "feats"]},
+    {"id": "dice", "service": "d20.dice.DiceService", "inject": ["skills", "feats"]},
+    {"id": "derived", "service": "d20.derived.DerivedService", "inject": ["skills", "equipment", "feats", "race"]},
+    {"id": "slots", "service": "d20.slots.SpellSlotsService", "inject": ["skills"]},
+    {"id": "combat", "service": "d20.combat.CombatService", "inject": ["derived", "equipment", "dice", "techniques", "skills", "race", "slots", "feats", "rest"]},
+    {"id": "rest", "service": "d20.rest.RestService", "inject": ["derived", "slots", "feats", "race"]},
+    {"id": "sheet", "service": "d20.sheet.SheetService", "inject": ["perks", "skills", "equipment", "derived", "slots", "background", "rest", "condition"]},
+    {"id": "condition", "service": "d20.condition.ConditionService", "inject": []},
+    {"id": "monster", "service": "d20.monster.MonsterService", "inject": []},
+    {"id": "classes", "service": "d20.classes.ClassService", "inject": []},
+    {"id": "reference", "service": "d20.reference.ReferenceService", "inject": []},
+    {"id": "battle", "service": "d20.battle.BattleService", "inject": []},
+]
+
+
+def _troupe_composition_path() -> str:
+    # troupe 与 d20 同目录并列：<d20 包目录>/../troupe/composition.yml
+    here = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(here, "..", "troupe", "composition.yml")
+
+
+def _merge_troupe_now(ctx: Context) -> None:
+    """「存在才合并」软挂载 troupe 服务到 ctx（不修改 DEFAULT_SERVICE_ENTRIES）。
+
+    仅当 troupe/composition.yml 存在时生效；troupe 缺失/损坏或任一服务不可解析时静默跳过，
+    绝不拖累 d20 自身装配。这是让 d20 基类「认识」troupe 服务（例如 d20 CLI 直接驱动战役）
+    的可选通道，而非把 troupe 反向硬编码进 d20 的默认清单。
+
+    调用方需自行决定是否启用（见 :func:`merge_optional_troupe` 的环境变量开关，
+    或 :func:`mount_defaults_with_troupe` 的显式 opt-in）；本函数不做环境判断。
+    """
+    path = _troupe_composition_path()
+    if not os.path.exists(path):
+        return
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            doc = load_yaml(f.read())
+    except Exception:
+        return
+    entries = _collect_entries(doc, os.path.dirname(path), {})
+    # 防御：跳过 d20 默认清单已占用的 id（troupe 与 d20 目前 id 不冲突，这里只是保险）
+    occupied = {e.get("id") for e in DEFAULT_SERVICE_ENTRIES}
+    extra = [e for e in entries if e.get("id") not in occupied]
+    if extra:
+        _mount_entries(ctx, extra)
+
+
+def merge_optional_troupe(ctx: Context) -> None:
+    """opt-in 软挂载 troupe 服务（受 ``D20_MERGE_TROUPE`` 控制，默认关闭）。
+
+    默认关闭以零影响既有 d20 装配；需要 d20 直接驱动战役时置位该环境变量为任意真值，
+    或显式调用 :func:`mount_defaults_with_troupe` 绕过环境判断。
+    """
+    if not os.environ.get("D20_MERGE_TROUPE"):
+        return
+    _merge_troupe_now(ctx)
+
+
+def mount_defaults_with_troupe(ctx: Context) -> None:
+    """装配 d20 默认服务 + 可选 troupe 服务（显式 opt-in，无需设环境变量）。"""
+    _mount_entries(ctx, DEFAULT_SERVICE_ENTRIES)
+    _merge_troupe_now(ctx)
+
+
+def mount_defaults(ctx: Context) -> None:
+    """按内置兜底清单装配 d20 自有服务（composition.yml 缺失/损坏时调用）。
+
+    若环境变量 ``D20_MERGE_TROUPE`` 为真，则额外把可选的 troupe/composition.yml 软挂载进来
+    （「存在才合并」，且绝不写进 DEFAULT_SERVICE_ENTRIES，保持 d20 基类不反向依赖 troupe）。
+    默认关闭以零影响既有 d20 装配；需要 d20 直接驱动战役时置位该变量，或显式调用
+    :func:`mount_defaults_with_troupe`。
+    """
+    _mount_entries(ctx, DEFAULT_SERVICE_ENTRIES)
+    merge_optional_troupe(ctx)

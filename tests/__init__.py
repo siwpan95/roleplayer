@@ -1,1 +1,1 @@
-"""tests 包：D&D-GURPS 变体角色构建器单元测试"""
+"""tests 包：Role Player 跑团模拟器单元测试"""

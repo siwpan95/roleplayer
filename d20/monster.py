@@ -47,7 +47,8 @@ def parse_dice(expr: str):
 class MonsterService(Service):
     """怪物查询与结算。"""
 
-    inject = ["dice"]
+    # dice 为历史冗余声明（怪物图鉴是纯数据 + 数据级结算，自身不调 ctx.dice）
+    inject = []
 
     MONSTERS = MONSTERS
     CR_XP = CR_XP

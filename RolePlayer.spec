@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""D20 角色构筑器 — tkinter GUI 的 PyInstaller 打包规格
+"""Role Player 跑团模拟器 — tkinter GUI 的 PyInstaller 打包规格
 
 用法：F:/Python314/python.exe -m PyInstaller D20.spec --noconfirm --clean
 入口：gui/app.py（无控制台窗口程序，windowed）
@@ -11,7 +11,7 @@ PyInstaller 不会自动收集其初始化脚本（init.tcl/tk.tcl），必须�
 """
 import os
 
-ROOT = os.path.abspath(r"E:/D20")
+ROOT = os.path.abspath(r"E:/RolePlayer")
 TCLLIB = os.path.join(ROOT, "_tcllib")
 
 a = Analysis(
@@ -48,6 +48,25 @@ a = Analysis(
         "d20.rest",
         "d20.sheet",
         "d20.core",
+        # ★ 服务由 composition.yml / loader.DEFAULT_SERVICE_ENTRIES 以「字符串」声明，
+        #   经 d20/loader.py:195 的 importlib.import_module() 动态导入，
+        #   PyInstaller 静态分析**抓不到**，必须在此显式列出。
+        #   缺失时 importlib 抛 ModuleNotFoundError（不是 CordisError），
+        #   character.py:171 的 `except CordisError` 兜不住 → 打包版启动即崩溃。
+        "d20.loader",
+        "d20.classes",        # v2.1 ClassService
+        "d20.reference",      # v2.1 ReferenceService
+        "d20.battle",         # v2.2 BattleService
+        # v2.1/v2.2 新增数据表（被上述服务静态引用，显式列出以防漏检）
+        "d20.data_classes",
+        "d20.data_reference",
+        "d20.data_battle",
+        "d20.data_equipment_srd",
+        "d20.data_proficiencies",
+        # v2.2 新增模块（battle 内部静态引用 narration；character 方法内延迟导入
+        # character_io，二者均显式列出以确保进入模块图）
+        "d20.narration",
+        "d20.character_io",
         # tkinter 子模块
         "tkinter",
         "tkinter.ttk",
@@ -73,7 +92,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="D20",
+    name="RolePlayer",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -95,5 +114,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name="D20",
+    name="RolePlayer",
 )

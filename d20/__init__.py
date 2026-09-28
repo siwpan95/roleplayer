@@ -1,4 +1,4 @@
-"""d20 - D&D-GURPS 变体角色构建器核心包
+"""d20 - Role Player 跑团模拟器的角色构建核心包（包名沿用 d20，产品名 Role Player）
 
 Cordis 化架构（Context / Service / 依赖注入 / 事件 / 生命周期）：
 
@@ -69,4 +69,4 @@ __all__ = [
     "normalize_damage_type", "DIFFICULTY_CN",
 ]
 
-__version__ = "2.2.0"
+__version__ = "3.0.0"

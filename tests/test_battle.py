@@ -273,6 +273,38 @@ class TestDamageAndConditions:
         svc._apply_damage(t, 100, "钝击", b)
         assert not t.alive and t.hp == 0
 
+    def test_gurps_wound_multiplier_applied(self):
+        svc = Character().ctx.battle
+        b = Battle(gurps_wounds=True)
+        # 穿刺命中头骨：2.0（穿刺）× 4.0（头骨）= ×8
+        t = _dummy(max_hp=100, hp=100)
+        svc._apply_damage(t, 5, "穿刺", b, location="头骨")
+        assert t.hp == 60  # 100 - 5×8
+        # 挥砍命中颈部：1.5 × 2.0 = ×3
+        t = _dummy(max_hp=100, hp=100)
+        svc._apply_damage(t, 6, "挥砍", b, location="颈部")
+        assert t.hp == 82  # 100 - 6×3
+        # 钝击命中躯干：1.0 × 1.0 = ×1（无放大）
+        t = _dummy(max_hp=100, hp=100)
+        svc._apply_damage(t, 7, "钝击", b, location="躯干")
+        assert t.hp == 93
+        # 元素类不参与部位倍率
+        t = _dummy(max_hp=100, hp=100)
+        svc._apply_damage(t, 10, "火焰", b, location="头骨")
+        assert t.hp == 90
+
+    def test_gurps_wound_multiplier_disabled_by_default(self):
+        svc = Character().ctx.battle
+        b = Battle()  # 默认关闭
+        t = _dummy(max_hp=100, hp=100)
+        svc._apply_damage(t, 5, "穿刺", b, location="头骨")
+        assert t.hp == 95  # 无倍率
+
+    def test_new_battle_gurps_wounds_flag(self):
+        svc = Character().ctx.battle
+        b = svc.new_battle(_party2(), [("哥布林", 1)], gurps_wounds=True)
+        assert b.gurps_wounds is True
+
 
 # =============================================================================
 #  5. 遭遇构建（DMG 2014）

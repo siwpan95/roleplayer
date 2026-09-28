@@ -3,14 +3,30 @@ import pytest
 
 
 class TestDerivedStats:
-    def test_hp_zero_without_vitality(self, char):
-        assert char.hp() == 0
+    def test_hp_floor_without_vitality(self, char):
+        """未投资活力时按公式外推，得到生命值下限——不应为 0。
+
+        2026-08-29 行为变更（上线前全检）：原实现在 ``derived.max_hp`` 里对
+        ``vit_rank == 0`` 提前 ``return 0.0``，导致一切未买活力的角色 HP 恒为 0
+        （新建角色即如此），高等级随机角色更因 CP 被职业等级吃光而必然产出 0 HP 废卡
+        且无法自救。现改为按公式外推并设下限。
+
+        体质 10（调整 +0）：6 + 0 + (0-1)*(3.5+0) = 2.5 → int → 2
+        """
+        assert char.max_hp == 2.5
+        assert char.hp() == 2
 
     def test_hp_with_vitality(self, char):
         char.set_attribute("体质", 14)  # +2
         char.purchase_skill("活力", 5)
         # 6 + 2 + (5-1)*(3.5+2) = 8 + 4*5.5 = 8+22 = 30
         assert char.hp() == 30
+
+    def test_hp_positive_even_with_con_penalty(self, char):
+        """体质劣势下 max_hp 仍必须为正（下限保护），不得退化回 0 或负数。"""
+        char.set_attribute("体质", 8)  # -1
+        assert char.max_hp > 0
+        assert char.hp() >= 1
 
     def test_ac_base_10(self, char):
         assert char.ac == 10

@@ -1,6 +1,13 @@
 # cordis.yml 风格组合（与 deepseek-harness 的 cordis.yml 同构）
 # 运行时可由 loader.loadCompositionYaml(ctx, text) 加载；默认应用启动时直接用
 # composition.ts 的 TS 常量装配（浏览器原生、零依赖）。
+#
+# 本文件与 composition.ts 保持镜像同步（此前已漂移：sheet 缺 condition、
+# 缺 classes/reference/battle 三条 v2.1/v2.2 条目）。
+# inject 只声明「服务自身 ctx 的真实依赖」：
+#   - combat 用 ctx.race.elemental()（龙息宏）→ 必须声明 race
+#   - rest 不用 ctx.dice / sheet 不用 ctx.feats·race / monster 不用 ctx.dice → 已删冗余
+#   - battle 对自身 ctx 零依赖（数据走 data_monsters，角色能力走 char.ctx）→ inject 为空
 - id: attributes
   service: AttributesService
   inject: []
@@ -36,10 +43,27 @@
   inject: [skills]
 - id: rest
   service: RestService
-  inject: [derived, dice, slots, feats, race]
+  inject: [derived, slots, feats, race]
 - id: combat
   service: CombatService
-  inject: [derived, equipment, dice, techniques, skills, slots, feats, rest]
+  inject: [derived, equipment, dice, techniques, skills, race, slots, feats, rest]
 - id: sheet
   service: SheetService
-  inject: [perks, skills, equipment, derived, slots, race, background, feats, rest]
+  inject: [perks, skills, equipment, derived, slots, background, rest, condition]
+- id: condition
+  service: ConditionService
+  inject: []
+- id: monster
+  service: MonsterService
+  inject: []
+# ---- v2.1：职业与规则速查（可选增强，依赖方以 ctx.has("classes") 探测）----
+- id: classes
+  service: ClassService
+  inject: []
+- id: reference
+  service: ReferenceService
+  inject: []
+# ---- v2.2：模拟对战（对自身 ctx 零依赖，见 composition.ts 同段注释）----
+- id: battle
+  service: BattleService
+  inject: []

@@ -2,7 +2,7 @@
   "name": "d20-web",
   "version": "1.0.0",
   "private": true,
-  "description": "D20 角色构筑器 · Cordis 式浏览器扩展（TypeScript 移植，参考 deepseek-harness 架构）",
+  "description": "Role Player 跑团模拟器 · Cordis 式浏览器扩展（TypeScript 移植，参考 deepseek-harness 架构）",
   "type": "module",
   "scripts": {
     "dev": "vite",
