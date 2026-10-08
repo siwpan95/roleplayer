@@ -1,11 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
 """Role Player 跑团模拟器 — tkinter GUI 的 PyInstaller 打包规格
 
-用法：F:/Python314/python.exe -m PyInstaller D20.spec --noconfirm --clean
+用法：<主解释器>/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean  # 去符盘：原写死 /Python314
 入口：gui/app.py（无控制台窗口程序，windowed）
-依赖：d20 包（纯标准库，零第三方依赖）+ tkinter（Tcl/Tk 9.0，F:/Python314 自带）
+依赖：d20 包（纯标准库，零第三方依赖）+ tkinter（Tcl/Tk 9.0，主解释器自带 —— 去符盘 /Python314）
 
-注意：F:/Python314 的 Tcl/Tk 9.0 库以独立目录形式提供（tcl_library/tk_library），
+注意：主解释器（去符盘 /Python314）的 Tcl/Tk 9.0 库以独立目录形式提供（tcl_library/tk_library），
 PyInstaller 不会自动收集其初始化脚本（init.tcl/tk.tcl），必须显式 datas 注入，
 并由 runtime_hook_tk.py 在运行时设置 TCL_LIBRARY/TK_LIBRARY。
 """
