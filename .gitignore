@@ -7,6 +7,11 @@ __pycache__/
 .coverage.*
 htmlcov/
 
+# ---- 打包构建残留（3.0.1 补：此前无此规则，egg-info 曾被误提交） ----
+*.egg-info/
+*.egg
+.eggs/
+
 # ---- 角色卡导出样例（属运行期产物，非源码） ----
 /character.json
 /e2e_hero.json
