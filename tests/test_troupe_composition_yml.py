@@ -1,19 +1,19 @@
-"""Round 6：composition.yml 作为 troupe 服务注册权威来源 + d20 loader 软挂载。
+"""Round 6：composition.yml 作为 troupe 服务注册权威来源 + roleplayer loader 软挂载。
 
 锁定三条不变量：
 1. ``troupe/composition.yml`` 与 ``composition.DEFAULT_TROUPE_ENTRIES`` 逐条一致
    （id / service / inject）；且 YAML 必须能被 d20 的「极简 YAML 兜底解析器」解析
    （PyYAML 缺失时回退），因此必须写成块风格，不能写成行内流风格 ``{...}``。
-2. d20 基类的 ``loader.DEFAULT_SERVICE_ENTRIES`` 不被 troupe 反向污染（单向分层）。
-3. ``mount_defaults_with_troupe`` / ``D20_MERGE_TROUPE`` 软挂载确实把全部 troupe 服务挂上，
+2. roleplayer 基类的 ``loader.DEFAULT_SERVICE_ENTRIES`` 不被 troupe 反向污染（单向分层）。
+3. ``mount_defaults_with_troupe`` / ``ROLEPLAYER_MERGE_TROUPE`` 软挂载确实把全部 troupe 服务挂上，
    且 d20 自身服务不受影响；默认关闭时绝不挂载 troupe。
 """
 from __future__ import annotations
 
 import os
 
-from d20.core import Context
-from d20.loader import (
+from roleplayer.core import Context
+from roleplayer.loader import (
     DEFAULT_SERVICE_ENTRIES,
     _minimal_yaml_load,
     load_yaml,
@@ -49,7 +49,7 @@ def test_compose_yaml_exists_and_is_block_style():
 
 
 def test_yaml_parses_under_minimal_fallback_parser():
-    # 即便 PyYAML 缺失，d20.loader 的极简解析器也必须能解析出 15 条合法条目
+    # 即便 PyYAML 缺失，roleplayer.loader 的极简解析器也必须能解析出 15 条合法条目
     with open(_COMPOSE_PATH, "r", encoding="utf-8") as f:
         text = f.read()
     doc = _minimal_yaml_load(text)
@@ -106,13 +106,13 @@ def test_mount_defaults_with_troupe_merges_all_and_keeps_d20():
 
 
 def test_merge_optional_troupe_off_by_default():
-    # 无 D20_MERGE_TROUPE 环境变量时，merge_optional_troupe 是 no-op
+    # 无 ROLEPLAYER_MERGE_TROUPE 环境变量时，merge_optional_troupe 是 no-op
     ctx = Context()
     mount_defaults_with_troupe(ctx)  # 先确保 d20 服务在
     # 模拟默认关闭：临时清掉环境变量再调 merge（幂等，无 troupe 时应仍无 troupe）
     import os as _os
 
-    saved = _os.environ.pop("D20_MERGE_TROUPE", None)
+    saved = _os.environ.pop("ROLEPLAYER_MERGE_TROUPE", None)
     try:
         ctx2 = Context()
         merge_optional_troupe(ctx2)  # 默认关闭：什么也不挂
@@ -120,4 +120,4 @@ def test_merge_optional_troupe_off_by_default():
             assert not ctx2.has(sid), f"默认关闭却挂上了 troupe 服务：{sid}"
     finally:
         if saved is not None:
-            _os.environ["D20_MERGE_TROUPE"] = saved
+            _os.environ["ROLEPLAYER_MERGE_TROUPE"] = saved

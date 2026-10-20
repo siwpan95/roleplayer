@@ -1,7 +1,7 @@
 """骰子系统测试。"""
 import random
 
-from d20.dice import (
+from roleplayer.dice import (
     roll_d20, roll_d100, roll_d6, roll_3d6,
     gurps_success_chance, roll_weapon_damage,
 )

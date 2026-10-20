@@ -101,7 +101,7 @@ class TestBackwardCompat:
     def test_old_import_path(self):
         """mvp_builder 仍可 import Character。"""
         from mvp_builder import Character as OldChar
-        from d20 import Character as NewChar
+        from roleplayer import Character as NewChar
         assert OldChar is NewChar
 
     def test_class_data_accessible(self, char):

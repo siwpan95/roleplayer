@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .contracts import (
     OUTCOME_IN_CONTROL,
@@ -44,7 +44,7 @@ ACTION_KINDS = (
     "exploration",   # 探索 / 搜索 / 勘察
     "social",        # 交涉 / 询价 / 威胁
     "travel",        # 行军 / 导航 / 扎营
-    "combat",        # 战斗（交由 L4 encounter 桥接 d20.battle）
+    "combat",        # 战斗（交由 L4 encounter 桥接 roleplayer.battle）
     "downtime",      # 休整 / 采购 / 打探
     "lore",          # 回忆知识 / 辨识
     "custom",        # 模组自定义

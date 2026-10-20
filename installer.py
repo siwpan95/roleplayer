@@ -37,14 +37,14 @@ import tempfile
 import winreg
 
 APP_NAME = "Role Player 跑团模拟器"
-# 必须与 d20/__init__.py 的 __version__ 对齐。
+# 必须与 roleplayer/__init__.py 的 __version__ 对齐。
 # 该值会写入注册表 DisplayVersion（见下方 winreg.SetValueEx），
 # 版本不一致会让"添加/删除程序"里显示错误的版本号。
-APP_VERSION = "3.0.0"
+APP_VERSION = "3.0.1"
 REG_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\RolePlayer"
 
 
-def bundled_d20() -> str:
+def bundled_roleplayer() -> str:
     """打包后通过 sys._MEIPASS 找到内嵌的 RolePlayer 目录；开发期回退到仓库 dist/RolePlayer。"""
     if getattr(sys, "_MEIPASS", None):
         return os.path.join(sys._MEIPASS, "RolePlayer")
@@ -239,7 +239,7 @@ def _shortcut_targets():
 
 def do_install(silent: bool = False) -> int:
     dst = install_location()
-    src = bundled_d20()
+    src = bundled_roleplayer()
     if not os.path.isdir(src):
         msg = f"找不到内嵌的程序目录：\n{src}"
         if not silent:

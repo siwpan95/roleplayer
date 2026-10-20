@@ -10,7 +10,7 @@
 
 加值来源（沿用 ``d20`` 既有服务，保证与 v2.x 角色卡完全一致）：
     技能      ctx.skills.effective_skill_rank(技能名)
-    属性      d20.data.ability_mod(属性值)
+    属性      roleplayer.data.ability_mod(属性值)
     豁免      ctx.derived.save_bonus(fort/ref/will)
     攻击      ctx.derived.attack_bonus(melee)
     防御      ctx.derived.ac
@@ -19,8 +19,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from d20.data import ability_mod, ATTRIBUTES
-from d20.dice import weapon_dice
+from roleplayer.data import ability_mod, ATTRIBUTES
+from roleplayer.dice import weapon_dice
 
 from .contracts import CheckRequest, CheckResult
 from .data_world import TIER_DC_DND5E
@@ -34,7 +34,7 @@ SAVE_ALIASES = {
     "will": "will", "意志": "will", "感知": "will",
 }
 
-#: D&D 伤害类型 → 本项目的规范化中文类型（与 d20.data_battle.normalize_damage_type 对齐）
+#: D&D 伤害类型 → 本项目的规范化中文类型（与 roleplayer.data_battle.normalize_damage_type 对齐）
 _DTYPE_ALIAS = {
     "火": "火焰", "寒": "寒冷", "电": "闪电", "酸": "酸蚀", "毒": "毒素",
     "穿刺": "穿刺", "挥砍": "挥砍", "钝击": "钝击",
@@ -200,11 +200,11 @@ class Dnd5eRuleset(RulesetAdapter):
     #  战斗
     # ------------------------------------------------------------------ #
     def to_combatant(self, actor: Any):
-        """交给 ``d20.battle.BattleService.make_pc`` 转成战斗单位。"""
+        """交给 ``roleplayer.battle.BattleService.make_pc`` 转成战斗单位。"""
         return self._unwrap(actor)
 
     def xp_for(self, threat: Any) -> int:
-        from d20.data_monsters import CR_XP
+        from roleplayer.data_monsters import CR_XP
 
         return CR_XP.get(str(threat), 0)
 

@@ -1,6 +1,6 @@
-"""Generate web/src/engine data modules from the live Python d20 SRD data.
+"""Generate web/src/engine data modules from the live Python roleplayer SRD data.
 
-Outputs 4 TS files that mirror d20/data_spells.py, data_magicitems.py,
+Outputs 4 TS files that mirror roleplayer/data_spells.py, data_magicitems.py,
 data_monsters.py, data_conditions.py. Using the Python objects as the single
 source of truth guarantees the TS engine content is byte-for-byte consistent
 with the Python backend (frontend/backend parity for the SRD expansion).
@@ -12,7 +12,7 @@ import sys
 # 仓库根 = 本脚本所在目录（2026-08-31 修复：原硬编码 E:/D20 已随项目更名/迁仓失效）
 D20 = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, D20)
-from d20 import (  # noqa: E402
+from roleplayer import (  # noqa: E402
     data_spells, data_magicitems, data_monsters, data_conditions,
     data_classes, data_equipment_srd, data_proficiencies, data_reference,
     data_battle,
@@ -21,9 +21,9 @@ from d20 import (  # noqa: E402
 OUT = os.path.join(D20, "web", "src", "engine")
 
 HEADER = """/**
- * d20.web engine/{fname} - {desc}
+ * roleplayer.web engine/{fname} - {desc}
  *
- * 由 Python d20.{pyname} 经 JSON 直转生成，保证与 Python 单一事实来源逐字段一致
+ * 由 Python roleplayer.{pyname} 经 JSON 直转生成，保证与 Python 单一事实来源逐字段一致
  * （前端/后端 SRD 内容零漂移）。如需修改，请在 Python 侧改动后经本生成脚本同步。
  */
 """

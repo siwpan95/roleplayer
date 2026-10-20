@@ -1,7 +1,7 @@
 """GURPS 战斗引擎 / 条件生效 / 点经济 / 社交反应 的端到端测试。
 
 这些测试锁定本次「全量搭建完整架构」的核心交付：
-1. GURPS 真的有独立战斗引擎（不再悄悄退回 d20.battle）；
+1. GURPS 真的有独立战斗引擎（不再悄悄退回 roleplayer.battle）；
 2. 主动防御三选一（闪避/招架/格挡）、命中部位、伤口倍率、休克/击倒均按规则书生效；
 3. 条件（震慑/眩晕…）真正修正检定；
 4. GURPS 点数购买（属性/优缺点/技能）可计算可构建；
@@ -11,8 +11,8 @@ import random
 
 import pytest
 
-from d20 import Character
-from d20.core import Context
+from roleplayer import Character
+from roleplayer.core import Context
 
 from troupe.composition import mount_troupe
 from troupe.ruleset_gurps import GurpsRuleset
@@ -209,7 +209,7 @@ def test_build_gurps_character_and_points_of_roundtrip():
 
 
 # --------------------------------------------------------------------------- #
-#  6. encounter.combat 按规则集分派（gurps 不走 d20.battle）
+#  6. encounter.combat 按规则集分派（gurps 不走 roleplayer.battle）
 # --------------------------------------------------------------------------- #
 def _make_sim(ruleset):
     from troupe.simulator import Simulator
@@ -218,7 +218,7 @@ def _make_sim(ruleset):
 
 def test_gurps_combat_does_not_use_d20_battle():
     sim = _make_sim("gurps")
-    # 若误走 d20.battle，Character.battle_create 会被调用——这里打桩验证它不被调用
+    # 若误走 roleplayer.battle，Character.battle_create 会被调用——这里打桩验证它不被调用
     called = {"battle_create": False}
     orig = Character.battle_create
     def spy(self, *a, **k):
@@ -229,7 +229,7 @@ def test_gurps_combat_does_not_use_d20_battle():
         res = sim.ctx.encounter.combat(sim.party, ["哥布林", "哥布林"], distance=60)
     finally:
         Character.battle_create = orig
-    assert called["battle_create"] is False, "GURPS 战斗不应调用 d20.battle"
+    assert called["battle_create"] is False, "GURPS 战斗不应调用 roleplayer.battle"
     assert res["winner"] in ("party", "foes")
     assert isinstance(res.get("report"), str) and "GURPS" in res["report"]
 
@@ -246,7 +246,7 @@ def test_dnd_combat_still_uses_d20_battle():
         res = sim.ctx.encounter.combat(sim.party, ["哥布林", "哥布林"], distance=60)
     finally:
         Character.battle_create = orig
-    assert called["battle_create"] is True, "D&D 战斗必须走 d20.battle"
+    assert called["battle_create"] is True, "D&D 战斗必须走 roleplayer.battle"
     assert res["winner"] in ("party", "foes")
 
 

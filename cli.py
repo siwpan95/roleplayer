@@ -1,10 +1,10 @@
 """cli.py - Role Player 跑团模拟器命令行界面
 
-基于新的 d20 包，提供交互式角色构建、掷骰测试与战斗宏演示。
+基于新的 roleplayer 包，提供交互式角色构建、掷骰测试与战斗宏演示。
 运行：python cli.py
 """
-import d20
-from d20 import Character
+import roleplayer
+from roleplayer import Character
 
 
 def _say(result) -> str:
@@ -150,7 +150,7 @@ def _combat_demo(char: Character):
 
 def _classes(char: Character):
     """职业：选择 / 升级 / 子职业 / 特性速览。"""
-    from d20.classes import level_up_cost
+    from roleplayer.classes import level_up_cost
 
     print(f"  当前职业: {char.class_summary()} | 生命骰 d{char.hit_die()}")
     print("  职业列表（生命骰 / 关键属性 / 施法 / 可选技能数）:")
@@ -344,7 +344,7 @@ def _battle_cli(char: Character) -> Character:
 def main():
     char = Character()
     print("=" * 50)
-    print(f" Role Player 跑团模拟器 v{d20.__version__}")
+    print(f" Role Player 跑团模拟器 v{roleplayer.__version__}")
     print(" 融合 D&D 三宝书 + GURPS Basic Set 规则")
     print("=" * 50)
     while True:

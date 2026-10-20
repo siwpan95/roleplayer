@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import pytest
 
-from d20.character import Character
+from roleplayer.character import Character
 
 from troupe import Simulator
 from troupe.agent import AgentService, Policy, CautiousPolicy, AggressivePolicy

@@ -6,7 +6,7 @@
 """
 import pytest
 
-from d20 import Character
+from roleplayer import Character
 
 from troupe.simulator import Simulator
 from troupe.character_gurps import build_gurps_character
@@ -287,5 +287,5 @@ def test_gurps_skill_cost_difficulty_ladders():
 
 
 def _lookup_level(name: str) -> int:
-    from d20.data_spells import SRD_SPELLS
+    from roleplayer.data_spells import SRD_SPELLS
     return int(SRD_SPELLS[name]["level"])

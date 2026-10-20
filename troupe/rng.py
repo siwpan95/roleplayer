@@ -17,7 +17,7 @@ from __future__ import annotations
 import random
 from typing import Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 #: 随机域（顺序即存档序列化顺序，勿随意重排）
 DOMAINS = ("rules", "world", "oracle", "ai", "narrative")

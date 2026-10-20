@@ -4,7 +4,7 @@ into D20's Chinese-keyed data modules.
 
 Provenance: every record originates from https://www.dnd5eapi.co/api/2014/ (the
 official D&D 5e SRD REST API). This script is the *only* thing that writes
-d20/data_{monsters,spells,magicitems,conditions}.py — no hand-authored numbers.
+roleplayer/data_{monsters,spells,magicitems,conditions}.py — no hand-authored numbers.
 
 Naming policy (documented, honest):
   * Enum fields (size/type/alignment/damage/school/rarity/...) are translated to
@@ -27,7 +27,7 @@ from collections import OrderedDict
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 PULL = os.path.join(_HERE, "_srd_pull")   # 2026-08-31：原 E:/D20 硬编码改相对
-OUT = os.path.join(_HERE, "d20")
+OUT = os.path.join(_HERE, "roleplayer")
 
 # =============================================================================
 #  Enum translation maps (deterministic, full coverage)
@@ -1458,7 +1458,7 @@ def main():
     # data_monsters.py
     write_file(
         os.path.join(OUT, "data_monsters.py"),
-        '''"""d20.data_monsters - D&D 5e SRD 怪物图鉴（全量，由权威 API 转换）
+        '''"""roleplayer.data_monsters - D&D 5e SRD 怪物图鉴（全量，由权威 API 转换）
 
 来源：D&D 5e SRD《Monster Manual》公开内容，经 dnd5eapi.co/api/2014/monsters
 （官方 REST API）拉取全部 334 个怪物的规范化 JSON，由 gen_srd_from_api.py
@@ -1474,7 +1474,7 @@ def main():
     # data_spells.py
     write_file(
         os.path.join(OUT, "data_spells.py"),
-        '''"""d20.data_spells - D&D 5e SRD 法术名册（全谱 0–9 环，由权威 API 转换）
+        '''"""roleplayer.data_spells - D&D 5e SRD 法术名册（全谱 0–9 环，由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014/spells（官方 REST API）拉取全部法术规范化 JSON，
 由 gen_srd_from_api.py 转换。枚举字段（学派/伤害类型/豁免属性）已译中文；
@@ -1491,7 +1491,7 @@ desc 效果摘要（英文，取自 API）。SRD_SPELL_RINGS 为 name->环位 �
     # data_magicitems.py
     write_file(
         os.path.join(OUT, "data_magicitems.py"),
-        '''"""d20.data_magicitems - D&D 5e DMG 魔法物品（全量，由权威 API 转换）
+        '''"""roleplayer.data_magicitems - D&D 5e DMG 魔法物品（全量，由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014/magic-items（官方 REST API）拉取全部魔法物品规范化
 JSON，由 gen_srd_from_api.py 转换。rarirty 已译中文（普通/非普通/稀有/极稀有/
@@ -1506,7 +1506,7 @@ JSON，由 gen_srd_from_api.py 转换。rarirty 已译中文（普通/非普通/
     # data_conditions.py
     write_file(
         os.path.join(OUT, "data_conditions.py"),
-        '''"""d20.data_conditions - D&D 5e 官方战斗条件（15 条，由权威 API 核对）
+        '''"""roleplayer.data_conditions - D&D 5e 官方战斗条件（15 条，由权威 API 核对）
 
 来源：dnd5eapi.co/api/2014/conditions 核对官方 15 条条件名称与说明。
 API 仅提供 name + desc 散文；本模块的 attack/save/check/auto_fail 惩罚模型是

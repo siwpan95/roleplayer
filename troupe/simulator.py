@@ -1,7 +1,7 @@
 """troupe.simulator - 跑团模拟器门面（L0.5 装配中枢）
 
-``Simulator`` 是整套管层的**唯一入口**，类比 ``d20.Character`` 在规则引擎里的位置：
-把分散的 Service 按依赖顺序挂进一个 Cordis ``Context``，持有队伍（``d20.Character`` 列表），
+``Simulator`` 是整套管层的**唯一入口**，类比 ``roleplayer.Character`` 在规则引擎里的位置：
+把分散的 Service 按依赖顺序挂进一个 Cordis ``Context``，持有队伍（``roleplayer.Character`` 列表），
 并把「导演 / 遭遇 / 智能体 / 渲染 / 存档」编排成一场可跑、可存、可复现的战役。
 
 分层装配顺序（依赖在前）
@@ -10,7 +10,7 @@
        → world → npc → faction → quest → clock
        → director → encounter → agent
 
-角色对象（``d20.Character``）自带各自的 d20 Cordis 上下文（属性/技能/装备/战斗…），
+角色对象（``roleplayer.Character``）自带各自的 d20 Cordis 上下文（属性/技能/装备/战斗…），
 ``ruleset`` 适配器读取其中的 ``char.ctx`` 把同一张卡翻译成 D&D 或 GURPS 判定语义 ——
 因此**换规则集不需要重建角色卡**。
 """
@@ -18,8 +18,8 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20 import Character
-from d20.core import Context
+from roleplayer import Character
+from roleplayer.core import Context
 
 from .composition import mount_troupe
 from .contracts import (

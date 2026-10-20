@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from . import data_world as W
 from .contracts import CheckRequest

@@ -16,18 +16,18 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.classes import ClassService, level_up_cost, cumulative_cost
-from d20.data import CLASS_LEVEL_MAX, PROFICIENCY_BONUS, SUBCLASS_MIN_LEVEL
-from d20.data_classes import CLASSES, CLASS_LEVELS, SUBCLASSES, FEATURES
-from d20.data_equipment_srd import SRD_EQUIPMENT, WEAPON_PROPERTIES
-from d20.data_proficiencies import PROFICIENCIES
-from d20.data_reference import (
+from roleplayer import Character
+from roleplayer.classes import ClassService, level_up_cost, cumulative_cost
+from roleplayer.data import CLASS_LEVEL_MAX, PROFICIENCY_BONUS, SUBCLASS_MIN_LEVEL
+from roleplayer.data_classes import CLASSES, CLASS_LEVELS, SUBCLASSES, FEATURES
+from roleplayer.data_equipment_srd import SRD_EQUIPMENT, WEAPON_PROPERTIES
+from roleplayer.data_proficiencies import PROFICIENCIES
+from roleplayer.data_reference import (
     ABILITY_SCORES, ALIGNMENTS, DAMAGE_TYPES, MAGIC_SCHOOLS,
     LANGUAGES, SRD_SKILLS, RULES, RULE_SECTIONS,
 )
-from d20.dice import weapon_dice
-from d20.data import WEAPON_DICE
+from roleplayer.dice import weapon_dice
+from roleplayer.data import WEAPON_DICE
 
 ZH = re.compile(r"[一-鿿]")
 
@@ -141,7 +141,7 @@ class TestEquipmentProfReferenceData:
 
     def test_srd_skills_align_with_skill_library(self):
         """SRD 18 技能必须全部落在项目既有 SKILL_LIBRARY 命名空间内。"""
-        from d20.data import SKILL_LIBRARY
+        from roleplayer.data import SKILL_LIBRARY
         assert set(SRD_SKILLS) <= set(SKILL_LIBRARY)
 
     def test_weapon_dice_falls_back_to_srd(self):

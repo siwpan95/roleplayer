@@ -1,6 +1,6 @@
 """data/sample_thief.py - 示例角色构建脚本
 
-复现原 盗贼.txt 的角色，演示用新 d20 包构建角色的完整流程。
+复现原 盗贼.txt 的角色，演示用新 roleplayer 包构建角色的完整流程。
 运行：python data/sample_thief.py
 """
 import sys
@@ -9,7 +9,7 @@ import os
 # 使项目根目录可 import
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from d20 import Character
+from roleplayer import Character
 
 
 def build_thief() -> Character:

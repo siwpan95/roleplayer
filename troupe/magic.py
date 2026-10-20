@@ -14,7 +14,7 @@
     - 命中型法术（火球/闪电）目标可闪避；抗力型法术（催眠/恐惧）目标掷属性检定抵抗。
 
 * **D&D 5e（SRD 5.1，CC-BY-4.0）**
-    - 法术来自 ``d20.data_spells.SRD_SPELLS``（由 dnd5eapi 拉取的全谱 0–9 环法术，本层只消费、不搬运文本）。
+    - 法术来自 ``roleplayer.data_spells.SRD_SPELLS``（由 dnd5eapi 拉取的全谱 0–9 环法术，本层只消费、不搬运文本）。
     - 法术位直接复用角色自带的 ``char.ctx.slots``（真实 d20 法术位系统：上限 4/3/3/3/3/2/2/1/1）。
     - 判定：伤害法术走「法术攻击 vs AC」；非攻击走「目标豁免 DC = 8 + 施法属性调整 + 熟练加值」；
       戏法(0 环)不耗位；高环施放(upcasting) 对伤害法术每高 1 环 +1d8。
@@ -27,8 +27,8 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.core import Service
-from d20.data import ability_mod
+from roleplayer.core import Service
+from roleplayer.data import ability_mod
 
 from .contracts import CheckRequest
 
@@ -326,7 +326,7 @@ class MagicService(Service):
         if rid == "gurps":
             return sorted(GURPS_SPELLS)
         try:
-            from d20.data_spells import SRD_SPELLS
+            from roleplayer.data_spells import SRD_SPELLS
             return list(SRD_SPELLS.keys())
         except Exception:
             return []
@@ -335,7 +335,7 @@ class MagicService(Service):
         """统一施法入口：按 ``ctx.ruleset.id`` 分派到 GURPS / D&D 路径。
 
         ``spec``：``{"actor", "spell", "target"(可选), "ring"(D&D 可选),
-        "modifier"(可选)}``。``actor``/``target`` 为 ``d20.Character``。
+        "modifier"(可选)}``。``actor``/``target`` 为 ``roleplayer.Character``。
         """
         rid = self.ctx.ruleset.id
         if rid == "gurps":
@@ -583,7 +583,7 @@ class MagicService(Service):
                 conds.append(cond)
 
     # ================================================================== #
-    #  D&D 5e（包装 d20.data_spells + 真实 slots 服务）
+    #  D&D 5e（包装 roleplayer.data_spells + 真实 slots 服务）
     # ================================================================== #
     def grant_dnd_spellcaster(self, char: Any, ability: str = "智力",
                               level: Optional[int] = None,
@@ -605,7 +605,7 @@ class MagicService(Service):
         known = list(flags.get("dnd_known", []))
         cantrips: list[str] = []
         if auto_cantrips:
-            from d20.data_spells import SRD_SPELLS
+            from roleplayer.data_spells import SRD_SPELLS
             cantrips = [zh for zh, v in SRD_SPELLS.items()
                         if int(v.get("level", 0) or 0) == 0]
             for c in cantrips:
@@ -830,11 +830,11 @@ class MagicService(Service):
 
 
 # =============================================================================
-#  D&D 辅助（包装 d20.data_spells，绝不搬运文本）
+#  D&D 辅助（包装 roleplayer.data_spells，绝不搬运文本）
 # =============================================================================
 def _lookup_dnd_spell(name: str) -> Optional[dict]:
     """按中文名（优先）或英文名查 SRD 法术。"""
-    from d20.data_spells import SRD_SPELLS
+    from roleplayer.data_spells import SRD_SPELLS
     if name in SRD_SPELLS:
         return SRD_SPELLS[name]
     for zh, v in SRD_SPELLS.items():

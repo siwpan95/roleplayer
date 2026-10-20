@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "roleplayer"
+version = "3.0.1"
+description = "融合 D&D 三宝书 / GURPS 4e / CoC 的跑团模拟器：角色构建 + GM 模拟（Oracle）+ 战斗/法术/补给 + 存档重演，纯标准库"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "siwpan" }]
+keywords = ["trpg", "rpg", "dnd", "gurps", "coc", "character-builder", "gm-emulator"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Games/Entertainment :: Role-Playing",
+]
+
+[project.urls]
+Homepage = "https://gitee.com/siwpan/roleplayer"
+Repository = "https://gitee.com/siwpan/roleplayer"
+Issues = "https://gitee.com/siwpan/roleplayer/issues"
+
+[project.scripts]
+roleplayer = "cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools]
+# 刻意不用 packages.find —— 仓根还有 data/ docs/ gui/ web/ tests/ 等目录，
+# 自动发现会把它们误当包收进 wheel（web/ 下还有 node_modules）。
+packages = ["roleplayer", "troupe"]
+py-modules = ["cli"]
+
+[tool.setuptools.package-data]
+roleplayer = ["composition.yml"]
+troupe = ["composition.yml"]

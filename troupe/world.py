@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .contracts import CampaignModule, Place, Route
 from .data_world import WEATHER

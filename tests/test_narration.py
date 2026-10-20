@@ -5,7 +5,7 @@
 """
 import random
 
-from d20 import narration as n
+from roleplayer import narration as n
 
 
 def test_translate_weapon():

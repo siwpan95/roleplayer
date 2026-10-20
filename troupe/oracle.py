@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from . import data_oracle as O
 from .contracts import SCENE_ALTERED, SCENE_INTERRUPTED, SCENE_NORMAL, Thread

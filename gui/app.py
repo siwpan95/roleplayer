@@ -1,26 +1,26 @@
 """gui.app - Role Player 跑团模拟器 tkinter 图形界面
 
-基于新的 d20 包。相比原 mvp_gui，新增：更多优缺点按钮、GURPS 战技宏、
+基于新的 roleplayer 包。相比原 mvp_gui，新增：更多优缺点按钮、GURPS 战技宏、
 GURPS 3d6 检定、灵巧武器高亮等增强内容。
 """
 import sys
 from pathlib import Path
 
-# 将项目根目录（d20 包所在目录）加入 sys.path，
-# 以便直接运行 gui/app.py 时也能导入上一级的 d20 包。
+# 将项目根目录（roleplayer 包所在目录）加入 sys.path，
+# 以便直接运行 gui/app.py 时也能导入上一级的 roleplayer 包。
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext, filedialog, simpledialog
 
-import d20
-from d20 import Character
+import roleplayer
+from roleplayer import Character
 
 
 class CharacterBuilderApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title(f"Role Player 跑团模拟器 v{d20.__version__}")
+        self.root.title(f"Role Player 跑团模拟器 v{roleplayer.__version__}")
         self.root.geometry("1040x760")
         self.root.minsize(860, 640)
 

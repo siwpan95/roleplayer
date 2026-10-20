@@ -6,7 +6,7 @@
 """
 import json
 
-from d20 import Character
+from roleplayer import Character
 
 from troupe.simulator import Simulator
 from troupe.modules import generate_module

@@ -88,7 +88,7 @@
 
 ### 装配与依赖
 - **`inject` 是硬契约，不是注释**：声明了不用（装饰性）会误导卸载传播；用了没声明（欠声明）会在卸载后运行时崩溃。
-- **`ctx.mount` 校验类属性 `inject`，loader 拓扑排序看清单** —— 改依赖必须同步**七处**：根 `composition.yml`、`d20/loader.py` 兜底、服务类属性、`web/src/engine/composition.ts`、`web/public/composition.yml`、troupe `composition.yml`、`composition.py` 兜底。
+- **`ctx.mount` 校验类属性 `inject`，loader 拓扑排序看清单** —— 改依赖必须同步**七处**：`roleplayer/composition.yml`（3.0.1 起由项目根移入包内）、`roleplayer/loader.py` 兜底、服务类属性、`web/src/engine/composition.ts`、`web/public/composition.yml`、troupe `composition.yml`、`composition.py` 兜底。
 - **`mount_troupe` 按清单顺序逐个挂载，无拓扑重排** —— 加依赖后必须手工重排：clock 在 faction/quest 前、director 在 provisions 前、agent 在 encounter 前。
 - **循环依赖**：agent 原调 `encounter._avg_party_level()` 而 encounter 依赖 agent → 已把平均等级内联进 agent 破环。
 

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any, Iterable, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .contracts import EVENT_TYPES, Event
 

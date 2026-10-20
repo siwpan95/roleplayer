@@ -1,7 +1,7 @@
 """属性购买系统测试。"""
 import pytest
 
-from d20.attributes import calc_attribute_cost
+from roleplayer.attributes import calc_attribute_cost
 
 
 class TestAttributeCost:

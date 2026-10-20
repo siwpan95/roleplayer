@@ -4,8 +4,8 @@
 覆盖：新增条目在场且字段契约完整、环位登记齐备、旧条目未被改动、
 Web 镜像与 Python 侧同规模。
 """
-from d20.data_monsters import MONSTERS
-from d20.data_spells import SRD_SPELLS, SRD_SPELL_RINGS
+from roleplayer.data_monsters import MONSTERS
+from roleplayer.data_spells import SRD_SPELLS, SRD_SPELL_RINGS
 
 #: 本次新增的 26 法术 / 20 怪物（中文键）
 NEW_SPELLS = [

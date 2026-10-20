@@ -1,4 +1,4 @@
-"""d20.combat 边界测试：补齐「从未被执行过」的法术宏与远程攻击宏。
+"""roleplayer.combat 边界测试：补齐「从未被执行过」的法术宏与远程攻击宏。
 
 覆盖率依据（修复前）：_macro_ranged_attack / _macro_fire_bolt / _macro_ray_of_frost /
 _macro_scorching_ray / _macro_lightning_bolt / _macro_cone_of_cold / _macro_meteor_swarm
@@ -13,8 +13,8 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.data import SPELL_RINGS
+from roleplayer import Character
+from roleplayer.data import SPELL_RINGS
 
 
 @pytest.fixture

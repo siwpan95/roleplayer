@@ -7,7 +7,7 @@
 * **PC 策略** ``propose(scene, actor, kind)``：根据场景模式（探索/交涉/旅行/休整）
   构造一次行动提议。行动带 ``request``（检定）与 ``on_success`` / ``on_fail`` 后果声明，
   交给导演翻译为具体的世界变更。
-* **战斗策略**：交给 ``d20.battle`` 自带的怪物/PC AI，本层不介入（见 ``encounter.combat``）。
+* **战斗策略**：交给 ``roleplayer.battle`` 自带的怪物/PC AI，本层不介入（见 ``encounter.combat``）。
 
 策略可插拔：实现一个新的 ``Policy`` 子类（更激进 / 更保守 / 更爱社交），
 在构造 ``AgentService`` 时传入即可，世界层代码一行不动。
@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .contracts import Action, CheckRequest, Place, Route
 
@@ -164,7 +164,7 @@ class AgentService(Service):
     def propose(self, scene, actor_name: str, kind: str = "exploration") -> Optional[Action]:
         """为某演员产出一次行动提议（探索/交涉/旅行/休整）。"""
         if kind == "combat":
-            return None  # 战斗由 d20.battle AI 接管
+            return None  # 战斗由 roleplayer.battle AI 接管
         return self.policy.propose(self.ctx, scene, actor_name, kind)
 
     def set_policy(self, name: str) -> None:

@@ -12,17 +12,17 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.data_battle import (
+from roleplayer import Character
+from roleplayer.data_battle import (
     XP_THRESHOLDS, ENCOUNTER_MULTIPLIERS, DAILY_XP_BUDGET,
     encounter_multiplier, party_thresholds, judge_difficulty,
     normalize_damage_type, DIFFICULTY_CN,
 )
-from d20.battle import (
+from roleplayer.battle import (
     Combatant, Battle, BattleService, normalize_action, _parse_save,
     _parse_multiattack, _hp_of, _reach_of,
 )
-from d20.data_monsters import MONSTERS
+from roleplayer.data_monsters import MONSTERS
 
 
 # =============================================================================
@@ -98,7 +98,7 @@ class TestActionParsing:
 
     def test_recharge_parse(self):
         import re
-        from d20.battle import _parse_recharge
+        from roleplayer.battle import _parse_recharge
         assert _parse_recharge("... Recharge 5-6. ...") == 5
         assert _parse_recharge("no recharge") is None
 

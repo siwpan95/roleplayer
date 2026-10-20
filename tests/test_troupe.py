@@ -12,7 +12,7 @@ import tempfile
 
 import pytest
 
-from d20.character import Character
+from roleplayer.character import Character
 
 from troupe import (
     Simulator,

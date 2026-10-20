@@ -1,4 +1,4 @@
-# Role Player — TRPG Simulator v3.0 (package name: `d20`)
+# Role Player — TRPG Simulator v3.0 (package renamed to `roleplayer` since 3.0.1; was `d20`)
 
 A tabletop role-playing game (TRPG) simulator blending the **D&D three core books**
 (PHB / DMG / MM), the **GURPS Basic Set**, and **Call of Cthulhu** rules:
@@ -23,7 +23,7 @@ cd web && npm ci && npm run build && npm test
 
 ## Architecture
 
-- `d20/` — rule services assembled via `composition.yml` (mini-Cordis: Context /
+- `roleplayer/` — rule services assembled via `composition.yml` (mini-Cordis: Context /
   Service / dependency injection / event lifecycle), D&D + GURPS unified data hub.
 - `troupe/` — campaign simulator: GM emulator (Oracle/Director), world model
   (NPC / factions / quests / clocks / calendar / lore), encounters (D&D 5e /

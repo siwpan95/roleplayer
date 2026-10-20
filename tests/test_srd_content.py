@@ -15,12 +15,12 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.data_conditions import CONDITIONS as CONDITIONS_DATA, DISADVANTAGE_PENALTY
-from d20.data_monsters import MONSTERS, CR_XP
-from d20.data_spells import SRD_SPELLS, SRD_SPELL_RINGS
-from d20.data_magicitems import MAGIC_ITEMS
-from d20.data import SPELL_RINGS
+from roleplayer import Character
+from roleplayer.data_conditions import CONDITIONS as CONDITIONS_DATA, DISADVANTAGE_PENALTY
+from roleplayer.data_monsters import MONSTERS, CR_XP
+from roleplayer.data_spells import SRD_SPELLS, SRD_SPELL_RINGS
+from roleplayer.data_magicitems import MAGIC_ITEMS
+from roleplayer.data import SPELL_RINGS
 
 # D&D 5e SRD Appendix A 的 15 条官方战斗条件
 SRD_CONDITION_NAMES = [

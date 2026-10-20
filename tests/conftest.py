@@ -5,17 +5,17 @@ import os
 
 import pytest
 
-# 把项目根目录加入 sys.path，使 `import d20` / `from d20 import ...` 可用
+# 把项目根目录加入 sys.path，使 `import roleplayer` / `from roleplayer import ...` 可用
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from d20 import Character
+from roleplayer import Character
 
 
 @pytest.fixture(autouse=True)
 def _isolate_global_random():
     """隔离全局随机状态，消除测试间的相互污染（flaky）。
 
-    背景：``d20.narration`` 有 25 处 ``_pick()`` 调用依赖全局 ``random``，
+    背景：``roleplayer.narration`` 有 25 处 ``_pick()`` 调用依赖全局 ``random``，
     战斗/掷骰逻辑同样如此。此前各测试文件各自 ``random.seed(...)`` 或干脆不播种，
     导致测试**单独跑通过、全量跑随机失败**（实测失败率约 20%，CI 会随机变红）。
 

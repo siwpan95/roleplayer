@@ -132,12 +132,12 @@ def build_gurps_character(attrs: dict, *, advantages: Optional[list] = None,
                           disadvantages: Optional[list] = None,
                           skills: Optional[dict] = None,
                           seed: int = 0, level: int = 1, name: str = "冒险者") -> Any:
-    """用 GURPS 点经济构建一张角色卡（融合设定：底层仍是 ``d20.Character``）。
+    """用 GURPS 点经济构建一张角色卡（融合设定：底层仍是 ``roleplayer.Character``）。
 
     六维属性直接写入角色卡；优缺点与技能等级存入 ``state.flags``，供 ``ruleset.points_of``
     随时回算总点数。返回 ``(Character, point_total)``。
     """
-    from d20 import Character
+    from roleplayer import Character
 
     char = Character.random(level, seed=seed)
     char.state.attributes.update({k: int(v) for k, v in attrs.items()})

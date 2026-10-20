@@ -4,7 +4,7 @@
 
 * ``ctx.state``（SessionState）+ 各 Service 的 ``to_dict``（世界/派系/NPC/任务/时钟/
   混沌/已确立事实/导演场景/事件流）+ ``rng`` 五域随机流快照；
-* 队伍成员用 ``d20.character_io.to_full_dict`` 序列化为完整角色状态，加载时原样重建；
+* 队伍成员用 ``roleplayer.character_io.to_full_dict`` 序列化为完整角色状态，加载时原样重建；
 * 事件流（``log``）一并保存，使战报 / 回放 / 审计可追溯。
 
 ``migrate`` 按 ``SCHEMA_VERSION`` 执行迁移链：旧版本存档在读入时自动补齐缺失字段，
@@ -16,13 +16,13 @@ import json
 import random
 from typing import Any, Optional
 
-from d20.character_io import character_from_dict, to_full_dict
+from roleplayer.character_io import character_from_dict, to_full_dict
 
 from .contracts import SCHEMA_VERSION, SessionState
 
 
 def _grng_snapshot() -> str:
-    """全局 random 模块状态（战斗桥接 d20.battle 消费它）。存档时一并记录，
+    """全局 random 模块状态（战斗桥接 roleplayer.battle 消费它）。存档时一并记录，
     载入后续跑才能精确复现战斗。"""
     import base64
     import pickle

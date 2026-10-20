@@ -1,4 +1,4 @@
-"""d20.character_io 边界测试（该模块此前 0% 覆盖，从未被任何测试 import）。
+"""roleplayer.character_io 边界测试（该模块此前 0% 覆盖，从未被任何测试 import）。
 
 覆盖重点：JSON 往返保真、深拷贝别名、文件 IO 异常路径（不存在/损坏 JSON/编码错误）、
 随机种子可复现性、等级边界。
@@ -12,8 +12,8 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.character_io import (
+from roleplayer import Character
+from roleplayer.character_io import (
     SAVE_FORMAT, SAVE_VERSION,
     to_full_dict, character_from_dict, save_character, load_character,
     random_character, _copy,
@@ -277,7 +277,7 @@ class TestRandomCharacter:
         assert back.state.equipment == c.state.equipment
 
     def test_generated_character_always_valid_class(self):
-        from d20.data_classes import CLASSES
+        from roleplayer.data_classes import CLASSES
         for s in range(15):
             c = random_character(level=3, seed=s)
             assert c.state.cls in CLASSES, f"seed={s} 产生了非法职业 {c.state.cls}"

@@ -11,7 +11,7 @@
 """
 from __future__ import annotations
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .contracts import GameTime
 

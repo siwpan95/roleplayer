@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from . import data_tables as T
 

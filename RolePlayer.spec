@@ -3,7 +3,7 @@
 
 用法：<主解释器>/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean  # 去符盘：原写死 /Python314
 入口：gui/app.py（无控制台窗口程序，windowed）
-依赖：d20 包（纯标准库，零第三方依赖）+ tkinter（Tcl/Tk 9.0，主解释器自带 —— 去符盘 /Python314）
+依赖：roleplayer 包（纯标准库，零第三方依赖）+ tkinter（Tcl/Tk 9.0，主解释器自带 —— 去符盘 /Python314）
 
 注意：主解释器（去符盘 /Python314）的 Tcl/Tk 9.0 库以独立目录形式提供（tcl_library/tk_library），
 PyInstaller 不会自动收集其初始化脚本（init.tcl/tk.tcl），必须显式 datas 注入，
@@ -23,50 +23,50 @@ a = Analysis(
         (os.path.join(TCLLIB, "tk", "tk_library"), "tk_library"),
     ],
     hiddenimports=[
-        # d20 核心包（纯标准库，全部显式列出以防动态导入漏检）
+        # roleplayer 核心包（纯标准库，全部显式列出以防动态导入漏检）
         "d20",
-        "d20.character",
-        "d20.attributes",
-        "d20.data",
-        "d20.data_monsters",
-        "d20.data_spells",
-        "d20.data_conditions",
-        "d20.data_magicitems",
-        "d20.combat",
-        "d20.condition",
-        "d20.skills",
-        "d20.techniques",
-        "d20.equipment",
-        "d20.feats",
-        "d20.perks",
-        "d20.race",
-        "d20.background",
-        "d20.derived",
-        "d20.dice",
-        "d20.monster",
-        "d20.slots",
-        "d20.rest",
-        "d20.sheet",
-        "d20.core",
+        "roleplayer.character",
+        "roleplayer.attributes",
+        "roleplayer.data",
+        "roleplayer.data_monsters",
+        "roleplayer.data_spells",
+        "roleplayer.data_conditions",
+        "roleplayer.data_magicitems",
+        "roleplayer.combat",
+        "roleplayer.condition",
+        "roleplayer.skills",
+        "roleplayer.techniques",
+        "roleplayer.equipment",
+        "roleplayer.feats",
+        "roleplayer.perks",
+        "roleplayer.race",
+        "roleplayer.background",
+        "roleplayer.derived",
+        "roleplayer.dice",
+        "roleplayer.monster",
+        "roleplayer.slots",
+        "roleplayer.rest",
+        "roleplayer.sheet",
+        "roleplayer.core",
         # ★ 服务由 composition.yml / loader.DEFAULT_SERVICE_ENTRIES 以「字符串」声明，
         #   经 d20/loader.py:195 的 importlib.import_module() 动态导入，
         #   PyInstaller 静态分析**抓不到**，必须在此显式列出。
         #   缺失时 importlib 抛 ModuleNotFoundError（不是 CordisError），
         #   character.py:171 的 `except CordisError` 兜不住 → 打包版启动即崩溃。
-        "d20.loader",
-        "d20.classes",        # v2.1 ClassService
-        "d20.reference",      # v2.1 ReferenceService
-        "d20.battle",         # v2.2 BattleService
+        "roleplayer.loader",
+        "roleplayer.classes",        # v2.1 ClassService
+        "roleplayer.reference",      # v2.1 ReferenceService
+        "roleplayer.battle",         # v2.2 BattleService
         # v2.1/v2.2 新增数据表（被上述服务静态引用，显式列出以防漏检）
-        "d20.data_classes",
-        "d20.data_reference",
-        "d20.data_battle",
-        "d20.data_equipment_srd",
-        "d20.data_proficiencies",
+        "roleplayer.data_classes",
+        "roleplayer.data_reference",
+        "roleplayer.data_battle",
+        "roleplayer.data_equipment_srd",
+        "roleplayer.data_proficiencies",
         # v2.2 新增模块（battle 内部静态引用 narration；character 方法内延迟导入
         # character_io，二者均显式列出以确保进入模块图）
-        "d20.narration",
-        "d20.character_io",
+        "roleplayer.narration",
+        "roleplayer.character_io",
         # tkinter 子模块
         "tkinter",
         "tkinter.ttk",

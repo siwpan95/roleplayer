@@ -12,7 +12,7 @@ import tempfile
 
 import pytest
 
-from d20 import Character, narration
+from roleplayer import Character, narration
 
 
 # ---------------------------------------------------------------------------
@@ -118,7 +118,7 @@ class TestDiceRuleBaseline:
         TS 端 dice.ts:73 写成 Math.max(roll, rollD20())（取较高值），与本基准不符。
         """
         import inspect
-        from d20 import dice
+        from roleplayer import dice
         src = inspect.getsource(dice.DiceService.d20_roll)
         assert "Math.max" not in src
         assert "roll = roll_d20()" in src, "Python 侧应重掷取新值"
@@ -126,7 +126,7 @@ class TestDiceRuleBaseline:
     def test_gurps_17_is_success_when_target_ge_16(self):
         """dice.py:123-125 —— 有效技能 >=16 时掷 17 判成功。"""
         import inspect
-        from d20 import dice
+        from roleplayer import dice
         src = inspect.getsource(dice.DiceService.gurps_check)
         assert "total == 17 and target >= 16" in src
 

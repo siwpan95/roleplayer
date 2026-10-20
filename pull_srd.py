@@ -50,7 +50,7 @@ CATS = {
     "races": "races",
 }
 
-HEADERS = {"User-Agent": "d20-srd-pull/2.1"}
+HEADERS = {"User-Agent": "roleplayer-srd-pull/2.1"}
 LEVEL_MIN, LEVEL_MAX = 1, 20
 
 #: Windows 保留设备名（作为文件名基名时 Win32 API 拒绝打开，git 无法索引）。

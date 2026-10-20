@@ -18,8 +18,8 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.character import COMPOSITION_PATH
+from roleplayer import Character
+from roleplayer.character import COMPOSITION_PATH
 
 # 重构前 盗贼.txt 中稳定的关键字段（与 CP 末位无关）
 EXPECTED_FIELDS = [

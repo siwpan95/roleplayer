@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from d20.data import ATTRIBUTES
+from roleplayer.data import ATTRIBUTES
 
 from .contracts import CheckRequest, CheckResult
 from .data_world import (
@@ -244,10 +244,10 @@ class GurpsRuleset(RulesetAdapter):
     #  战斗：命中 → 主动防御 → 部位 → 伤口倍率
     # ------------------------------------------------------------------ #
     def to_combatant(self, actor: Any):
-        """GURPS 战斗单位：由 ``d20.Character`` 映射成 ``GurpsCombatant``。
+        """GURPS 战斗单位：由 ``roleplayer.Character`` 映射成 ``GurpsCombatant``。
 
         真正的回合制结算在 ``troupe.combat_gurps.run_gurps_combat``，本方法只负责
-        把角色转成可驱动该循环的单位（不复用 d20.battle）。
+        把角色转成可驱动该循环的单位（不复用 roleplayer.battle）。
         """
         return build_pc_combatant(self._unwrap(actor), self)
 
@@ -311,7 +311,7 @@ class GurpsRuleset(RulesetAdapter):
                        retreating: bool = False) -> dict:
         """GURPS 单次攻击完整结算：命中 → 主动防御三选一 → 部位 → 伤口倍率 → 休克/击倒。
 
-        接受 ``GurpsCombatant``（由战斗循环传入）或 ``d20.Character``（直接调用时自动映射）。
+        接受 ``GurpsCombatant``（由战斗循环传入）或 ``roleplayer.Character``（直接调用时自动映射）。
         命中落地后写回防御方 HP 与状态（经 ``set_hp`` / ``condition`` 服务），保证与导演层一致。
         """
         rnd = self._rand()

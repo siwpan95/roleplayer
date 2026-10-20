@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from d20.data import ATTRIBUTES
+from roleplayer.data import ATTRIBUTES
 
 from .contracts import CheckRequest, CheckResult
 from .ruleset import RulesetAdapter, register_ruleset
@@ -188,7 +188,7 @@ class CocRuleset(RulesetAdapter):
         }
 
     # ------------------------------------------------------------------ #
-    #  战斗：复用 d20.battle（角色卡 HP/AC 与规则集无关）
+    #  战斗：复用 roleplayer.battle（角色卡 HP/AC 与规则集无关）
     # ------------------------------------------------------------------ #
     def to_combatant(self, actor: Any):
         return None

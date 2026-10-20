@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from d20.loader import DEFAULT_SERVICE_ENTRIES
+from roleplayer.loader import DEFAULT_SERVICE_ENTRIES
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -112,7 +112,7 @@ def _check_decls(label: str, entries: list[dict], files: dict[str, str],
 def _parse_root_yml() -> list[tuple[str, list[str]]]:
     """解析根 composition.yml（行内列表 inject 形态）。"""
     out, cur = [], None
-    for l in (ROOT / "composition.yml").read_text(encoding="utf-8").splitlines():
+    for l in (ROOT / "roleplayer" / "composition.yml").read_text(encoding="utf-8").splitlines():
         m = re.match(r"\s*-?\s*id:\s*([a-z_]+)", l)
         if m:
             cur = m.group(1)
@@ -167,9 +167,9 @@ def _parse_public_yml() -> list[tuple[str, list[str]]]:
 # --------------------------------------------------------------------------- #
 #  测试
 # --------------------------------------------------------------------------- #
-def test_d20_declarations_match_implementation():
-    d20_files = {e["id"]: f'{e["id"]}.py' for e in DEFAULT_SERVICE_ENTRIES}
-    _check_decls("d20", DEFAULT_SERVICE_ENTRIES, d20_files, "d20")
+def test_roleplayer_declarations_match_implementation():
+    rp_files = {e["id"]: f'{e["id"]}.py' for e in DEFAULT_SERVICE_ENTRIES}
+    _check_decls("roleplayer", DEFAULT_SERVICE_ENTRIES, rp_files, "roleplayer")
 
 
 def test_troupe_declarations_match_implementation():
@@ -177,10 +177,10 @@ def test_troupe_declarations_match_implementation():
     _check_decls("troupe", DEFAULT_TROUPE_ENTRIES, _TROUPE_FILES, "troupe")
 
 
-def test_d20_four_sources_agree():
+def test_roleplayer_four_sources_agree():
     """根 yml / loader 兜底 / composition.ts / public yml 四处 (id, inject) 一致。
 
-    d20 loader 挂载前有拓扑排序，清单**顺序**无语义，故按 id 匹配即可；
+    roleplayer loader 挂载前有拓扑排序，清单**顺序**无语义，故按 id 匹配即可；
     troupe 侧顺序=挂载顺序，已由 test_troupe_composition_yml 锁定。
     """
     from_loader = {e["id"]: list(e["inject"]) for e in DEFAULT_SERVICE_ENTRIES}

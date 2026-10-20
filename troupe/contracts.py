@@ -11,7 +11,7 @@
 
 分层对应
 --------
-    L0 内核      d20.core            Context / Service / 事件总线（复用，不重写）
+    L0 内核      roleplayer.core            Context / Service / 事件总线（复用，不重写）
     L1 规则适配  troupe.ruleset*     把角色对象翻译成统一的检定语义
     L2 世界模型  troupe.world 等     地点 / NPC / 派系 / 任务 / 时钟 / 时间
     L3 叙事导演  troupe.oracle 等    GM 模拟器（混沌 / 命运 / 场景 / 随机表）

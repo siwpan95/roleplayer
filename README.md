@@ -1,4 +1,19 @@
-# Role Player 跑团模拟器 v3.0（原 D20 项目更名；包名沿用 d20）
+# Role Player 跑团模拟器 v3.0（原 D20 项目更名；包名自 3.0.1 起改为 roleplayer）
+
+[![PyPI](https://img.shields.io/pypi/v/roleplayer.svg)](https://pypi.org/project/roleplayer/)
+[![Python](https://img.shields.io/pypi/pyversions/roleplayer.svg)](https://pypi.org/project/roleplayer/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Gitee](https://img.shields.io/badge/Gitee-siwpan%2Froleplayer-orange.svg)](https://gitee.com/siwpan/roleplayer)
+
+## 包名沿革（重要）
+
+| 时期 | 包名 | 说明 |
+|---|---|---|
+| ~3.0.0 | `d20` | 与技术标识 d20 同名 |
+| **3.0.1 起** | **`roleplayer`** | PyPI 上的 `d20` 已被他人占用，故随首发改名 |
+
+导入方式随之变化：`from roleplayer import Character` → **`from roleplayer import Character`**。
+骰子语境的 `d20`（如 `d20/d100/d6` 检定、`D20检定` 按钮）保持原样，不受改名影响。
 
 > 仓库：<https://gitee.com/siwpan/roleplayer> ｜ 许可：MIT（见 [LICENSE](LICENSE)）
 > 注：文中 <PATH> 为路径占位符，请替换为你本机实际的目录 / 可执行文件路径。
@@ -9,12 +24,12 @@
 
 ## 架构（Cordis 化：Context / Service / 依赖注入 / 组合装配）
 
-原 MVP 的单文件 `mvp_builder.py`（29KB）已拆分为模块化 `d20` 包，并参考 vendored 的
+原 MVP 的单文件 `mvp_builder.py`（29KB）已拆分为模块化 `roleplayer` 包，并参考 vendored 的
 [Cordis](https://cordis.js.org)（deepseek-harness 内嵌的 TypeScript 插件元框架）思想，
 将 9 个子系统改写为**服务（Service）**而非 mixin 多重继承：
 
 ```
-d20/
+roleplayer/
 ├── __init__.py        # 包入口，导出 Character 与数据
 ├── core.py            # ★ mini-Cordis：Context / Service / 事件 / effect 生命周期
 ├── loader.py          # composition.yml 解析 + 按 inject 依赖拓扑排序挂载
@@ -56,7 +71,7 @@ gui/app.py             # tkinter 图形界面
 cli.py                 # 命令行界面
 tests/                 # pytest 单元测试（665 项，含 Cordis 装配不变性 + v1.0 SRD + v2.1 SRD + v2.2 模拟对战 + troupe 全链路 + GURPS 战斗/条件/点经济/社交 + 法术/补给/任务依赖/存档迁移/重演/程序化生成/富文本导出 + 组合装配「声明=实现」一致性 + NPC 自主行动/HTTP API/地牢空间地图）
                        #   + 版本一致性 + 安装器/卸载器回归 + troupe 跑团模拟器集成/确定性/管线/规则集/策略/注册表/去重
-                       #   + Round6：composition.yml 权威注册源 ↔ 注册表一致性 / d20 软挂载零污染）
+                       #   + Round6：composition.yml 权威注册源 ↔ 注册表一致性 / roleplayer 软挂载零污染）
 
 troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.3 新增）
   ├── contracts.py     # ★ 契约层（DictMixin / Event / Action / Consequence / SceneSpec / CampaignModule / SessionState）
@@ -79,16 +94,16 @@ troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.
   ├── export.py        # ★ 战役档案富文本导出（Markdown / 自包含 HTML / JSON，Web 面板消费）
   ├── render.py        # L7 文本渲染（战役档案 / 队伍面板 / 战报）
   ├── simulator.py     # 组合根 + Simulator 门面
-  ├── composition.py    # ★ 服务注册表（DEFAULT_TROUPE_ENTRIES / mount_troupe / resolve_service，troupe 作用域内装配，不污染 d20 基类）
-  ├── composition.yml   # ★ 服务注册权威来源（块风格，d20 loader 软挂载也读它；tests 锁定与注册表逐条一致）
+  ├── composition.py    # ★ 服务注册表（DEFAULT_TROUPE_ENTRIES / mount_troupe / resolve_service，troupe 作用域内装配，不污染 roleplayer 基类）
+  ├── composition.yml   # ★ 服务注册权威来源（块风格，roleplayer loader 软挂载也读它；tests 锁定与注册表逐条一致）
   └── modules/         # 战役模组注册表（手写示例：border_shrine + 程序化生成：generator.generate_module(seed)）
 
 > **GURPS 4e 已是完整规则集（非占位）**：`encounter.combat` 在 `ruleset.id=="gurps"` 时
 > 走 `combat_gurps.run_gurps_combat`（GURPS 自有回合制结算：3d6 掷低命中 → 闪避/招架/格挡
-> 三选一 → 命中部位 → Thrust/Swing × 伤口倍率 → 休克/击倒），**不再静默退回 d20.battle**；
+> 三选一 → 命中部位 → Thrust/Swing × 伤口倍率 → 休克/击倒），**不再静默退回 roleplayer.battle**；
 > `character_gurps` 提供属性(10/级)/优缺点/技能的点数经济，`points_of` 可随时回算；
 > `data_social` 的反应检定已接入 `encounter.social`（态度位移 + 话术风险）。D&D 路径仍复用
-> `d20.battle`。两套规则在 `L0–L7` 全链路贯通，同一张角色卡可整局切换。
+> `roleplayer.battle`。两套规则在 `L0–L7` 全链路贯通，同一张角色卡可整局切换。
 
 > **P2/P3 已落地（跑团模拟器全量架构收口）**：
 > - **法术/补给细节**：旅行遭遇真正开戏（约七成战斗三成路遇）；D&D 戏法永久已知 + 每日备法
@@ -105,13 +120,13 @@ troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.
 >   整张地图（地点/路线/派系/NPC/任务链/时钟），与手写模组同注册表共存。
 > - **富文本/Web 渲染**：`troupe/export.py` 导出 Markdown/自包含 HTML/JSON 三种战役档案；
 >   `web` 端新增「跑团战役档案」面板（粘贴 JSON 或选 .json 文件即渲染）。
-> - **依赖声明修正（2026-08-30）**：按「声明 = 实现」AST 审计全部 19(d20)+17(troupe) 个服务，
+> - **依赖声明修正（2026-08-30）**：按「声明 = 实现」AST 审计全部 19(roleplayer)+17(troupe) 个服务，
 >   修复 10 处漂移——combat 欠声明 race（龙息宏真用）；rest/sheet/monster 的 dice·feats·race
 >   冗余声明；battle 的 `[dice, monster, condition]` 为装饰性错误声明（实际经 char.ctx 访问
 >   角色级服务，自身零依赖）；troupe 侧 director/encounter/provisions/world/quest/faction/
 >   lore/agent 的欠声明与冗余一并修正。因 `mount_troupe` 按清单顺序挂载（无拓扑重排），
 >   同步重排 clock/director/provisions/agent 条目顺序并破除 agent↔encounter 潜在环。
->   不变量由 `tests/test_composition_consistency.py` 锁死（AST 静态核对 + d20 四处清单一致）。
+>   不变量由 `tests/test_composition_consistency.py` 锁死（AST 静态核对 + roleplayer 四处清单一致）。
 > - **外围缺口补完（2026-08-30）**：① NPC 自主行动（`troupe/npc_agency.py`，挂 `ctx.agency`，
 >   场景节拍 + 每日过夜驱动，行动真实改变世界并全程事件溯源）；② Web 实时跑团
 >   （`troupe/server.py` 零依赖 HTTP API + `web` 端「实时跑团」面板，浏览器里开一局逐步推进）；
@@ -126,11 +141,11 @@ troupe/                # ★ 跑团模拟器（GM 模拟器 / 战役引擎，v2.
 
 sim_cli.py             # ★ 跑团模拟器 CLI（--demo 直接跑示例 / 交互 REPL）
 docs/troupe-architecture.md  # ★ 跑团模拟器架构手册（L0–L7 分层 / 数据流 / 规则适配 / 模组 / 确定性）
-mvp_builder.py         # 向后兼容 shim → d20
+mvp_builder.py         # 向后兼容 shim → roleplayer
 mvp_gui.py             # 向后兼容 shim → gui.app
 ```
 
-**核心模型**（`d20.core` 的 Python 版 mini-Cordis，零依赖）：
+**核心模型**（`roleplayer.core` 的 Python 版 mini-Cordis，零依赖）：
 
 - `Context`：服务容器 + 事件总线（`emit` / `waterfall` / `serial` / `parallel`）+ effect 生命周期。
   服务以稳定 key 挂到 `ctx.<name>`，其他服务通过 `ctx.<service>` 互调。
@@ -139,10 +154,10 @@ mvp_gui.py             # 向后兼容 shim → gui.app
   加载器按依赖拓扑排序后挂载，真正「显式装配、可插拔、无静态 MRO」。
 
 - **troupe 软挂载（可选，单向分层）**：troupe 在 `troupe/composition.yml` 自持一份服务注册
-  权威来源（与 d20 同构，但只登记 troupe 自有服务，**绝不写进** `loader.DEFAULT_SERVICE_ENTRIES`）。
-  d20 loader 提供「存在才合并」的软挂载通道——置环境变量 `D20_MERGE_TROUPE=1` 后，`Character`
+  权威来源（与 roleplayer 同构，但只登记 troupe 自有服务，**绝不写进** `loader.DEFAULT_SERVICE_ENTRIES`）。
+  roleplayer loader 提供「存在才合并」的软挂载通道——置环境变量 `ROLEPLAYER_MERGE_TROUPE=1` 后，`Character`
   装配完自身 19 个服务会再合并 troupe 的 17 个服务；或显式调用 `mount_defaults_with_troupe(ctx)`
-  绕过环境变量。默认关闭，零影响既有 d20 装配，且 troupe 缺失/损坏时静默跳过，绝不拖累 d20。
+  绕过环境变量。默认关闭，零影响既有 roleplayer 装配，且 troupe 缺失/损坏时静默跳过，绝不拖累 roleplayer。
   类解析对 `troupe.*` 路径优先复用 `troupe.composition.resolve_service` 的显式注册表，规避循环导入陷阱。
 
 `Character` 是**兼容门面**：公共方法委托给 `ctx.<service>.<method>`，实例状态字段
@@ -166,7 +181,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 > **数据来源更正**：本扩充的 SRD 数据现已由 `pull_srd.py` 从权威 REST API
 > `https://www.dnd5eapi.co/api/2014/`（D&D 5e SRD 官方开放接口）拉取全部怪物 / 法术 / 魔法物品 /
 > 条件的规范化 JSON（共 334 怪物 / 319 法术 / 362 魔法物品 / 15 条件，零错误），再经 `gen_srd_from_api.py`
-> 转换为 `d20/data_*.py` 的字典结构（枚举字段译中、CR 数值推导为 CR 字符串 + XP）。**并非手工撰写**。
+> 转换为 `roleplayer/data_*.py` 的字典结构（枚举字段译中、CR 数值推导为 CR 字符串 + XP）。**并非手工撰写**。
 > 条目名现已**全量中文化**：334 怪物 + 319 法术均转为中文键（100% 覆盖，零英文键残留），原始 SRD 英文名保留在每条记录的 `en` 字段便于按英文名查表/外部集成；中文键由脚本内 `EN2CN_MON` / `EN2CN_SPELL` + 新增缺口补全层 `EN2CN_MON_GAP` / `EN2CN_SPELL_GAP` 提供：
 > - **来源（三层）**：① [huijiwiki 龙与地下城TRPG](https://dnd.huijiwiki.com) 的《法术列表》与《怪物图鉴 2025》双语对照（238 怪物 / 298 法术）；
 >   ② [dndlogs.com 怪物清单](https://dndlogs.com) 的 2014-MM 中英对照，补齐野兽 / NPC / 幼龙 / 兽化人 / 吸血鬼形态 / 虫群等剩余 96 怪物；
@@ -174,7 +189,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 >   并以脚本内手工校订子集（curated）为**权威覆盖层**——curated 优先级最高，杜绝错译。
 > - **覆盖**：334 怪物 **334** 个、319 法术 **319** 个已转为中文键（100%）。
 >   怪物层对 2025 怪物手册的复数/更名条目做了 norm 归一匹配到 SRD 2014 原名（如 `Goblins→哥布林` 走 curated 覆盖）。
-> - **复现**：`python gen_srd_from_api.py` 重新生成 `d20/data_*.py`；`python gen_ts_data.py` 同步 `web/src/engine/data_*.ts`。`_cn_src/` 保留双语原始抓取页作溯源。
+> - **复现**：`python gen_srd_from_api.py` 重新生成 `roleplayer/data_*.py`；`python gen_ts_data.py` 同步 `web/src/engine/data_*.ts`。`_cn_src/` 保留双语原始抓取页作溯源。
 - **战斗条件** `ConditionService`（`ctx.condition`，注入 `[]`）：内置 SRD 15 条官方战斗条件
   （目盲/魅惑/耳聋/惊惧/擒抱/失能/隐形/麻痹/石化/中毒/倒地/束缚/震慑/昏迷/力竭）。支持按名
   施加/解除/清空、活跃查询、`auto_fail` 维度判定（如麻痹→力量/敏捷豁免自动失败），以及对
@@ -206,7 +221,7 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 > 117 项熟练 / 18 项技能 / 16 种语言 / 13 种伤害类型 / 8 个魔法学派 / 6 项属性值 / 9 种阵营 /
 > 11 条武器属性 / 6 部规则 + 33 个规则章节 / 38 条种族特性 / 4 个亚种 / 9 个种族**，
 > 共 **1100+ 份规范化 JSON**、**零错误**落盘 `_srd_pull/` 作可验证溯源证据。
-> 再经 `gen_srd_v21.py` 转换为 `d20/data_*.py`。**并非手工撰写**。
+> 再经 `gen_srd_v21.py` 转换为 `roleplayer/data_*.py`。**并非手工撰写**。
 >
 > **中文化（100% 中文键 + `en` 保留英文原名 + `desc_en` 保留官方描述）**：沿用 v2.0 的
 > 「三层来源 + curated 覆盖层」方法论——① `_cn_src/hj_*namelist.json` 灰机 wiki 双语名册
@@ -292,11 +307,11 @@ mvp_gui.py             # 向后兼容 shim → gui.app
 ## 浏览器扩展（TypeScript 移植，web/）
 
 以 deepseek-harness 的 `web-cordis` 示例（浏览器界面 + Cordis 插件内存挂载/卸载）为参考，
-把 `d20` 包**1:1 移植为 TypeScript** 并包装成 WebExtension（React 18 + Vite + 零依赖
+把 `roleplayer` 包**1:1 移植为 TypeScript** 并包装成 WebExtension（React 18 + Vite + 零依赖
 mini-Cordis），见 `web/`：
 
-- 引擎层（`web/src/engine/`）逐文件对应 `d20/`：core/data/19 个 Service/Character/loader/
-  composition，逻辑 1:1；`d20Plugin(ctx, options)` 可把 D20 整体挂入任意遵循契约的宿主 Context。
+- 引擎层（`web/src/engine/`）逐文件对应 `roleplayer/`：core/data/19 个 Service/Character/loader/
+  composition，逻辑 1:1；`d20Plugin(ctx, options)` 可把 roleplayer 整体挂入任意遵循契约的宿主 Context。
 - 插件面板复刻 web-cordis：19 个服务运行时热挂载/卸载，卸载被依赖服务后对应能力即报错
   （如卸载 feats 后 HP/先攻回落、卸载 slots 后施法宏报错）；classes/reference 为可选增强，
   卸载后依赖方自动回落原行为。
@@ -323,13 +338,13 @@ mini-Cordis），见 `web/`：
   `data_reference.ts`(属性值/阵营/伤害类型/学派/语言/技能/规则)，以及 `condition.ts` /
   `monster.ts` / `classes.ts` / `reference.ts` 四个 Service，经 `composition.ts` 装配 +
   `Character` 门面委托 + `sheet` 渲染战斗条件行与职业行。八个数据模块全部由
-  Python `d20` 对象经 JSON 直转生成（`gen_ts_data.py`），保证前端/后端 SRD 内容零漂移。
+  Python `roleplayer` 对象经 JSON 直转生成（`gen_ts_data.py`），保证前端/后端 SRD 内容零漂移。
 - 安装：`chrome://extensions` → 开发者模式 → 加载 `web/dist`。
 
 ## 规则内容（权威 SRD 数据 · 已联网拉取）
 
 > 数据由 `pull_srd.py` 从 `dnd5eapi.co/api/2014` 拉取规范化 JSON，经 `gen_srd_from_api.py` 转换，
-> 单一事实来源为 `d20/data_*.py`（再由 `gen_ts_data.py` 同步到 `web/src/engine/data_*.ts`）。
+> 单一事实来源为 `roleplayer/data_*.py`（再由 `gen_ts_data.py` 同步到 `web/src/engine/data_*.ts`）。
 >
 > **版权与许可声明**：本仓 D&D 5e 规则数据源自《D&D 5e System Reference Document 5.1》
 > （© Wizards of the Coast LLC，知识共享 **CC-BY-4.0** 许可），经
@@ -380,7 +395,7 @@ mini-Cordis），见 `web/`：
 ## 快速开始
 
 ```python
-from d20 import Character
+from roleplayer import Character
 
 c = Character()                       # 150 CP 起始
 c.set_attribute("力量", 16)            # 递增标价购买
@@ -396,7 +411,7 @@ print(c.gurps_check("近战攻击"))       # GURPS 3d6 检定
 **职业（v2.1）**：角色构建的传统主轴——选职业、升级、拿特性与施法能力。
 
 ```python
-from d20 import Character
+from roleplayer import Character
 
 c = Character()
 c.set_class("法师", choices=["奥术知识", "历史"])   # 创建期选择，1 级免费
@@ -417,7 +432,7 @@ c.gear_info("长剑")["damage"]      # '1d8'
 **模拟对战（v2.2）**：完整回合制对战 + DMG 遭遇构建 + 蒙特卡洛。
 
 ```python
-from d20 import Character
+from roleplayer import Character
 
 c = Character()
 c.battle_create([c], ["哥布林", ("兽人", 2)])   # 当前角色 vs 3 个敌人
@@ -433,7 +448,7 @@ c.battle_simulate([c], ["哥布林", "哥布林"], trials=200)  # 蒙特卡洛�
 **角色卡导出 / 加载 / 随机（v2.2）**：把车好的卡存成 JSON，随时读回或随机开卡。
 
 ```python
-from d20 import Character
+from roleplayer import Character
 
 c = Character()
 c.set_class("战士")                    # 创建期先选职业（1 级免费）
@@ -501,17 +516,17 @@ python mvp_gui.py        # 或 python -m gui.app
 加载/随机会整体替换当前角色并刷新全部面板，对战随即使用新角色。
 
 ### Windows 安装包
-项目提供自包含安装包 `dist/RolePlayer-Setup-3.0.0.exe`（单文件，无需 Python 环境即可安装运行）：
+项目提供自包含安装包 `dist/RolePlayer-Setup-3.0.1.exe`（单文件，无需 Python 环境即可安装运行）：
 
 - **打包 GUI 应用**：`python -m PyInstaller RolePlayer.spec --noconfirm --clean`
   入口 `gui/app.py`，已注入 Tcl/Tk 9.0 运行时（`runtime_hook_tk.py` + `_tcllib/`）以修复 PyInstaller 对 Tk 9.0 的收集盲点。
   重新打包前需先解压 `<PATH>`、`libtk9.0.4.zip` 到
   `_tcllib/tcl/tcl_library`、`_tcllib/tk/tk_library`（`_tcllib/` 已被 .gitignore 排除）。
 - **构建安装包**：`python -m PyInstaller installer.spec --noconfirm --clean`
-  产出 `dist/RolePlayer-Setup-3.0.0.exe`，内嵌完整 RolePlayer 程序目录，双击即装。
+  产出 `dist/RolePlayer-Setup-3.0.1.exe`，内嵌完整 RolePlayer 程序目录，双击即装。
 - **安装行为**：默认安装到 `%LOCALAPPDATA%\Programs\D20`（免 UAC），并在桌面与开始菜单创建快捷方式，
   同时写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\D20` 卸载项。
-- **卸载**：开始菜单「卸载 Role Player」，或 `RolePlayer-Setup-3.0.0.exe --uninstall`。
+- **卸载**：开始菜单「卸载 Role Player」，或 `RolePlayer-Setup-3.0.1.exe --uninstall`。
 - 注：本机网络无法访问 Inno Setup 官方源（GitHub 被墙），安装包改用纯标准库自写安装向导
   （`installer.py`，ctypes 直调 `IShellLink` 创建快捷方式），零第三方依赖。
 

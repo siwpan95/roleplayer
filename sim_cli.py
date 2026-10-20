@@ -22,10 +22,10 @@ import argparse
 import os
 import sys
 
-# 在 PYTHONSAFEPATH=1（入口脚本目录不自动加入 sys.path）时，仍能从自身目录定位 d20 / troupe 包
+# 在 PYTHONSAFEPATH=1（入口脚本目录不自动加入 sys.path）时，仍能从自身目录定位 roleplayer / troupe 包
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from d20 import Character
+from roleplayer import Character
 
 from troupe import Simulator
 from troupe.modules import available_modules, get_module

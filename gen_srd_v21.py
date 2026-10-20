@@ -3,10 +3,10 @@
 输入：pull_srd.py 从 https://www.dnd5eapi.co/api/2014/ 拉取并落盘的规范化 JSON
       （_srd_pull/{category}/{index}.json，含 12 职业 × 20 级 = 240 条等级记录）。
 输出：
-      d20/data_classes.py       12 职业 + 12 子职业 + 20 级成长 + 407 特性
-      d20/data_equipment_srd.py 237 件 SRD 装备 + 11 条武器属性
-      d20/data_proficiencies.py 117 项熟练
-      d20/data_reference.py     属性值/阵营/伤害类型/学派/语言/技能/规则/规则章节
+      roleplayer/data_classes.py       12 职业 + 12 子职业 + 20 级成长 + 407 特性
+      roleplayer/data_equipment_srd.py 237 件 SRD 装备 + 11 条武器属性
+      roleplayer/data_proficiencies.py 117 项熟练
+      roleplayer/data_reference.py     属性值/阵营/伤害类型/学派/语言/技能/规则/规则章节
 
 译名来源（三层，与 v2.0 怪物/法术中文化同一套方法论）：
   ① _cn_src/hj_*namelist.json —— 灰机 wiki《龙与地下城 TRPG》双语名册（权威对照层）
@@ -27,7 +27,7 @@ from collections import OrderedDict
 _HERE = os.path.dirname(os.path.abspath(__file__))
 PULL = os.path.join(_HERE, "_srd_pull")   # 2026-08-31：原 E:/D20 硬编码改相对
 CN = os.path.join(_HERE, "_cn_src")
-OUT = os.path.join(_HERE, "d20")
+OUT = os.path.join(_HERE, "roleplayer")
 
 
 # =============================================================================
@@ -247,7 +247,7 @@ EN2CN_EQUIP_CURATED = {
     "Sprig of mistletoe": "槲寄生枝条", "Stabling (1 day)": "马厩（1日）",
     "String (10 feet)": "细绳（10尺）", "Tent, two-person": "双人帐篷", "Vestments": "祭袍",
     "War pick": "战镐", "Wooden staff": "木杖", "Yew wand": "紫杉魔杖",
-    # 与 d20.data.EQUIPMENT_LIBRARY 既有中文名对齐，避免两套装备库命名割裂
+    # 与 roleplayer.data.EQUIPMENT_LIBRARY 既有中文名对齐，避免两套装备库命名割裂
     "Chain Mail": "锁子甲", "Plate Armor": "全身板甲",
 }
 
@@ -897,7 +897,7 @@ def main():
 
     write_file(
         os.path.join(OUT, "data_classes.py"),
-        '''"""d20.data_classes - D&D 5e SRD 职业系统（全量，由权威 API 转换）
+        '''"""roleplayer.data_classes - D&D 5e SRD 职业系统（全量，由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014 的 classes / subclasses / features 三个端点，外加
 12 职业 × 1–20 级 = 240 条 class-level 记录（每级含特性、熟练加值、施法位、
@@ -918,10 +918,10 @@ def main():
 
     write_file(
         os.path.join(OUT, "data_equipment_srd.py"),
-        '''"""d20.data_equipment_srd - D&D 5e SRD 装备库（全量 237 件，由权威 API 转换）
+        '''"""roleplayer.data_equipment_srd - D&D 5e SRD 装备库（全量 237 件，由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014/equipment（237 件）+ weapon-properties（11 条），
-由 gen_srd_v21.py 转换。与 d20.data 的手工 EQUIPMENT_LIBRARY（41 件，带 D20
+由 gen_srd_v21.py 转换。与 roleplayer.data 的手工 EQUIPMENT_LIBRARY（41 件，带 D20
 CP 定价）互补：本模块提供权威的伤害骰 / AC / 重量 / 价格 / 武器属性 / 分类。
 
 字段：cat 分类 / sub 子类（军用近战、重甲…） / cost_gp 价格（统一折算金币） /
@@ -935,10 +935,10 @@ str_min 力量需求 / stealth_dis 隐匿劣势 / desc_en 官方描述。
 
     write_file(
         os.path.join(OUT, "data_proficiencies.py"),
-        '''"""d20.data_proficiencies - D&D 5e SRD 熟练项（全量 117 项，由权威 API 转换）
+        '''"""roleplayer.data_proficiencies - D&D 5e SRD 熟练项（全量 117 项，由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014/proficiencies。覆盖技能熟练（18 项，中文名对齐
-d20.data.SKILL_LIBRARY 同一命名空间）、豁免熟练（6 项 -> D20 三豁免轴）、
+roleplayer.data.SKILL_LIBRARY 同一命名空间）、豁免熟练（6 项 -> D20 三豁免轴）、
 武器/护甲/工具/乐器/赌具/载具熟练。
 
 type 为 API 的熟练大类（Skills / Saving Throws / Weapons / Armor / Artisan's
@@ -950,14 +950,14 @@ Tools / Musical Instruments …）；ref 为 API 的关联引用原名。
 
     write_file(
         os.path.join(OUT, "data_reference.py"),
-        '''"""d20.data_reference - D&D 5e SRD 参考常量与规则速查（由权威 API 转换）
+        '''"""roleplayer.data_reference - D&D 5e SRD 参考常量与规则速查（由权威 API 转换）
 
 来源：dnd5eapi.co/api/2014 的 ability-scores(6) / alignments(9) /
 damage-types(13) / magic-schools(8) / languages(16) / skills(18) /
 rules(6) / rule-sections(33)，由 gen_srd_v21.py 转换。
 
 用途：给 ReferenceService 提供 DM 侧规则速查与枚举翻译（伤害类型、学派、
-阵营、语言、武器属性…），并让 SRD 的 18 项技能与 d20.data.SKILL_LIBRARY
+阵营、语言、武器属性…），并让 SRD 的 18 项技能与 roleplayer.data.SKILL_LIBRARY
 可交叉核对。条目名全量中文化，英文原名保留在 `en`，官方描述保留在 `desc_en`。
 本文件由脚本生成，勿手工编辑。
 """\nfrom __future__ import annotations\n''',

@@ -1,5 +1,5 @@
 import traceback
-from d20 import Character
+from roleplayer import Character
 from troupe import Simulator
 from troupe.modules import get_module, available_modules
 from troupe.render import render_status, render_world, render_party

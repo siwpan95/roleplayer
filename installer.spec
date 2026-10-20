@@ -7,10 +7,10 @@
 
 输出：dist/RolePlayer-Setup-<版本>.exe（单文件自包含安装包）
 
-注意：输出文件名**不再硬编码**，而是从 d20/__init__.py 的 __version__ 解析。
+注意：输出文件名**不再硬编码**，而是从 roleplayer/__init__.py 的 __version__ 解析。
 此前写死 "RolePlayer-Setup-2.0.0"，版本升到 2.2.0 后产出物名仍叫 2.0.0 —— 与
 installer.py:APP_VERSION 的版本漂移属同一病根（同一个数字散落三处）。
-现在唯一真相源是 d20.__version__，配合 tests/test_version_consistency.py 守住。
+现在唯一真相源是 roleplayer.__version__，配合 tests/test_version_consistency.py 守住。
 """
 import os
 import re
@@ -19,8 +19,8 @@ ROOT = os.path.abspath(SPECPATH)  # 2026-08-31：原硬编码 E:/RolePlayer 改�
 
 
 def _app_version() -> str:
-    """从 d20/__init__.py 解析 __version__，作为版本号的唯一真相源。"""
-    init = os.path.join(ROOT, "d20", "__init__.py")
+    """从 roleplayer/__init__.py 解析 __version__，作为版本号的唯一真相源。"""
+    init = os.path.join(ROOT, "roleplayer", "__init__.py")
     with open(init, encoding="utf-8") as f:
         m = re.search(r'^__version__\s*=\s*["\']([^"\']+)["\']', f.read(), re.M)
     if not m:

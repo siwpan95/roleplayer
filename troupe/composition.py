@@ -1,16 +1,16 @@
 """troupe.composition - 服务注册表（troupe 作用域内）
 
-把 ``Simulator`` 里原本硬编码的挂载清单抽成一份**声明式注册表**，与 d20 基类的
+把 ``Simulator`` 里原本硬编码的挂载清单抽成一份**声明式注册表**，与 roleplayer 基类的
 ``loader.DEFAULT_SERVICE_ENTRIES`` 同构（id / service / inject），但只登记 troupe 自有服务、
-不反向依赖 d20 基类——从而保持「troupe 依赖 d20，而非 d20 依赖 troupe」的单向分层。
+不反向依赖 roleplayer 基类——从而保持「troupe 依赖 d20，而非 d20 依赖 troupe」的单向分层。
 
-权威来源是同级目录下的 ``composition.yml``（数据驱动、可人工编辑、d20 loader 也读它做软挂载）；
+权威来源是同级目录下的 ``composition.yml``（数据驱动、可人工编辑、roleplayer loader 也读它做软挂载）；
 本模块导入时读取 YAML 得到 ``DEFAULT_TROUPE_ENTRIES``（``service`` 字段保留为字符串），
-类对象在 :func:`mount_troupe` / d20 loader 挂载时按字符串解析。YAML 缺失/损坏时回退到内联清单。
+类对象在 :func:`mount_troupe` / roleplayer loader 挂载时按字符串解析。YAML 缺失/损坏时回退到内联清单。
 
 **类解析用显式注册表**（``_SERVICE_CLASSES``），而非运行时 ``importlib`` 盲解析：
 troupe 包在 ``__init__`` 里把 composition 放在**最后**导入，因此本模块体执行时所有服务类已就绪，
-直接引用即可，彻底规避「部分初始化的缓存模块缺类」这类循环导入陷阱。d20 loader 软挂载 troupe
+直接引用即可，彻底规避「部分初始化的缓存模块缺类」这类循环导入陷阱。roleplayer loader 软挂载 troupe
 时也优先复用这里的 :func:`resolve_service`，保证同一份权威解析逻辑。
 
 ``Simulator`` 通过 :func:`mount_troupe` 按依赖顺序把注册表里的服务挂进 Cordis ``Context``。
@@ -22,8 +22,8 @@ from __future__ import annotations
 import importlib
 import os
 
-from d20.core import Context
-from d20.loader import load_yaml
+from roleplayer.core import Context
+from roleplayer.loader import load_yaml
 
 # composition.yml 与本文件同目录；service 用字符串登记（来自 YAML / 兜底清单）
 _COMPOSE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "composition.yml")
@@ -116,7 +116,7 @@ def resolve_service(path: str) -> type:
 
     优先查权威显式注册表 ``_SERVICE_CLASSES``（绝对不会命中部分初始化的模块）；
     注册表未覆盖的路径（未来扩展的服务）回退到 ``importlib`` 通用解析。供 :func:`mount_troupe`
-    与 d20 loader 软挂载共用，保证同一份解析语义。
+    与 roleplayer loader 软挂载共用，保证同一份解析语义。
     """
     if path in _SERVICE_CLASSES:
         return _SERVICE_CLASSES[path]
@@ -164,7 +164,7 @@ def mount_troupe(ctx: Context, *, seed: int, ruleset: str) -> None:
     挂载时再把 ``service`` 字符串解析成类（经 :func:`resolve_service`，显式注册表，无循环导入风险）。
     挂载后做两件 ``Simulator`` 专属的副作用：
 
-    * 用主种子给**全局** ``random`` 定点播种（``d20.battle`` 消费全局 random，保证同种子同战斗）；
+    * 用主种子给**全局** ``random`` 定点播种（``roleplayer.battle`` 消费全局 random，保证同种子同战斗）；
     * 触发派系日推进钩子（按 power 推进计划时钟）。
     """
     for entry in DEFAULT_TROUPE_ENTRIES:

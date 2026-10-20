@@ -1,6 +1,6 @@
 """troupe.data_tables - 通用随机表数据（遭遇 / 发现 / 传闻 / 战利品 / 变故）
 
-表中的怪物名**全部取自 ``d20.data_monsters.MONSTERS`` 的真实键**（SRD 怪物图鉴，
+表中的怪物名**全部取自 ``roleplayer.data_monsters.MONSTERS`` 的真实键**（SRD 怪物图鉴，
 由 ``pull_srd.py`` 自 ``dnd5eapi.co`` 拉取）。``tests/test_troupe_tables.py``
 会逐条断言表内名字确实存在于怪物库，杜绝「表里写了库里没有的名字」这类静默失效。
 

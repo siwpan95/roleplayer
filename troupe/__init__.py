@@ -2,7 +2,7 @@
 
 分层（详见 ``docs/troupe-architecture.md``）：
 
-    L0 内核      d20.core            Context / Service / 事件总线
+    L0 内核      roleplayer.core            Context / Service / 事件总线
     L1 规则适配  ruleset*            把角色卡翻译成 D&D / GURPS 统一检定语义
     L2 世界模型  world/npc/faction/quest/clock/calendar/lore
     L3 叙事导演  oracle/director      GM 模拟（混沌/命运/场景）+ 裁定落地
@@ -66,7 +66,7 @@ __all__ = [
     "NpcService", "FactionService", "QuestService", "RandomTableService",
     "OracleService", "RulesetService", "DirectorService", "EncounterService",
     "AgentService", "WorldService",
-    # 服务注册表（troupe 作用域内，不污染 d20 基类）
+    # 服务注册表（troupe 作用域内，不污染 roleplayer 基类）
     "DEFAULT_TROUPE_ENTRIES", "available_troupe_services", "mount_troupe",
     # 规则适配器
     "RulesetAdapter", "Dnd5eRuleset", "GurpsRuleset", "CocRuleset",

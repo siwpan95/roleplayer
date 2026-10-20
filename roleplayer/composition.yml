@@ -1,0 +1,94 @@
+# composition.yml - D20 子系统装配（cordis.yml 风格）
+#
+# 每个服务以稳定 id 挂到 ctx.<id>；其他服务通过 ctx.<id> 互调。
+# inject 声明依赖，加载器（roleplayer.loader）按依赖做拓扑排序后挂载，
+# 缺失依赖直接报错（misconfiguration fails loud）。
+# 想加一套新规则系统（法术位/专长/背景/种族/休整）：写个 Service + 在此加一行即可，
+# 无需改动 Character 的 MRO。
+
+services:
+  - id: attributes
+    service: roleplayer.attributes.AttributesService
+    inject: []
+
+  - id: equipment
+    service: roleplayer.equipment.EquipmentService
+    inject: []
+
+  - id: perks
+    service: roleplayer.perks.PerksService
+    inject: []
+
+  - id: techniques
+    service: roleplayer.techniques.TechniquesService
+    inject: []
+
+  - id: race
+    service: roleplayer.race.RaceService
+    inject: []
+
+  - id: background
+    service: roleplayer.background.BackgroundService
+    inject: []
+
+  - id: feats
+    service: roleplayer.feats.FeatsService
+    inject: []
+
+  - id: skills
+    service: roleplayer.skills.SkillsService
+    inject: [perks, feats]
+
+  - id: dice
+    service: roleplayer.dice.DiceService
+    inject: [skills, feats]
+
+  - id: derived
+    service: roleplayer.derived.DerivedService
+    inject: [skills, equipment, feats, race]
+
+  - id: slots
+    service: roleplayer.slots.SpellSlotsService
+    inject: [skills]
+
+  - id: combat
+    service: roleplayer.combat.CombatService
+    # race：龙息宏（_macro_dragon_breath）直接调 ctx.race.elemental()，必须声明
+    inject: [derived, equipment, dice, techniques, skills, race, slots, feats, rest]
+
+  - id: rest
+    service: roleplayer.rest.RestService
+    # dice 为历史冗余声明（rest 自身从不调 ctx.dice），已移除
+    inject: [derived, slots, feats, race]
+
+  - id: sheet
+    service: roleplayer.sheet.SheetService
+    # feats/race 为历史冗余声明（sheet 直接读 state 而非 ctx.feats/ctx.race），已移除
+    inject: [perks, skills, equipment, derived, slots, background, rest, condition]
+
+  - id: condition
+    service: roleplayer.condition.ConditionService
+    inject: []
+
+  - id: monster
+    service: roleplayer.monster.MonsterService
+    # dice 为历史冗余声明（怪物图鉴是纯数据 + 数据级结算），已移除
+    inject: []
+
+  # ---- v2.1：职业与规则速查（两者均为可选增强，无人 inject 它们；
+  #      依赖方以 ctx.has("classes") 探测，卸载即回落原行为）----
+  - id: classes
+    service: roleplayer.classes.ClassService
+    inject: []
+
+  - id: reference
+    service: roleplayer.reference.ReferenceService
+    inject: []
+
+  # ---- v2.2：模拟对战（回合制完整对战 + 遭遇构建 + 蒙特卡洛）----
+  # battle 对**自身 ctx 零依赖**：怪物数据走 roleplayer.data_monsters（数据模块，
+  # 非 MonsterService），装备/技能/环位/攻击经 **char.ctx**（角色级全量装配）
+  # 访问。旧的 [dice, monster, condition] 是装饰性错误声明，已清空。
+  - id: battle
+    service: roleplayer.battle.BattleService
+    inject: []

@@ -1,4 +1,4 @@
-"""d20.battle 边界测试：补齐「当前对战」门面、状态机与 AI 辅助函数的未覆盖分支。
+"""roleplayer.battle 边界测试：补齐「当前对战」门面、状态机与 AI 辅助函数的未覆盖分支。
 
 覆盖率依据（修复前）：create/current/step_current/run_current/report_current/
 state_current 六个门面方法整体 0 覆盖；_pc_yo_yo_heal 缺 12 行、_try_recover 缺 7 行、
@@ -13,10 +13,10 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import Character
-from d20.battle import Battle, BattleService, Combatant, normalize_action
-from d20.character_io import random_character
-from d20.data_monsters import MONSTERS
+from roleplayer import Character
+from roleplayer.battle import Battle, BattleService, Combatant, normalize_action
+from roleplayer.character_io import random_character
+from roleplayer.data_monsters import MONSTERS
 
 
 @pytest.fixture

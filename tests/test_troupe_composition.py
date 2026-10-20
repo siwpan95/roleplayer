@@ -1,13 +1,13 @@
 """troupe 服务注册表 + 线索去重测试。
 
 * 方向一：troupe 服务正式登记在 troupe 作用域内的注册表（DEFAULT_TROUPE_ENTRIES /
-  mount_troupe），不污染 d20 基类的 loader.DEFAULT_SERVICE_ENTRIES；Simulator 经注册表装配后
+  mount_troupe），不污染 roleplayer 基类的 loader.DEFAULT_SERVICE_ENTRIES；Simulator 经注册表装配后
   行为与重构前一致（仍端到端可跑）。
 * 方向三：oracle.add_thread 对相同未关闭线索幂等，整场跑完不出现重复未关闭线索。
 """
 from __future__ import annotations
 
-from d20.core import Context
+from roleplayer.core import Context
 
 from troupe import Simulator, available_troupe_services, mount_troupe
 from troupe.composition import DEFAULT_TROUPE_ENTRIES

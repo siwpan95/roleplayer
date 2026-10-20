@@ -20,7 +20,7 @@
 
 角色对象的约定
 --------------
-两个适配器都作用于同一个 ``d20.Character`` —— 本项目用 GURPS 式点数购买 +
+两个适配器都作用于同一个 ``roleplayer.Character`` —— 本项目用 GURPS 式点数购买 +
 D&D 六维属性，技能等级是「绝对有效等级」，两套规则各自解释它：
 
     D&D：等级 = 加值（d20 + 等级 vs DC）
@@ -118,7 +118,7 @@ class RulesetAdapter:
     def resolve_attack(self, attacker: Any, defender: Any,
                        weapon: Optional[str] = None, modifier: int = 0,
                        retreating: bool = False) -> dict:
-        """场景级单次攻击结算（不经 ``d20.battle`` 的轻量路径）。"""
+        """场景级单次攻击结算（不经 ``roleplayer.battle`` 的轻量路径）。"""
         raise NotImplementedError
 
     def describe(self, actor: Any) -> str:
@@ -133,7 +133,7 @@ class RulesetAdapter:
     #  战斗桥接
     # ------------------------------------------------------------------ #
     def to_combatant(self, actor: Any) -> Any:
-        """把角色转成 ``d20.battle`` 可消费的战斗单位（不支持则返回 None）。"""
+        """把角色转成 ``roleplayer.battle`` 可消费的战斗单位（不支持则返回 None）。"""
         return None
 
     def xp_for(self, threat: Any) -> int:

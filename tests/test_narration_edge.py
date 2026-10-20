@@ -1,4 +1,4 @@
-"""d20.narration 边界测试：补齐零伤害 / 平局 / 未知输入等未覆盖分支。
+"""roleplayer.narration 边界测试：补齐零伤害 / 平局 / 未知输入等未覆盖分支。
 
 覆盖率依据（修复前）：narration.py 95%，未覆盖行为
 171（元素部位短语回退）、245（attack_hit 零伤害）、297（save_fail 零伤害）、
@@ -12,8 +12,8 @@ import pytest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from d20 import narration as N
-from d20.narration import (
+from roleplayer import narration as N
+from roleplayer.narration import (
     hit_location, wound_multiplier, weapon_dtype, translate_weapon,
     attack_hit, attack_miss, save_success, save_fail,
     condition_apply, condition_recover, kill, down, death_save,
@@ -107,7 +107,7 @@ class TestInitiative:
     def test_initiative_never_called_from_battle_or_combat(self):
         """确认该函数当前在生产代码中无调用点（死代码，供后续清理确认）。"""
         import subprocess
-        src = open(os.path.join(ROOT, "d20", "battle.py"), encoding="utf-8").read()
+        src = open(os.path.join(ROOT, "roleplayer", "battle.py"), encoding="utf-8").read()
         assert "narration.initiative" not in src, \
             "battle.py 已开始调用 narration.initiative，请删除本断言"
 

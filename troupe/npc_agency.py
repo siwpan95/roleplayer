@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 #: role → [(权重, 行动键)]。行动键见 ``_EFFECTS``。
 _ROLE_ACTIONS: dict[str, list] = {

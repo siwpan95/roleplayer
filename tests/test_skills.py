@@ -29,7 +29,7 @@ class TestSkillCost:
         char.set_attribute("智力", 10)
         cost_e, _ = char.calc_skill_cost("活力", 13)  # E? 活力是 A
         # 用 E 难度对比：手动构造比较
-        from d20.data import DIFFICULTY_COST
+        from roleplayer.data import DIFFICULTY_COST
         # rel=0: E=4, A=4; rel=3: E=10, A=16 → A 比 E 贵
         assert DIFFICULTY_COST["A"][3] > DIFFICULTY_COST["E"][3]
 

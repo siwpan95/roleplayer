@@ -2,9 +2,9 @@
 
 为什么独立成模块
 ----------------
-``troupe`` 的 D&D 路径复用 ``d20.battle``（一个成熟的 d20 对战引擎）；但 GURPS 的判定与
+``troupe`` 的 D&D 路径复用 ``roleplayer.battle``（一个成熟的 d20 对战引擎）；但 GURPS 的判定与
 战斗语义与 d20 根本不同（3d6 掷低、主动防御三选一、命中部位、伤口倍率、休克/击倒），
-无法塞进 d20.battle。因此这里实现**与规则书对齐的 GURPS 自有战斗循环**，由
+无法塞进 roleplayer.battle。因此这里实现**与规则书对齐的 GURPS 自有战斗循环**，由
 ``EncounterService.combat`` 在 ``ruleset.id == "gurps"`` 时调度。
 
 规则锚点（Basic Set 结构性公开事实，已在 ``data_world`` 标注）
@@ -19,8 +19,8 @@
 
 参与单位
 --------
-* PC：由 ``d20.Character`` 映射（六维 → GURPS 四属性；HP 沿用角色池；武器技能 = DX+2 融合基线）。
-* 怪物：由 ``d20.data_monsters.MONSTERS`` 映射（str/dex/con/int → ST/DX/HT/IQ；
+* PC：由 ``roleplayer.Character`` 映射（六维 → GURPS 四属性；HP 沿用角色池；武器技能 = DX+2 融合基线）。
+* 怪物：由 ``roleplayer.data_monsters.MONSTERS`` 映射（str/dex/con/int → ST/DX/HT/IQ；
   HP 取数据值；武器技能 = DX + 攻击加值；伤害用怪物固有骰）。
 
 确定性：所有掷骰走 ``ruleset._rand()``（即 RngService 的可播种流），同种子同战斗可复现。
@@ -29,8 +29,8 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.data_monsters import MONSTERS
-from d20.monster import parse_dice
+from roleplayer.data_monsters import MONSTERS
+from roleplayer.monster import parse_dice
 
 from .data_world import (
     basic_move, dodge as gurps_dodge, parry as gurps_parry, block as gurps_block,
@@ -164,7 +164,7 @@ class GurpsCombatant:
 #  单位构建
 # =============================================================================
 def build_pc_combatant(char: Any, ruleset: Any = None) -> GurpsCombatant:
-    """把 ``d20.Character`` 映射成 GURPS 战斗单位。"""
+    """把 ``roleplayer.Character`` 映射成 GURPS 战斗单位。"""
     st_obj = getattr(char, "state", None)
     a = dict(st_obj.attributes) if st_obj is not None else {}
     st = int(a.get("力量", 10)); dx = int(a.get("敏捷", 10))
@@ -250,10 +250,10 @@ def run_gurps_combat(party: list, foes: list, ruleset: Any,
                      distance: float = 60, max_rounds: int = 50) -> dict:
     """跑一场 GURPS 回合制对战，回写 HP 与状态到真实角色。
 
-    :param party: ``d20.Character`` 列表（PC）。
+    :param party: ``roleplayer.Character`` 列表（PC）。
     :param foes: 怪物名字符串，或 ``("怪物名", 数量)`` 元组。
     :param ruleset: ``GurpsRuleset`` 实例（驱动攻击结算与写回）。
-    :return: 与 d20.battle 结果同构的 dict（winner / rounds / total_xp / report / result）。
+    :return: 与 roleplayer.battle 结果同构的 dict（winner / rounds / total_xp / report / result）。
     """
     if not party:
         return {"error": "no_party", "winner": "none"}
@@ -325,7 +325,7 @@ def run_gurps_combat(party: list, foes: list, ruleset: Any,
     winner = "party" if party_alive else "foes"
     # 经验：按怪物威胁合计（CR_XP），查不到则按数量兜底
     try:
-        from d20.data_monsters import CR_XP
+        from roleplayer.data_monsters import CR_XP
         xp = sum(int(CR_XP.get(getattr(u, "name", "").split("#")[0], 0)) for u in foe_units)
     except Exception:
         xp = 0

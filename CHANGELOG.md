@@ -4,6 +4,43 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [3.0.1] - 2026-10-20
+
+**包名 `d20` → `roleplayer`** ｜ **PyPI 首发**：<https://pypi.org/project/roleplayer/3.0.1/>
+
+### Changed
+
+- **包名改为 `roleplayer`**：PyPI 上的 `d20` 已被他人占用，无法发布，故随首发改名。
+  导入方式：`from d20 import Character` → **`from roleplayer import Character`**。
+  共改写 106 个文件、375 处引用。
+- `composition.yml` 由项目根移入 `roleplayer/` 包内：此前装进 site-packages 后会丢失，
+  只能走 `loader.DEFAULT_SERVICE_ENTRIES` 兜底清单；现在随包分发，pip 安装后可读。
+- 环境变量 `D20_MERGE_TROUPE` → `ROLEPLAYER_MERGE_TROUPE`（**旧名仍兼容读取**，
+  已写在脚本里的配置不会失效）。
+
+### Added
+
+- `pyproject.toml`（此前完全没有打包文件）：`packages = ["roleplayer", "troupe"]` +
+  `py-modules = ["cli"]` + 两份 `composition.yml` 作为 package-data + 控制台入口 `roleplayer`。
+  刻意不用 `packages.find` —— 仓根还有 `data/ docs/ gui/ web/ tests/`，自动发现会把
+  `web/node_modules` 误收进 wheel。
+- PyPI / Python 版本 / License / Gitee 四个 shields 徽章。
+
+### ⚠️ 刻意未改（不是遗漏）
+
+- **骰子语境的 `d20`**：`d20/d100/d6` 检定、`d20+敏捷`、`D20 三豁免轴` 等指 20 面骰与 D20 规则体系，
+  与包名无关，61 处全部保留。
+- **存档格式标识 `d20-character`**：改了会让既有存档读不出来。
+- **安装路径与卸载注册表键**：`%LOCALAPPDATA%\Programs\D20`、
+  `HKCU\...\Uninstall\D20` —— 改名会让已安装用户的卸载项失效。
+- **前端 `d20Plugin(ctx, options)`**：`web/` 下 TypeScript 侧的插件 API 名，不在 Python 包内。
+
+### 验证
+
+- `pytest tests -q`：**684 passed, 2 skipped, 4 xfailed**（改名前后一致）
+- wheel 85 条目，顶层仅 `cli.py` / `roleplayer` / `troupe`，未混入 `web/` 与 `node_modules`
+- 干净 venv 安装后零第三方依赖，中立目录 `Character()` 构建成功、`composition.yml` 可读
+
 ## [3.0.0] - 2026-08-31
 
 ### Added

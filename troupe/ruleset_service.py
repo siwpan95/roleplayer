@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .ruleset import RulesetAdapter, get_ruleset, RulesetError
 

@@ -242,7 +242,7 @@ def is_incapacitated(conditions) -> bool:
     """是否被条件限制到无法行动（如束缚）。"""
     return any(CONDITION_MODIFIERS_GURPS.get(c, {}).get("skip") for c in (conditions or []))
 
-#: D&D：伤害类型归一（与 d20.data_battle.normalize_damage_type 对齐）
+#: D&D：伤害类型归一（与 roleplayer.data_battle.normalize_damage_type 对齐）
 DAMAGE_TYPES = (
     "穿刺", "挥砍", "钝击", "酸蚀", "寒冷", "火焰", "力场",
     "闪电", "死灵", "毒素", "心灵", "光耀", "雷鸣",

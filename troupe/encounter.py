@@ -6,7 +6,7 @@
   探索 / 交涉 / 旅行 / 休整 还是 战斗，并给出 ``SceneSpec``（战斗则给敌人编组）。
 * **noncombat**：跑一场非战斗戏 —— 开场景 → 智能体逐节拍「提议行动」 →
   导演裁定并落地 → 收场景。所有状态变更都经由导演，保证回放/审计一致。
-* **combat**：桥接 ``d20.battle`` 跑完整回合制对战（先攻/动作经济/伤害抗免/
+* **combat**：桥接 ``roleplayer.battle`` 跑完整回合制对战（先攻/动作经济/伤害抗免/
   状态/死亡豁免/怪物 AI），把胜败与战利品回写模拟器状态。
 * **trigger**：导演 ``apply`` 在遇到 ``effects["combat"]`` 时调用的统一入口。
 
@@ -14,14 +14,14 @@
 --------------------------
 * L4 只**提议与调度**，不写世界；写世界唯一发生在 L3 导演的 ``apply``。
 * 非战斗戏的「每个节拍怎么打」由 L5 智能体 ``propose`` 决定，L4 负责把它串成一场戏。
-* 战斗戏的「每个回合怎么打」由 ``d20.battle`` 自带的 PC/怪物 AI 决定，L4 只负责
+* 战斗戏的「每个回合怎么打」由 ``roleplayer.battle`` 自带的 PC/怪物 AI 决定，L4 只负责
   起手、等结果、收尾 —— 复用已在 v2.2 充分验证过的对战引擎，不重复造轮子。
 """
 from __future__ import annotations
 
 from typing import Any, Optional
 
-from d20.core import Service
+from roleplayer.core import Service
 
 from .combat_gurps import run_gurps_combat
 from . import data_social as social_data
@@ -211,7 +211,7 @@ class EncounterService(Service):
         return ""
 
     # ------------------------------------------------------------------ #
-    #  战斗戏（桥接 d20.battle）
+    #  战斗戏（桥接 roleplayer.battle）
     # ------------------------------------------------------------------ #
     def combat(self, party: list, foes: list, distance: float = 60,
                max_rounds: int = 50) -> dict:
@@ -219,7 +219,7 @@ class EncounterService(Service):
 
         **按规则集分派引擎**：``ruleset.id == "gurps"`` 走 ``troupe.combat_gurps`` 的 GURPS
         自有结算（3d6 掷低、主动防御三选一、部位、伤口倍率、休克/击倒）；其余（dnd5e/coc…）
-        走 ``d20.battle``（已充分验证的 d20 对战引擎）。两者最终都回写同一份模拟器状态。
+        走 ``roleplayer.battle``（已充分验证的 d20 对战引擎）。两者最终都回写同一份模拟器状态。
         """
         if not party:
             return {"error": "no_party", "winner": "none"}
@@ -258,7 +258,7 @@ class EncounterService(Service):
 
     def _combat_dnd(self, party: list, foes: list, distance: float,
                     max_rounds: int) -> dict:
-        """D&D 路径：复用 ``d20.battle`` 自带的 AI 驱动对战。"""
+        """D&D 路径：复用 ``roleplayer.battle`` 自带的 AI 驱动对战。"""
         pc = party[0]
         pc.battle_create(party, foes, distance)
         result = pc.battle_run(max_rounds)

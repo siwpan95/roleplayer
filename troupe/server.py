@@ -32,7 +32,7 @@ DEFAULT_PORT = 8765
 
 def _build_sim(spec: dict) -> Any:
     """按请求规格新建一场战役。"""
-    from d20 import Character
+    from roleplayer import Character
 
     from .modules import generate_module, get_module
     from .simulator import Simulator
