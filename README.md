@@ -5,7 +5,7 @@
 > 本仓在 siwpan 投资组合（D:/projects/repos，共 133 仓）中定级为 **① 核心推进**，领域 **跑团/TRPG**，定位 **TRPG+本地AI收敛点（枢纽）**。
 > **角色**：持续投入：D&D/GURPS/CoC 融合跑团模拟器 v3，AI-GM 旗舰样板。
 > **维护策略**：① 核心推进——持续投入、不允许冻结；随所属收敛点 / 流水线长期演进。
-> 投资组合统一分级索引：`D:/projects/repos/PORTFOLIO_TIERING.md`。
+> 投资组合统一分级索引（多机可查）：[组合分级决策索引 · allin 事实源](https://gitee.com/siwpan/allin/blob/master/docs/事实源/组合分级决策索引.md)。
 
 [![PyPI](https://img.shields.io/pypi/v/roleplayer.svg)](https://pypi.org/project/roleplayer/)
 [![Python](https://img.shields.io/pypi/pyversions/roleplayer.svg)](https://pypi.org/project/roleplayer/)
