@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 """D20 安装器 — PyInstaller 单文件规格
 
-用法：F:/Python314/python.exe -m PyInstaller installer.spec --noconfirm --clean
+用法：python -m PyInstaller installer.spec --noconfirm --clean
 入口：installer.py（windowed，纯标准库，不依赖 tkinter）
 内嵌：dist/D20（已用 runtime_hook_tk.py 验证可用的完整 tkinter 应用目录）
 

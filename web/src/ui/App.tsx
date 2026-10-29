@@ -262,7 +262,7 @@ export function App() {
 
       <Section title="实时跑团（连本地 troupe 服务）">
         <div className="sub" style={{ marginBottom: 8 }}>
-          需要先启动后端：<code>F:/Python314/python.exe troupe/server.py</code>（端口 8765）。
+          需要先启动后端：<code>python troupe/server.py</code>（端口 8765）。
           之后即可在浏览器里开一局、逐步推进。
         </div>
         <CampaignRunner />

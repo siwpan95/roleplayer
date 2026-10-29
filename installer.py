@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 """Role Player 跑团模拟器 — 自包含安装器 / 卸载器（纯标准库，零第三方依赖）
 
-打包：F:/Python314/python.exe -m PyInstaller installer.spec --noconfirm --clean
+打包：python -m PyInstaller installer.spec --noconfirm --clean
 内嵌的程序目录 dist/RolePlayer 由 installer.spec 的 --add-data 提供（onedir 产物整体嵌入）。
 
 行为：

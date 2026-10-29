@@ -165,13 +165,13 @@
 
 ```bash
 # 全量测试（唯一权威验证入口）
-cd /e/RolePlayer && F:/Python314/python.exe -m pytest -q
+cd /e/RolePlayer && /Python314/python.exe -m pytest -q
 
 # 跑团 CLI 演示
-F:/Python314/python.exe sim_cli.py --demo
+/Python314/python.exe sim_cli.py --demo
 
 # 跑团 HTTP API（Web 实时跑团的后端，端口 8765）
-F:/Python314/python.exe troupe/server.py
+/Python314/python.exe troupe/server.py
 
 # Web：类型检查 / 构建 / 预览
 cd /e/RolePlayer/web
@@ -179,9 +179,9 @@ F:/node/node.exe node_modules/typescript/bin/tsc --noEmit
 F:/node/node.exe node_modules/vite/bin/vite.js build
 F:/node/node.exe node_modules/vite/bin/vite.js preview --port 4173
 
-# 打包（需 F:/Python314，自带 Tcl/Tk 9.0）
-F:/Python314/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean
-F:/Python314/python.exe -m PyInstaller installer.spec    --noconfirm --clean
+# 打包（需 /Python314，自带 Tcl/Tk 9.0）
+/Python314/python.exe -m PyInstaller RolePlayer.spec --noconfirm --clean
+/Python314/python.exe -m PyInstaller installer.spec    --noconfirm --clean
 ```
 
 > 注意：本机 npm 装大包不可靠，Web 构建一律用上面的 `node + node_modules 内二进制` 方式，不要 `npm install`。

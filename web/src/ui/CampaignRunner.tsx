@@ -57,7 +57,7 @@ export function CampaignRunner() {
       if (s && s.ok) setState(s);
       else setError(s?.error ?? "服务返回异常");
     } catch (e) {
-      setError(`无法连接 ${API} —— 请先运行 F:/Python314/python.exe troupe/server.py`);
+      setError(`无法连接 ${API} —— 请先运行 python troupe/server.py`);
     } finally {
       setBusy(false);
     }

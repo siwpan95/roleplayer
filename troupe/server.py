@@ -14,7 +14,7 @@
 本地 Web 前端直连。状态结构复用 ``troupe.export.build_archive``，保证与
 档案导出同一份取数逻辑。
 
-启动：``F:/Python314/python.exe troupe/server.py``（或 ``python -m troupe.server``）。
+启动：``python troupe/server.py``（或 ``python -m troupe.server``）。
 """
 from __future__ import annotations
 
