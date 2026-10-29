@@ -62,9 +62,44 @@ def cmd_new(sim: Simulator | None) -> Simulator:
     return sim
 
 
+def demo_llm(sim: Simulator) -> None:
+    """离线 AI-GM 叙事层演示：把 ``troupe.oracle`` 的结构化判定叠加上 LLM 文笔。
+
+    无 ``ollama_generator`` / Ollama 服务时自动回落到启发式文本（绝不报错）。
+    仅用于 ``--demo --llm``，不改动 ``Simulator`` / ``OracleService`` 任何逻辑。
+    """
+    from roleplayer.gm_llm import LLMNarrator
+
+    n = LLMNarrator(model="qwen2.5:7b")
+    ctx = "地下城·哀嚎回廊"
+    _scene_label = {"normal": "一切如预期展开", "altered": "出现了意外变故",
+                    "interrupted": "被突发事件打断"}
+    print("\n" + "═" * 22 + " AI-GM 叙事层演示 " + "═" * 22)
+    print(f"LLM 后端在线: {n.enabled}（False = 离线，回落启发式文本）\n")
+
+    fate = sim.ctx.oracle.fate("前方石门后有埋伏吗", odds="不太可能")
+    print("【命运问答】", fate["text"])
+    print("  →", n.narrate_fate(fate, context=ctx), "\n")
+
+    chk = sim.ctx.oracle.check_scene()
+    chk_fb = f"场景开局：{_scene_label.get(chk['result'], chk['result'])}"
+    print("【场景开局】", chk_fb)
+    print("  →", n.narrate_scene_check({**chk, "text": chk_fb}, context=ctx), "\n")
+
+    ev = sim.ctx.oracle.random_event(scene_kind="exploration", context=ctx)
+    print("【随机事件】", ev["text"])
+    print("  →", n.narrate_event(ev, context=ctx), "\n")
+
+    q = "我们要不要先搜索左侧的壁龛？"
+    print("【开放 GM 应答】玩家：", q)
+    print("  →", n.gm_ask(q, context=ctx), "\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="跑团模拟器 CLI")
     parser.add_argument("--demo", action="store_true", help="直接跑一局示例并打印档案")
+    parser.add_argument("--llm", action="store_true",
+                        help="--demo 时叠加 AI-GM 叙事层（离线自动回落启发式文本）")
     args = parser.parse_args()
 
     if args.demo:
@@ -72,6 +107,8 @@ def main() -> None:
                               module=get_module("border_shrine"), level=3, count=3)
         sim.run(max_scenes=8, verbose=True)
         print("\n" + sim.render())
+        if args.llm:
+            demo_llm(sim)
         return
 
     sim: Simulator | None = None
